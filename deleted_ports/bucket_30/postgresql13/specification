@@ -34,7 +34,6 @@ FPC_EQUIVALENT=		databases/${NAMEBASE}-server
 BUILD_DEPENDS=		docbook-sgml:single:std
 			docbook-dsssl:single:std
 			openjade:primary:std
-			OpenSP:single:std
 			readline:dev:std
 			readline:primary:std
 			libxslt:dev:std
@@ -49,6 +48,7 @@ B_DEPS[darwin]=		libuuid:dev:std
 BR_DEPS[darwin]=	libuuid:primary:std
 
 EXRUN[server]=		${NAMEBASE}:client:std
+			icu:data:std
 EXRUN[client]=		gettext:primary:std
 			libxslt:primary:std
 			readline:primary:std
@@ -98,6 +98,7 @@ SUB_FILES=		502.pgsql
 SUB_LIST=		PG_GROUP=${PG_GROUP}
 			PG_USER=${PG_USER}
 			PG_UID=${PG_UID}
+			PG_VERSION=${PORTVERSION:R}
 			DATADIR=${DATADIR}
 
 VAR_OPSYS[sunos]=	CONFIGURE_ENV=ac_cv_search_bind_textdomain_codeset=-lintl
@@ -132,7 +133,7 @@ post-install:
 		${STAGEDIR}${PREFIX}/etc/periodic/daily
 	# install-world doesn't strip (and install-strip won't install enough)
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/postgresql/*.so
-	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/*.${LIBEXT}
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/*.so
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/postgresql/pgxs/src/test/regress/pg_regress
 	list=$$(${LS} ${STAGEDIR}${PREFIX}/bin/* | ${GREP} -v pltcl_); \
 		${STRIP_CMD} $${list}

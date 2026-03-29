@@ -36,8 +36,10 @@ PHP_HEADER_DIRS=	libmbfl
 			libmbfl/nls
 EXTRACT_HEAD[1]=	env LANG=en_US.UTF-8 {{TAR}} -xf
 EXTRACT_TAIL[1]=	php-${PORTVERSION}/ext/{{PHP_MODNAME}}
+CVE_FIXED=		CVE-2007-3205
 
 [REGEX].DESCRIPTION=			Enable multibyte regex support
+[REGEX].BUILD_DEPENDS_ON=		oniguruma:dev:std
 [REGEX].BUILDRUN_DEPENDS_ON=		oniguruma:primary:std
 [REGEX].CONFIGURE_ARGS_ON=		--with-onig={{LOCALBASE}}
 [REGEX].CONFIGURE_ARGS_OFF=		--disable-mbregex

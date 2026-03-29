@@ -1,6 +1,6 @@
---- storage/rocksdb/ha_rocksdb.cc.orig	2024-05-26 18:15:39 UTC
+--- storage/rocksdb/ha_rocksdb.cc.orig	2025-05-21 14:08:50 UTC
 +++ storage/rocksdb/ha_rocksdb.cc
-@@ -266,7 +266,7 @@ Rdb_cf_manager cf_manager;
+@@ -262,7 +262,7 @@ Rdb_cf_manager cf_manager;
  Rdb_ddl_manager ddl_manager;
  Rdb_binlog_manager binlog_manager;
  
@@ -9,7 +9,7 @@
  Rdb_io_watchdog *io_watchdog = nullptr;
  #endif
  /**
-@@ -851,7 +851,7 @@ static void rocksdb_set_io_write_timeout
+@@ -841,7 +841,7 @@ static void rocksdb_set_io_write_timeout
      void *const var_ptr MY_ATTRIBUTE((__unused__)), const void *const save) {
    DBUG_ASSERT(save != nullptr);
    DBUG_ASSERT(rdb != nullptr);
@@ -18,7 +18,7 @@
    DBUG_ASSERT(io_watchdog != nullptr);
  #endif
  
-@@ -860,7 +860,7 @@ static void rocksdb_set_io_write_timeout
+@@ -850,7 +850,7 @@ static void rocksdb_set_io_write_timeout
    const uint32_t new_val = *static_cast<const uint32_t *>(save);
  
    rocksdb_io_write_timeout_secs = new_val;
@@ -27,7 +27,7 @@
    io_watchdog->reset_timeout(rocksdb_io_write_timeout_secs);
  #endif
    RDB_MUTEX_UNLOCK_CHECK(rdb_sysvars_mutex);
-@@ -5813,7 +5813,7 @@ static int rocksdb_init_func(void *const
+@@ -5778,7 +5778,7 @@ static int rocksdb_init_func(void *const
      directories.push_back(myrocks::rocksdb_wal_dir);
    }
  
@@ -36,7 +36,7 @@
    io_watchdog = new Rdb_io_watchdog(std::move(directories));
    io_watchdog->reset_timeout(rocksdb_io_write_timeout_secs);
  #endif
-@@ -5912,7 +5912,7 @@ static int rocksdb_done_func(void *const
+@@ -5877,7 +5877,7 @@ static int rocksdb_done_func(void *const
    delete commit_latency_stats;
    commit_latency_stats = nullptr;
  

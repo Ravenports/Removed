@@ -1,4 +1,4 @@
---- doc/src/sgml/Makefile.orig	2024-11-18 20:39:24 UTC
+--- doc/src/sgml/Makefile.orig	2025-08-11 21:10:58 UTC
 +++ doc/src/sgml/Makefile
 @@ -15,7 +15,7 @@
  

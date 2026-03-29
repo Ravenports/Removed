@@ -38,6 +38,7 @@ include/mysql/server/my_alloc.h
 include/mysql/server/my_alloca.h
 include/mysql/server/my_attribute.h
 include/mysql/server/my_byteorder.h
+include/mysql/server/my_cmp.h
 include/mysql/server/my_compiler.h
 include/mysql/server/my_config.h
 include/mysql/server/my_dbug.h
@@ -83,6 +84,7 @@ include/mysql/server/mysql/service_encryption.h
 include/mysql/server/mysql/service_encryption_scheme.h
 include/mysql/server/mysql/service_json.h
 include/mysql/server/mysql/service_kill_statement.h
+include/mysql/server/mysql/service_log_warnings.h
 include/mysql/server/mysql/service_logger.h
 include/mysql/server/mysql/service_md5.h
 include/mysql/server/mysql/service_my_crypt.h
@@ -126,7 +128,7 @@ include/mysql/server/private/aria_backup.h
 include/mysql/server/private/assume_aligned.h
 include/mysql/server/private/authors.h
 include/mysql/server/private/backup.h
-include/mysql/server/private/bounded_queue.h
+include/mysql/server/private/bloom_filters.h
 include/mysql/server/private/char_buffer.h
 include/mysql/server/private/charset_collations.h
 include/mysql/server/private/client_settings.h
@@ -188,6 +190,7 @@ include/mysql/server/private/item_strfunc.h
 include/mysql/server/private/item_subselect.h
 include/mysql/server/private/item_sum.h
 include/mysql/server/private/item_timefunc.h
+include/mysql/server/private/item_vectorfunc.h
 include/mysql/server/private/item_vers.h
 include/mysql/server/private/item_windowfunc.h
 include/mysql/server/private/item_xmlfunc.h
@@ -245,6 +248,7 @@ include/mysql/server/private/my_tracker.h
 include/mysql/server/private/my_tree.h
 include/mysql/server/private/my_uctype.h
 include/mysql/server/private/my_user.h
+include/mysql/server/private/my_virtual_mem.h
 include/mysql/server/private/myisam.h
 include/mysql/server/private/myisamchk.h
 include/mysql/server/private/myisammrg.h
@@ -259,6 +263,7 @@ include/mysql/server/private/opt_rewrite_date_cmp.h
 include/mysql/server/private/opt_subselect.h
 include/mysql/server/private/opt_trace.h
 include/mysql/server/private/opt_trace_context.h
+include/mysql/server/private/opt_vcol_substitution.h
 include/mysql/server/private/optimizer_costs.h
 include/mysql/server/private/optimizer_defaults.h
 include/mysql/server/private/parse_file.h
@@ -376,6 +381,7 @@ include/mysql/server/private/sql_plugin_compat.h
 include/mysql/server/private/sql_prepare.h
 include/mysql/server/private/sql_priv.h
 include/mysql/server/private/sql_profile.h
+include/mysql/server/private/sql_queue.h
 include/mysql/server/private/sql_reload.h
 include/mysql/server/private/sql_rename.h
 include/mysql/server/private/sql_repl.h
@@ -403,6 +409,7 @@ include/mysql/server/private/sql_type_json.h
 include/mysql/server/private/sql_type_real.h
 include/mysql/server/private/sql_type_string.h
 include/mysql/server/private/sql_type_timeofday.h
+include/mysql/server/private/sql_type_vector.h
 include/mysql/server/private/sql_udf.h
 include/mysql/server/private/sql_union.h
 include/mysql/server/private/sql_update.h
@@ -428,6 +435,7 @@ include/mysql/server/private/tzfile.h
 include/mysql/server/private/tztime.h
 include/mysql/server/private/uniques.h
 include/mysql/server/private/unireg.h
+include/mysql/server/private/vector_mhnsw.h
 include/mysql/server/private/violite.h
 include/mysql/server/private/waiting_threads.h
 include/mysql/server/private/welcome_copyright_notice.h

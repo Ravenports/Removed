@@ -336,7 +336,6 @@
 %%BASE%%/usr/bin/ld.sun
 %%BASE%%/usr/bin/ldd
 %%BASE%%/usr/bin/less
-%%BASE%%/usr/bin/lockf
 %%BASE%%/usr/bin/lorder
 %%BASE%%/usr/bin/lzcat
 %%BASE%%/usr/bin/lzcmp
@@ -370,6 +369,7 @@
 %%BASE%%/usr/bin/tail
 %%BASE%%/usr/bin/tar
 %%BASE%%/usr/bin/tee
+%%BASE%%/usr/bin/timeout
 %%BASE%%/usr/bin/touch
 %%BASE%%/usr/bin/tr
 %%BASE%%/usr/bin/true

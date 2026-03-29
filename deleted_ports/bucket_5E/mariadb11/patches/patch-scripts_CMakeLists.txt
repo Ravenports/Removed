@@ -1,4 +1,4 @@
---- scripts/CMakeLists.txt.orig	2024-05-26 18:15:38 UTC
+--- scripts/CMakeLists.txt.orig	2025-05-21 14:08:45 UTC
 +++ scripts/CMakeLists.txt
 @@ -136,11 +136,7 @@ IF(CMAKE_GENERATOR MATCHES "Makefiles|Ni
    ENDFOREACH()
@@ -13,3 +13,13 @@
  
  IF(UNIX)
    # FIND_PROC and CHECK_PID are used by mysqld_safe
+@@ -155,8 +151,7 @@ ENDIF()
+ 
+ IF(NOT FIND_PROC)
+   # BSD style
+-  EXECUTE_PROCESS(COMMAND ps -uaxww OUTPUT_QUIET ERROR_QUIET RESULT_VARIABLE result)
+-  IF(result MATCHES 0)
++  IF(CMAKE_SYSTEM_NAME MATCHES "FreeBSD|DragonFly")
+      SET( FIND_PROC
+        "ps -uaxww | grep -v mariadbd-safe | grep -- $MYSQLD | grep $PID > /dev/null")
+   ENDIF()
