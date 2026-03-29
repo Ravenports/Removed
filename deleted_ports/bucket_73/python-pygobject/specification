@@ -1,5 +1,5 @@
 # manually maintained
-DEF[PORTVERSION]=	3.28.3
+DEF[PORTVERSION]=	3.30.4
 # ------------------------------------------------------------------------
 
 NAMEBASE=		python-pygobject
@@ -41,11 +41,10 @@ RUN_DEPENDS=		gobject-introspection:single:standard
 
 EXRUN[primary]=		python-pygobject:common:py37
 
-USES=			gmake libtool pkgconfig
+USES=			gmake libtool pkgconfig meson
 GNOME_COMPONENTS=	introspection
-MUST_CONFIGURE=		gnu
-CONFIGURE_ENV=		PYCAIRO_CFLAGS=-I{{PYTHON_SITELIBDIR}}/cairo/include
-MAKE_ARGS=		PYTHON_VERSION={{PYTHON_VER}}
+MESON_ARGS=		-Dpython=python{{PYTHON_VER}}
+MESON_INSERT_RPATH=	gi/meson.build
 DISTNAME=		pygobject-${PORTVERSION}
 INSTALL_TARGET=		install-strip
 

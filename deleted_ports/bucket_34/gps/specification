@@ -1,7 +1,6 @@
 DEF[PORTVERSION]=	2017
 DEF[RELEASE_TAG]=	ba0c4c0
 DEF[PYCOMPILE]=		{{PREFIX}}/lib/python{{PYTHON_VER}}/compileall.py
-DEF[LLVM_VERSION]=	40
 DEF[GCCVER]=		EXTRACT_INFO(CURRENT_GCC)
 DEF[PYVER]=		py27
 # ----------------------------------------------------------------------------
@@ -25,15 +24,19 @@ OPTIONS_STANDARD=	DEBUG
 
 LICENSE=		GPLv3+:primary
 LICENSE_FILE=		GPLv3+:{{WRKSRC}}/COPYING3
+LICENSE_TERMS=		primary:{{WRKDIR}}/TERMS
+LICENSE_AWK=		TERMS:"^$$"
+LICENSE_SOURCE=		TERMS:{{WRKSRC}}/gps/src/gps-main.adb
 LICENSE_SCHEME=		solo
 
-FPC_EQUIVALENT=		devel/gps
+# FreeBSD deleted because Brooks and Antoine too lazy to change llvm reference
+# FPC_EQUIVALENT=		devel/gps
 
 BUILD_DEPENDS=		gnat-util:single:standard
 			python-Sphinx:single:${PYVER}
 BUILDRUN_DEPENDS=	fontconfig:primary:standard
 			freetype:primary:standard
-			llvm${LLVM_VERSION}:clang:standard
+			clang:compiler:standard
 			gtkada:primary:standard
 			python-pygobject:primary:${PYVER}
 			libadalang:single:${PYVER}
@@ -52,7 +55,7 @@ GNOME_COMPONENTS=	gtk3 cairo gdkpixbuf
 MUST_CONFIGURE=		gnu
 CONFIGURE_ENV=		AWK=/usr/bin/awk
 CONFIGURE_ARGS=		--with-gtk=3.0
-			--with-clang={{LOCALBASE}}/llvm${LLVM_VERSION}/lib
+			--with-clang={{LOCALBASE}}/lib
 BUILD_TARGET=		default
 MAKE_ARGS=		PROCESSORS={{MAKE_JOBS_NUMBER}}
 			PYTHON_CMD={{PYTHON_CMD}}
@@ -67,8 +70,8 @@ SHEBANG_FILES=		share/support/core/gps_utils/internal/dialogs.py
 # we just request the sole binary to pull in the package which effectively
 # accomplishes what is desired.
 
-[DEBUG].CONFIGURE_ARGS_ON=		Build=Debug
-[DEBUG].CONFIGURE_ARGS_OFF=		Build=Production
+[DEBUG].MAKE_ARGS_ON=			Build=Debug
+[DEBUG].MAKE_ARGS_OFF=			Build=Production
 
 post-extract:
 	${MV} ${WRKSRC}/Makefile.gnat ${WRKSRC}/Makefile.gnat.ignore
@@ -93,7 +96,7 @@ post-patch:
 		${WRKSRC}/cli/src/gps-cli_scripts.adb \
 		${WRKSRC}/cli/src/gnatdoc_main.adb
 	${REINPLACE_CMD} \
-		-e 's|-lclang|-Wl,-rpath,${LOCALBASE}/llvm${LLVM_VERSION}/lib -lclang|' \
+		-e 's|-lclang|-Wl,-rpath,${LOCALBASE}/lib -lclang|' \
 		${WRKSRC}/configure
 
 do-build:

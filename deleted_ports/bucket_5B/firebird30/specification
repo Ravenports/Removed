@@ -1,5 +1,5 @@
 DEF[PORTVERSION]=	EXTRACT_VERSION(FIREBIRD_3.0_VERSION)
-DEF[SCMVERSION]=	32900-0
+DEF[SCMVERSION]=	33054-0
 DEF[LOCALSTATEDIR]=	/var/db/firebird
 DEF[CONFDIR]=		etc/firebird
 DEF[LIBEXECDIR]=	{{PREFIX}}/libexec/firebird
@@ -9,7 +9,7 @@ NAMEBASE=		firebird30
 VERSION=		${PORTVERSION}
 KEYWORDS=		databases
 VARIANTS=		standard
-SDESC[standard]=	Firebird-2 relational SQL database
+SDESC[standard]=	Firebird-3 relational SQL database
 HOMEPAGE=		https://www.firebirdsql.org/
 CONTACT=		nobody
 
