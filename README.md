@@ -20,3 +20,8 @@ Ensure this software is available too:
 
 - git
 - rsync
+
+### Latest list of deleted ports
+
+See the alphabetical [list of deleted ports](history.md).  It shows the last commit
+hash and date the port was present in the Ravenports tree.
