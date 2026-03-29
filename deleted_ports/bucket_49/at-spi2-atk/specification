@@ -1,0 +1,32 @@
+DEF[PORTVERSION]=	2.30.0
+# ----------------------------------------------------------------------------
+
+NAMEBASE=		at-spi2-atk
+VERSION=		${PORTVERSION}
+KEYWORDS=		accessibility x11_toolkits
+VARIANTS=		standard
+SDESC[standard]=	Assisted Technology Provider module for GTK+
+HOMEPAGE=		http://www.linuxfoundation.org/en/AT-SPI_on_D-Bus
+CONTACT=		nobody
+
+DOWNLOAD_GROUPS=	main
+SITES[main]=		GNOME/at-spi2-atk/${PORTVERSION:R}
+DISTFILE[1]=		at-spi2-atk-${PORTVERSION}.tar.xz:main
+DIST_SUBDIR=		gnome3
+
+SPKGS[standard]=	single
+
+OPTIONS_AVAILABLE=	none
+OPTIONS_STANDARD=	none
+
+FPC_EQUIVALENT=		accessibility/at-spi2-atk
+
+BUILDRUN_DEPENDS=	at-spi2-core:primary:standard
+
+USES=			cpe gmake libtool pkgconfig meson
+GNOME_COMPONENTS=	atk intltool
+MESON_INSERT_RPATH=	atk-adaptor/adaptors/meson.build
+			atk-adaptor/meson.build
+INSTALL_TARGET=		install-strip
+INSTALL_REQ_TOOLCHAIN=	yes
+CPE_VENDOR=		gnome

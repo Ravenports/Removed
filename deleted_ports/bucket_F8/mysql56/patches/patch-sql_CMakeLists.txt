@@ -1,0 +1,18 @@
+--- sql/CMakeLists.txt.orig	2018-09-10 10:17:55 UTC
++++ sql/CMakeLists.txt
+@@ -457,6 +457,7 @@ ADD_CUSTOM_TARGET(distclean
+ 
+ IF(INSTALL_LAYOUT STREQUAL "STANDALONE")
+ 
++IF(FALSE)
+ # Copy db.opt into data/test/
+ SET(DBOPT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/db.opt ) 
+ INSTALL(FILES ${DBOPT_FILE} DESTINATION data/test COMPONENT DataFiles)
+@@ -501,6 +502,7 @@ ELSE()
+   INSTALL(FILES ${DUMMY_FILE} DESTINATION data/mysql COMPONENT DataFiles)
+ ENDIF()
+ ENDIF()
++ENDIF()
+ 
+ ADD_CUSTOM_TARGET(show-dist-name
+   COMMAND ${CMAKE_COMMAND} -E echo "${CPACK_PACKAGE_FILE_NAME}"

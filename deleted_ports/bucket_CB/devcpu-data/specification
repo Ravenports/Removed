@@ -1,0 +1,54 @@
+DEF[PORTVERSION]=	1.20
+DEF[INTEL_SITE]=	28039
+DEF[INTEL_DATE]=	20180807
+DEF[AMD_VERSION]=	20180525
+# ----------------------------------------------------------------------------
+
+NAMEBASE=		devcpu-data
+VERSION=		${PORTVERSION}
+KEYWORDS=		sysutils
+VARIANTS=		standard
+SDESC[standard]=	Intel and AMD CPUs microcode updates
+HOMEPAGE=		none
+CONTACT=		nobody
+
+DOWNLOAD_GROUPS=	main intel amd
+SITES[main]=		https://downloadmirror.intel.com/${INTEL_SITE}/eng/
+SITES[intel]=		https://downloadmirror.intel.com/${INTEL_SITE}/eng/
+SITES[amd]=		FREELOCAL/sbruno
+DISTFILE[1]=		microcode-${INTEL_DATE}.tgz:intel
+DISTFILE[2]=		amd64-microcode.${AMD_VERSION}.tar.xz:amd
+DF_INDEX=		1 2
+
+SPKGS[standard]=	single
+
+OPTIONS_AVAILABLE=	none
+OPTIONS_STANDARD=	none
+
+LICENSE=		CUSTOM1:single
+LICENSE_NAME=		CUSTOM1:"Intel Software License Agreement"
+LICENSE_FILE=		CUSTOM1:{{FILESDIR}}/LICENSE
+LICENSE_SCHEME=		solo
+
+FPC_EQUIVALENT=		sysutils/devcpu-data
+
+NOT_FOR_ARCH=		aarch64
+ONLY_FOR_OPSYS=		freebsd dragonfly
+
+RC_SUBR=		microcode_update:single
+EXTRACT_DIRTY=		1 2
+
+post-extract:
+	${INSTALL_DATA} ${FILESDIR}/Makefile ${FILESDIR}/ucode-split.c \
+		${WRKSRC}
+	${CAT} ${WRKSRC}/intel-ucode/* ${WRKSRC}/intel-ucode-with-caveats/* \
+		> ${WRKSRC}/intel-ucode.bin
+
+do-install:
+	${MKDIR} ${STAGEDIR}${PREFIX}/share/cpucontrol \
+		${STAGEDIR}/boot/firmware
+	${INSTALL_DATA} ${WRKSRC}/mcodes/* ${STAGEDIR}${PREFIX}/share/cpucontrol
+	(cd ${WRKDIR}/${NAMEBASE}_2 && \
+	    ${INSTALL_DATA} microcode_amd.bin microcode_amd_fam1[567]h.bin \
+	    ${STAGEDIR}${PREFIX}/share/cpucontrol)
+	${INSTALL_DATA} ${WRKSRC}/intel-ucode.bin ${STAGEDIR}/boot/firmware

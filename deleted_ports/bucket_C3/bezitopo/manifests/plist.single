@@ -1,0 +1,6 @@
+bin/bezitopo
+bin/convertgeoid
+bin/viewtin
+share/bezitopo/bezitopo_en.qm
+share/bezitopo/bezitopo_es.qm
+share/examples/bezitopo/topo0.asc

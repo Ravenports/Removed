@@ -1,0 +1,118 @@
+DEF[PORTVERSION]=	2017
+DEF[RELEASE_TAG]=	ba0c4c0
+DEF[PYCOMPILE]=		{{PREFIX}}/lib/python{{PYTHON_VER}}/compileall.py
+DEF[GCCVER]=		EXTRACT_INFO(CURRENT_GCC)
+DEF[PYVER]=		py27
+# ----------------------------------------------------------------------------
+
+NAMEBASE=		gps
+VERSION=		${PORTVERSION}
+KEYWORDS=		devel
+VARIANTS=		standard
+SDESC[standard]=	GNAT Programming Studio - IDE for Ada plus
+HOMEPAGE=		https://www.adacore.com/gnatpro/toolsuite/gps/
+CONTACT=		John_Marino[draco@marino.st]
+
+DOWNLOAD_GROUPS=	main
+SITES[main]=		GITHUB/AdaCore:gps:${RELEASE_TAG}
+DISTFILE[1]=		generated:main
+
+SPKGS[standard]=	complete primary docs examples
+
+OPTIONS_AVAILABLE=	DEBUG
+OPTIONS_STANDARD=	DEBUG
+
+LICENSE=		GPLv3+:primary
+LICENSE_FILE=		GPLv3+:{{WRKSRC}}/COPYING3
+LICENSE_TERMS=		primary:{{WRKDIR}}/TERMS
+LICENSE_AWK=		TERMS:"^$$"
+LICENSE_SOURCE=		TERMS:{{WRKSRC}}/gps/src/gps-main.adb
+LICENSE_SCHEME=		solo
+
+# FreeBSD deleted because Brooks and Antoine too lazy to change llvm reference
+# FPC_EQUIVALENT=		devel/gps
+
+BUILD_DEPENDS=		gnat-util:single:standard
+			python-Sphinx:single:${PYVER}
+BUILDRUN_DEPENDS=	fontconfig:primary:standard
+			freetype:primary:standard
+			clang:compiler:standard
+			gtkada:primary:standard
+			python-pygobject:primary:${PYVER}
+			libadalang:single:${PYVER}
+			gnatcoll:primary:standard
+RUN_DEPENDS=		librsvg:primary:standard
+			gdb:single:standard
+			python-pep8:single:${PYVER}
+			python-jedi:single:${PYVER}
+EXRUN[primary]=		${GCCVER}:complete:standard
+
+USES=			gprbuild:buildrun gettext-tools gmake pkgconfig zlib
+			perl:build python:${PYVER} shebangfix iconv
+XORG_COMPONENTS=	x11
+GNOME_COMPONENTS=	gtk3 cairo gdkpixbuf
+
+MUST_CONFIGURE=		gnu
+CONFIGURE_ENV=		AWK=/usr/bin/awk
+CONFIGURE_ARGS=		--with-gtk=3.0
+			--with-clang={{LOCALBASE}}/lib
+BUILD_TARGET=		default
+MAKE_ARGS=		PROCESSORS={{MAKE_JOBS_NUMBER}}
+			PYTHON_CMD={{PYTHON_CMD}}
+SUB_FILES=		gps
+SUB_LIST=		ADA_PATH={{PREFIX}}/toolchain/${GCCVER}/bin
+SHEBANG_FILES=		share/support/core/gps_utils/internal/dialogs.py
+			share/plug-ins/spark2014.py
+
+# note: librsvg2 is needed to display the svg icons in the menu.  Actually
+# needed is lib/gdk-pixbuf-2.0/%%GTK2_VER%%/loaders/libpixbufloader-svg.so ,
+# but it's a variable library needed only at runtime, which is obnoxious so
+# we just request the sole binary to pull in the package which effectively
+# accomplishes what is desired.
+
+[DEBUG].MAKE_ARGS_ON=			Build=Debug
+[DEBUG].MAKE_ARGS_OFF=			Build=Production
+
+post-extract:
+	${MV} ${WRKSRC}/Makefile.gnat ${WRKSRC}/Makefile.gnat.ignore
+	${FIND} ${WRKSRC}/share -name "*.pyc" -delete
+	${RM} ${WRKSRC}/share/support/core/cross_references.py
+
+post-patch:
+	${RM} ${WRKSRC}/share/plug-ins/*.orig
+	${ECHO} "GNAT_SOURCES=" > ${WRKSRC}/Makefile.gnat
+	${REINPLACE_CMD} -e 's|@PREFIX@|${PREFIX}|g' \
+		${WRKSRC}/gps/gps.gpr \
+		${WRKSRC}/gnatdoc/gnatdoc.gpr \
+		${WRKSRC}/widgets/widgets.gpr
+	${REINPLACE_CMD} -e '/Gdb_Command/ s|"gdb"|"${PREFIX}/bin/gdb"|' \
+		${WRKSRC}/gvd/src/debugger-base_gdb-gdb_mi.adb \
+		${WRKSRC}/gvd/src/debugger-base_gdb-gdb_cli.adb
+	${REINPLACE_CMD} -i'' -e 's|ISO-8859|ISO8859|' \
+		${WRKSRC}/kernel/src/gps-kernel-charsets.adb \
+		${WRKSRC}/share/support/core/os_utils.py \
+		${WRKSRC}/configure*
+	${REINPLACE_CMD} -e 's|iso-8859|ISO8859|' \
+		${WRKSRC}/cli/src/gps-cli_scripts.adb \
+		${WRKSRC}/cli/src/gnatdoc_main.adb
+	${REINPLACE_CMD} \
+		-e 's|-lclang|-Wl,-rpath,${LOCALBASE}/lib -lclang|' \
+		${WRKSRC}/configure
+
+do-build:
+	${CP} ${PREFIX}/include/gnat-util/impunit.* ${WRKSRC}/distrib
+	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} \
+		${MAKE_CMD} ${MAKE_ARGS} ${ALL_TARGET}
+	cd ${WRKSRC}/docs && ${SETENV} ${MAKE_ENV} \
+		${MAKE_CMD} ${MAKE_ARGS} all
+	${PYTHON_CMD} ${PYCOMPILE} ${WRKSRC}/share/plug-ins
+	${PYTHON_CMD} ${PYCOMPILE} ${WRKSRC}/share/library
+	${PYTHON_CMD} ${PYCOMPILE} ${WRKSRC}/share/support
+
+post-install:
+	${RM} -r ${STAGEDIR}${PREFIX}/share/doc/gps/html/*/_sources
+	${FIND} ${STAGEDIR}${PREFIX} -type f -name ".gitignore" -delete
+	${INSTALL_SCRIPT} ${WRKDIR}/gps ${STAGEDIR}${PREFIX}/bin
+	echo "This is the GPS GPL Edition for Ravenports." \
+		> ${STAGEDIR}${PREFIX}/share/gps/about.txt
+	${FIND} ${STAGEDIR}${PREFIX} -type d -empty -delete

@@ -1,0 +1,5 @@
+BUILDRUN_DEPENDS=	augeas:single:standard
+
+USES=			pkgconfig
+CONFIGURE_ARGS=		--with-opt-include="{{LOCALBASE}}/include/libxml2"
+			--with-cppflags="-Wno-attributes"

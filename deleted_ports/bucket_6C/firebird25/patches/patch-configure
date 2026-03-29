@@ -1,0 +1,103 @@
+--- configure.orig	2018-01-05 09:56:21 UTC
++++ configure
+@@ -2428,7 +2428,7 @@ _ACEOF
+     SHRLIB_EXT=so
+     ;;
+ 
+-  amd64-*-freebsd* | x86_64*-*-freebsd* | x86_64*-*-k*bsd*-gnu)
++  amd64-*-freebsd* | x86_64*-*-freebsd* | x86_64-*-dragonfly* | x86_64*-*-k*bsd*-gnu)
+     MAKEFILE_PREFIX=freebsd_amd64
+     case "$target" in
+         x86_64*-*-k*bsd-gnu)      # Debian/kFreeBSD
+@@ -2466,7 +2466,7 @@ _ACEOF
+     SHRLIB_EXT=so
+     ;;
+ 
+-  *-*-freebsd* | *-*-k*bsd*-gnu)
++  *-*-freebsd* | *-*-dragonfly* | *-*-k*bsd*-gnu)
+     MAKEFILE_PREFIX=freebsd
+     case "$target" in
+         *-*-k*bsd-gnu)      # Debian/kFreeBSD
+@@ -2826,23 +2826,11 @@ _ACEOF
+     SHRLIB_EXT=sl
+     libdir=/usr/lib/pa20_64
+     ;;
+-
+-  i386-pc-solaris*)
+-        comp=`echo "$CXX" | cut -c1-2`
+-    case $comp in
+-       CC) MAKEFILE_PREFIX=solaris
+-           ICU_PLATFORM=SOLARISX86
+-           PTHREAD_CFLAGS=-mt
+-           PTHREAD_LIBS=-lpthread
+-           ;;
+-       *)  MAKEFILE_PREFIX=solx86gcc ;
+-           ICU_PLATFORM=SOLARISX86GCC ;
+-           PTHREAD_CFLAGS=-pthreads ;;
+-    esac
+-        isa=`isainfo -k`
+-    if test "$isa" = "amd64"; then
+-        libdir=/usr/lib/amd64
+-    fi
++  x86_64-*-solaris*)
++    MAKEFILE_PREFIX=solx86gcc
++    ICU_PLATFORM=SOLARISX86GCC
++    PTHREAD_CFLAGS=-pthreads
++    libdir=/usr/lib/amd64
+     INSTALL_PREFIX=solaris
+     PLATFORM=solx86
+ 
+@@ -4502,7 +4490,7 @@ $as_echo "$as_me: WARNING: we do not kno
+ $as_echo_n "checking if more special flags are required for pthreads... " >&6; }
+         flag=no
+         case "${host_cpu}-${host_os}" in
+-                *-aix* | *-freebsd* | *-darwin*) flag="-D_THREAD_SAFE";;
++                *-aix* | *-freebsd* | *-dragonfly* | *-darwin*) flag="-D_THREAD_SAFE";;
+                 *solaris* | *-osf* | *-hpux*) flag="-D_REENTRANT";;
+         esac
+         { $as_echo "$as_me:$LINENO: result: ${flag}" >&5
+@@ -11582,7 +11570,7 @@ freebsd* | dragonfly*)
+     shlibpath_overrides_runpath=no
+     hardcode_into_libs=yes
+     ;;
+-  freebsd*) # from 4.6 on
++  freebsd*|dragonfly*) # from 4.6 on
+     shlibpath_overrides_runpath=yes
+     hardcode_into_libs=yes
+     ;;
+@@ -15574,7 +15562,7 @@ freebsd* | dragonfly*)
+     shlibpath_overrides_runpath=no
+     hardcode_into_libs=yes
+     ;;
+-  freebsd*) # from 4.6 on
++  freebsd*|dragonfly*) # from 4.6 on
+     shlibpath_overrides_runpath=yes
+     hardcode_into_libs=yes
+     ;;
+@@ -18202,7 +18190,7 @@ freebsd* | dragonfly*)
+     shlibpath_overrides_runpath=no
+     hardcode_into_libs=yes
+     ;;
+-  freebsd*) # from 4.6 on
++  freebsd*|dragonfly*) # from 4.6 on
+     shlibpath_overrides_runpath=yes
+     hardcode_into_libs=yes
+     ;;
+@@ -20837,7 +20825,7 @@ freebsd* | dragonfly*)
+     shlibpath_overrides_runpath=no
+     hardcode_into_libs=yes
+     ;;
+-  freebsd*) # from 4.6 on
++  freebsd*|dragonfly*) # from 4.6 on
+     shlibpath_overrides_runpath=yes
+     hardcode_into_libs=yes
+     ;;
+@@ -43406,7 +43394,7 @@ fi
+ 
+ (cd extern/icu/source
+ chmod +x runConfigureICU configure install-sh
+-./runConfigureICU "$ICU_PLATFORM" "$DEBUG_ICU" "$ICU_EXTRAS" --prefix=`pwd`/..)
++./runConfigureICU "$ICU_PLATFORM" "$DEBUG_ICU" "$ICU_EXTRAS" --disable-shared --enable-static --prefix=`pwd`/..)
+ fi
+ 
+ echo
