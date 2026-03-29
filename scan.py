@@ -12,6 +12,7 @@ otherwise it starts from the very first commit.
 
 import datetime
 import glob
+import hashlib
 import os
 import pathlib
 import re
@@ -193,6 +194,9 @@ def reset_deleted_ports_tree():
         else:
             tree_directory.unlink()
     tree_directory.mkdir(parents=True, exist_ok=True)
+    history = pathlib.Path(__file__).parent / "history.md"
+    if history.is_file():
+        history.unlink()
 
 
 def remaining_ports(filter, rsource):
@@ -205,8 +209,63 @@ def remaining_ports(filter, rsource):
     allports = get_bucket_subdirs(rsource)
     for port in allports:
         if port not in filter:
-            results.add(port)
+            portname = port.split("/")[-1]
+            prefix = bucket(portname)
+            calced = f"{prefix}/{portname}"
+            if calced == port:
+                results.add(port)
+            else:
+                print("SKIP MISPLACED {port}, should be located at ${calced}")
     return results
+
+
+def write_out_index(deleted_ports):
+    """
+    deleted ports is a dictionary with "portname" as the key and a three
+    element array as the value.  ELement 0 of the array is the "bucket" value,
+    element 1 is the 10-character commit hash, and element 2 is the
+    ISO 8601 timestamp that it was last seen.
+
+    The file is written to <cwd>/history.md file.
+    """
+    history = pathlib.Path(__file__).parent / "history.md"
+    with history.open("w") as fout:
+        fout.write("# Last time deleted Ravenport was available\n\n")
+        fout.write("```\n")
+        fout.write("Directory  Commit      Date                       Portname\n")
+        fout.write("```\n\n---\n\n```\n")
+        #          "bucket_00  0123456789  2017-04-22T11:42:17-05:00  ravensys-uname
+        for name, data in sorted(deleted_ports.items()):
+            fout.write(f"{data[0]}  {data[1]}  {data[2]}  {name}\n")
+        fout.write("```\n")
+
+
+def read_existing_index():
+    """
+    If history.md exists, read it and return the deleted ports data.
+    The first 9 lines are the header and can be ignore.
+    The final line ("```") is also ignored.
+    """
+    results = {}
+    history = pathlib.Path(__file__).parent / "history.md"
+    if history.is_file():
+        for counter, line in enumerate(history.read_text().splitlines()):
+            if counter < 9 or line == "```":
+                continue
+            parts = line.split()
+            if len(parts) >= 4:
+                results[parts[3]] = parts[:3]
+    return results
+
+
+def update_deleted_ports(deleted_ports, purged, commit_hash, iso_date):
+    """
+    Iterates through purged ports and upserts them into deleted_ports
+    """
+    for port in purged:
+        portname = port.split("/")[-1]
+        prefix = bucket(portname)
+        deleted_ports[portname] = [prefix, commit_hash, iso_date]
 
 
 def sync_purged_ports(filter, rsource):
@@ -246,6 +305,17 @@ def sync_purged_ports(filter, rsource):
                 print(transferred)
         except subprocess.CalledProcessError as e:
             print("Error during sync:\n", e.stderr)
+    return purged
+
+
+def bucket(portname):
+    """
+    Given the portname, return "bucket_" + first 2 characters of the sha1 hash of portname
+    """
+    portname_hash = hashlib.sha1(portname.encode())
+    digest = portname_hash.hexdigest().upper()
+    first2 = digest[:2]
+    return f"bucket_{first2}"
 
 
 def main():
@@ -260,13 +330,11 @@ def main():
     previous_found = False
 
     filter = build_filter_from_conspiracy(csource)
-    # results = get_bucket_subdirs(rsource)
-    # for path in results:
-    #     print(path)
-    # sys.exit(1)
 
     if not previous_run:
         reset_deleted_ports_tree()
+
+    deleted_ports = read_existing_index()
     try:
         for counter, (commit_hash, iso_date) in enumerate(get_commit_order(rsource), 1):
             if previous_run:
@@ -283,7 +351,8 @@ def main():
 
             print(f"Switched to commit: {commit_hash} {iso_date} ({counter})")
             switch_to_commit(rsource, commit_hash)
-            sync_purged_ports(filter, rsource)
+            purged = sync_purged_ports(filter, rsource)
+            update_deleted_ports(deleted_ports, purged, commit_hash, iso_date)
             save_last_commit(commit_hash)
     except KeyboardInterrupt:
         print("\nInterrupted by user (Ctrl+C). Cleaning up...")
@@ -291,6 +360,7 @@ def main():
         devnull = os.open(os.devnull, os.O_WRONLY)
         os.dup2(devnull, sys.stdout.fileno())
     finally:
+        write_out_index(deleted_ports)
         return_to_head(rsource)
 
 
