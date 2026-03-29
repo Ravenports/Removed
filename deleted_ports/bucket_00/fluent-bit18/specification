@@ -4,8 +4,8 @@ DEF[PORTVERSION]=	1.8.15
 NAMEBASE=		fluent-bit18
 VERSION=		${PORTVERSION}
 KEYWORDS=		sysutils
-VARIANTS=		standard
-SDESC[standard]=	Fast and Lightweight Log processor and forwarder
+VARIANTS=		std
+SDESC[std]=		Fast and Lightweight Log processor and forwarder
 HOMEPAGE=		https://fluentbit.io/
 CONTACT=		nobody
 
@@ -13,7 +13,7 @@ DOWNLOAD_GROUPS=	main
 SITES[main]=		GITHUB/fluent:fluent-bit:v${PORTVERSION}
 DISTFILE[1]=		generated:main
 
-SPKGS[standard]=	complete primary library
+SPKGS[std]=		set primary library
 
 OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none
@@ -39,6 +39,9 @@ CMAKE_ARGS=		-DFLB_DEBUG=Off
 			-DFLB_OUT_PGSQL=Off
 			-DFLB_HTTP_SERVER=On
 RC_SUBR=		fluent-bit:primary
+
+# required for gcc14 detection of HAVE_C_TLS
+CFLAGS=			-Wno-implicit-function-declaration
 
 post-extract:
 	${CP} ${MK_TEMPLATES}/config.sub ${WRKSRC}/lib/onigmo/config.sub

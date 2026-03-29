@@ -1,0 +1,11 @@
+--- configure.orig	2024-08-01 23:22:54 UTC
++++ configure
+@@ -5606,7 +5606,7 @@ case $target_os in
+     dragonfly)
+         disable symver
+         ;;
+-    freebsd)
++    freebsd|midnightbsd)
+         enable section_data_rel_ro
+         ;;
+     bsd/os)

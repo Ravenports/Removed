@@ -15,8 +15,8 @@ NAMEBASE=		gcc12
 VERSION=		${PORTVERSION}
 REVISION=		${PORTREVISION}
 KEYWORDS=		lang raven
-VARIANTS=		standard
-SDESC[standard]=	GNU Compiler collection (GCC), Series ${BRANCH}
+VARIANTS=		std
+SDESC[std]=		GNU Compiler collection (GCC), Series ${BRANCH}
 HOMEPAGE=		https://gcc.gnu.org/
 CONTACT=		John_Marino[draco@marino.st]
 
@@ -31,7 +31,7 @@ DISTFILE[5]=		patch-diff-ada-testsuite:draco
 DISTFILE[6]=		patch-diff-gcc-testsuite:draco
 DIST_SUBDIR=		gcc12_${DRACO_TAG}
 
-SPKGS[standard]=	complete compilers ada_run cxx_run fortran_run libs infopages nls
+SPKGS[std]=		set compilers ada_run cxx_run fortran_run libs info man nls
 
 OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none
@@ -52,14 +52,15 @@ C_USES[dragonfly]=	iconv:build
 C_USES[midnightbsd]=	iconv:build
 C_USES[darwin]=		iconv:build
 
-BUILD_DEPENDS=		gmp:static:standard
-			mpfr:static:standard
-			mpc:static:standard
-BUILDRUN_DEPENDS=	binutils:primary:standard
-EXRUN[ada_run]=		gcc${BRANCH}:libs:standard
-EXRUN[cxx_run]=		gcc${BRANCH}:libs:standard
-EXRUN[fortran_run]=	gcc${BRANCH}:libs:standard
-EXRUN[compilers]=	gcc${BRANCH}:cxx_run:standard
+BUILD_DEPENDS=		gmp:dev:std
+			mpfr:dev:std
+			mpc:dev:std
+			binutils:dev:std
+BUILDRUN_DEPENDS=	binutils:primary:std
+EXRUN[ada_run]=		gcc${BRANCH}:libs:std
+EXRUN[cxx_run]=		gcc${BRANCH}:libs:std
+EXRUN[fortran_run]=	gcc${BRANCH}:libs:std
+EXRUN[compilers]=	gcc${BRANCH}:cxx_run:std
 
 PATCHFILES=		2 3 4 5 6
 
@@ -122,18 +123,18 @@ VAR_OPSYS[midnightbsd]=	CONFIGURE_ARGS=--disable-libstdcxx-pch
 			CONFIGURE_ARGS=--with-libiconv-prefix={{WRKDIR}}/fake
 			MAKEFILE_LINE=CONFIGURE_TARGET=${MBSD64_TARGET}
 
-INFO=			infopages:cpp
-			infopages:cppinternals
-			infopages:gcc
-			infopages:gccinstall
-			infopages:gccint
-			infopages:gfortran
-			infopages:gnat-style
-			infopages:gnat_rm
-			infopages:gnat_ugn
-			infopages:libquadmath
-			infopages:libitm
-			infopages:libgomp
+INFO=			info:cpp
+			info:cppinternals
+			info:gcc
+			info:gccinstall
+			info:gccint
+			info:gfortran
+			info:gnat-style
+			info:gnat_rm
+			info:gnat_ugn
+			info:libquadmath
+			info:libitm
+			info:libgomp
 
 # Removed ALLSTAGES OPTION (left for info)
 # [ALLSTAGES].DESCRIPTION=		Three stage build (full bootstrap)

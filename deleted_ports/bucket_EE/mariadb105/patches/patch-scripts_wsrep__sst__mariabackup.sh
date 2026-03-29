@@ -1,10 +1,11 @@
---- scripts/wsrep_sst_mariabackup.sh.orig	2023-11-08 12:03:51 UTC
+--- scripts/wsrep_sst_mariabackup.sh.orig	2024-10-29 10:48:50 UTC
 +++ scripts/wsrep_sst_mariabackup.sh
-@@ -799,7 +799,7 @@ recv_joiner()
+@@ -800,8 +800,7 @@ recv_joiner()
      if [ $tmt -gt 0 ]; then
          if [ -n "$(commandex timeout)" ]; then
              local koption=0
--            if [ "$OS" = 'FreeBSD' ]; then
+-            if [ "$OS" = 'FreeBSD' -o "$OS" = 'NetBSD' -o "$OS" = 'OpenBSD' -o \
+-                 "$OS" = 'DragonFly' ]; then
 +            if [ 1 eq 1 ]; then
                  if timeout 2>&1 | grep -qw -F -- '-k'; then
                      koption=1

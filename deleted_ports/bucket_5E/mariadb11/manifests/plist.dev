@@ -19,7 +19,6 @@ include/mysql/mysqld_error.h
 include/mysql/mariadb/ma_io.h
 include/mysql/mysql/client_plugin.h
 include/mysql/mysql/plugin_auth.h
-include/mysql/mysql/plugin_auth_common.h
 include/mysql/server/big_endian.h
 include/mysql/server/byte_order_generic.h
 include/mysql/server/byte_order_generic_x86.h
@@ -89,6 +88,7 @@ include/mysql/server/mysql/service_md5.h
 include/mysql/server/mysql/service_my_crypt.h
 include/mysql/server/mysql/service_my_print_error.h
 include/mysql/server/mysql/service_my_snprintf.h
+include/mysql/server/mysql/service_print_check_msg.h
 include/mysql/server/mysql/service_progress_report.h
 include/mysql/server/mysql/service_sha1.h
 include/mysql/server/mysql/service_sha2.h
@@ -127,6 +127,7 @@ include/mysql/server/private/assume_aligned.h
 include/mysql/server/private/authors.h
 include/mysql/server/private/backup.h
 include/mysql/server/private/bounded_queue.h
+include/mysql/server/private/char_buffer.h
 include/mysql/server/private/charset_collations.h
 include/mysql/server/private/client_settings.h
 include/mysql/server/private/compat56.h
@@ -140,6 +141,7 @@ include/mysql/server/private/datadict.h
 include/mysql/server/private/ddl_log.h
 include/mysql/server/private/debug.h
 include/mysql/server/private/debug_sync.h
+include/mysql/server/private/deprecation.h
 include/mysql/server/private/derived_handler.h
 include/mysql/server/private/derror.h
 include/mysql/server/private/des_key_file.h
@@ -162,6 +164,7 @@ include/mysql/server/private/gcalc_tools.h
 include/mysql/server/private/grant.h
 include/mysql/server/private/group_by_handler.h
 include/mysql/server/private/gstream.h
+include/mysql/server/private/gtid_index.h
 include/mysql/server/private/ha_handler_stats.h
 include/mysql/server/private/ha_partition.h
 include/mysql/server/private/ha_sequence.h
@@ -195,6 +198,9 @@ include/mysql/server/private/key.h
 include/mysql/server/private/keycaches.h
 include/mysql/server/private/lex.h
 include/mysql/server/private/lex_charset.h
+include/mysql/server/private/lex_ident.h
+include/mysql/server/private/lex_ident_cli.h
+include/mysql/server/private/lex_ident_sys.h
 include/mysql/server/private/lex_string.h
 include/mysql/server/private/lex_symbol.h
 include/mysql/server/private/lf.h
@@ -202,6 +208,7 @@ include/mysql/server/private/lock.h
 include/mysql/server/private/log.h
 include/mysql/server/private/log_cache.h
 include/mysql/server/private/log_event.h
+include/mysql/server/private/log_event_data_type.h
 include/mysql/server/private/log_slow.h
 include/mysql/server/private/maria.h
 include/mysql/server/private/mariadb.h
@@ -209,7 +216,6 @@ include/mysql/server/private/mdl.h
 include/mysql/server/private/mem_root_array.h
 include/mysql/server/private/message.h
 include/mysql/server/private/multi_range_read.h
-include/mysql/server/private/my_alarm.h
 include/mysql/server/private/my_apc.h
 include/mysql/server/private/my_atomic.h
 include/mysql/server/private/my_atomic_wrapper.h
@@ -304,6 +310,7 @@ include/mysql/server/private/session_tracker.h
 include/mysql/server/private/set_var.h
 include/mysql/server/private/simple_tokenizer.h
 include/mysql/server/private/slave.h
+include/mysql/server/private/socketpair.h
 include/mysql/server/private/source_revision.h
 include/mysql/server/private/sp.h
 include/mysql/server/private/sp_cache.h
@@ -395,6 +402,7 @@ include/mysql/server/private/sql_type_int.h
 include/mysql/server/private/sql_type_json.h
 include/mysql/server/private/sql_type_real.h
 include/mysql/server/private/sql_type_string.h
+include/mysql/server/private/sql_type_timeofday.h
 include/mysql/server/private/sql_udf.h
 include/mysql/server/private/sql_union.h
 include/mysql/server/private/sql_update.h
@@ -408,7 +416,6 @@ include/mysql/server/private/sys_vars_shared.h
 include/mysql/server/private/t_ctype.h
 include/mysql/server/private/table.h
 include/mysql/server/private/table_cache.h
-include/mysql/server/private/thr_alarm.h
 include/mysql/server/private/thr_lock.h
 include/mysql/server/private/thr_malloc.h
 include/mysql/server/private/thr_timer.h
@@ -421,11 +428,9 @@ include/mysql/server/private/tzfile.h
 include/mysql/server/private/tztime.h
 include/mysql/server/private/uniques.h
 include/mysql/server/private/unireg.h
-include/mysql/server/private/vers_string.h
 include/mysql/server/private/violite.h
 include/mysql/server/private/waiting_threads.h
 include/mysql/server/private/welcome_copyright_notice.h
-include/mysql/server/private/win_tzname_data.h
 include/mysql/server/private/winservice.h
 include/mysql/server/private/wqueue.h
 include/mysql/server/private/wsrep.h

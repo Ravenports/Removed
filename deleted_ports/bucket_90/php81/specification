@@ -6,8 +6,8 @@ DEF[SOMAJOR]=		${PORTVERSION:R:R}
 NAMEBASE=		php${SUFFIX}
 VERSION=		${PORTVERSION}
 KEYWORDS=		lang www php
-VARIANTS=		standard
-SDESC[standard]=	PHP Hypertext Preprocessor version ${PORTVERSION:R}
+VARIANTS=		std
+SDESC[std]=		PHP Hypertext Preprocessor version ${PORTVERSION:R}
 HOMEPAGE=		https://php.net/
 CONTACT=		nobody
 
@@ -15,7 +15,7 @@ DOWNLOAD_GROUPS=	main
 SITES[main]=		PHP/distributions
 DISTFILE[1]=		php-${PORTVERSION}.tar.xz:main
 
-SPKGS[standard]=	complete primary dev man
+SPKGS[std]=		set primary dev man
 
 OPTIONS_AVAILABLE=	CLI CGI FPM EMBED DEBUGGER
 OPTIONS_STANDARD=	CLI CGI FPM EMBED DEBUGGER
@@ -31,7 +31,10 @@ LICENSE_NAME=		CUSTOM1:"PHP License v3.01"
 LICENSE_FILE=		CUSTOM1:{{WRKSRC}}/LICENSE
 LICENSE_SCHEME=		solo
 
-BUILD_DEPENDS=		autoconf:single:standard
+BUILD_DEPENDS=		autoconf:primary:std
+
+SUB_FILES=		scripts-dev.ucl
+SUB_LIST=		SUFFIX=${SUFFIX}
 
 USES=			cpe gmake pkgconfig zlib pcre2 mbsdfix
 CPE_PRODUCT=		php
@@ -50,12 +53,13 @@ CONFIGURE_ARGS=		--with-layout=GNU
 			--datadir={{PREFIX}}/share/php${SUFFIX}
 			--disable-all
 			--enable-mysqlnd
-			--enable-maintainer-zts
 			--program-suffix=${SUFFIX}
 CONFIGURE_ENV=		ac_cv_decimal_fp_supported="no"
 			lt_cv_path_SED="sed"
 PLIST_SUB=		SUFFIX=${SUFFIX} SOMAJOR=${SOMAJOR}
-SUB_LIST=		SUFFIX=${SUFFIX}
+
+# for gcc14
+CFLAGS=			-Wno-incompatible-pointer-types
 
 C_USES[darwin]=		iconv:build
 

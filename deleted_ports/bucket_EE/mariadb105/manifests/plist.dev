@@ -89,9 +89,11 @@ include/mysql/server/mysql/service_md5.h
 include/mysql/server/mysql/service_my_crypt.h
 include/mysql/server/mysql/service_my_print_error.h
 include/mysql/server/mysql/service_my_snprintf.h
+include/mysql/server/mysql/service_print_check_msg.h
 include/mysql/server/mysql/service_progress_report.h
 include/mysql/server/mysql/service_sha1.h
 include/mysql/server/mysql/service_sha2.h
+include/mysql/server/mysql/service_sql.h
 include/mysql/server/mysql/service_thd_alloc.h
 include/mysql/server/mysql/service_thd_autoinc.h
 include/mysql/server/mysql/service_thd_error_context.h
@@ -183,12 +185,14 @@ include/mysql/server/private/item_xmlfunc.h
 include/mysql/server/private/key.h
 include/mysql/server/private/keycaches.h
 include/mysql/server/private/lex.h
+include/mysql/server/private/lex_ident.h
 include/mysql/server/private/lex_string.h
 include/mysql/server/private/lex_symbol.h
 include/mysql/server/private/lf.h
 include/mysql/server/private/lock.h
 include/mysql/server/private/log.h
 include/mysql/server/private/log_event.h
+include/mysql/server/private/log_event_data_type.h
 include/mysql/server/private/log_event_old.h
 include/mysql/server/private/log_slow.h
 include/mysql/server/private/maria.h

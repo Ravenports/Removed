@@ -1,4 +1,4 @@
---- libswresample/version_major.h.orig	2023-11-09 23:38:51 UTC
+--- libswresample/version_major.h.orig	2024-08-04 23:23:18 UTC
 +++ libswresample/version_major.h
 @@ -26,6 +26,6 @@
   * Libswresample version macros

@@ -6,9 +6,10 @@ DEF[KEYWORD]=		textproc
 
 NAMEBASE=		php${SUFFIX}-${MODULE}
 VERSION=		${PORTVERSION}
+REVISION=		1
 KEYWORDS=		lang www php ${KEYWORD}
-VARIANTS=		standard
-SDESC[standard]=	PHP ${PORTVERSION:R} extension: ${MODULE} parser
+VARIANTS=		std
+SDESC[std]=		PHP ${PORTVERSION:R} extension: ${MODULE} parser
 HOMEPAGE=		https://pecl.php.net/package/yaml/
 CONTACT=		nobody
 
@@ -17,14 +18,15 @@ SITES[main]=		https://pecl.php.net/get/
 DISTFILE[1]=		yaml-${PORTVERSION}.tgz:main
 DIST_SUBDIR=		PECL
 
-SPKGS[standard]=	single
+SPKGS[std]=		single
 
 OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none
 
 FPC_EQUIVALENT=		${KEYWORD}/pecl-yaml
 
-BUILDRUN_DEPENDS=	libyaml:single:standard
+BUILD_DEPENDS=		libyaml:dev:std
+BUILDRUN_DEPENDS=	libyaml:primary:std
 
 USES=			php:ext,${SUFFIX}
 DISTNAME=		yaml-${PORTVERSION}

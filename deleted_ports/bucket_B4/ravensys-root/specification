@@ -3,7 +3,7 @@ DEF[X_SOLARIS]=		EXTRACT_VERSION(PLATFORM_SunOS_x86-64)
 
 NAMEBASE=		ravensys-root
 VERSION=		3.4
-REVISION=		0
+REVISION=		2
 KEYWORDS=		raven
 VARIANTS=		sunos
 SDESC[sunos]=		Solaris 10 system root for Ravenports build env
@@ -27,33 +27,33 @@ VOPTS[sunos]=		SUNOS=ON
 
 INVALID_RPATH=		yes
 
-BUILD_DEPENDS=		nawk:single:standard
+BUILD_DEPENDS=		nawk:primary:std
 			diffutils:primary:ravensys
 			libarchive:primary:static
 			gnugrep:primary:ravensys
-			file:single:ravensys
+			file:primary:ravensys
 			findutils:primary:ravensys
 			flex:primary:ravensys
-			gzip:single:standard
-			xz:tools:standard
-			unzip:primary:standard
+			gzip:primary:std
+			xz:tools:std
+			unzip:primary:std
 			m4:primary:noprefix
-			bmake:single:standard
+			bmake:primary:std
 			sed:primary:ravensys
-			byacc:primary:standard
-			less:single:standard
-			nvi:single:standard
+			byacc:primary:std
+			less:primary:std
+			nvi:primary:std
 			coreutils:primary:ravensys
-			ravensys-binutils:single:standard
-			ncurses:terminfo:standard
-			ravensw:single:standard
-			mandoc:single:standard
-			genpatch:single:standard
-			lockf:single:standard
-			fetch:single:standard
-			ravensys-utils:single:standard
-			ccache:primary:standard
-			bzip2:tools:standard
+			ravensys-binutils:single:std
+			ncurses:terminfo:std
+			rvn:primary:std
+			mandoc:primary:std
+			genpatch:primary:std
+			lockf:primary:std
+			fetch:primary:std
+			ravensys-utils:primary:std
+			ccache:primary:std
+			bzip2:tools:std
 
 SKIP_BUILD=		yes
 SINGLE_JOB=		yes

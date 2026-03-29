@@ -1,8 +1,9 @@
 DEF[PORTVERSION]=	EXTRACT_VERSION(PYTHON_3.11_VERSION)
+DEF[PIP_VER]=		EXTRACT_VERSION(PIP_3.11_VERSION)
 DEF[PYTHON_VER]=	${PORTVERSION:R}
 DEF[PYTHON_VERSION]=	python${PYTHON_VER}
 DEF[PYTHON_SUFFIX]=	${PYTHON_VER:S/.//g}
-DEF[PIP_VER]=		23.2.1
+DEF[PYTHON_SUFFIX2]=	${PYTHON_VER:S/3.//}
 DEF[SETUP_VER]=		65.5.0
 # Remember to also re-generate distinfo for 'python-sqlite3' when upgrading
 # this port!
@@ -10,9 +11,10 @@ DEF[SETUP_VER]=		65.5.0
 
 NAMEBASE=		python${PYTHON_SUFFIX}
 VERSION=		${PORTVERSION}
+REVISION=		1
 KEYWORDS=		lang python
-VARIANTS=		standard
-SDESC[standard]=	Interpreted object-oriented programming language
+VARIANTS=		std
+SDESC[std]=		Interpreted object-oriented programming language
 HOMEPAGE=		https://www.python.org/
 CONTACT=		nobody
 
@@ -20,25 +22,25 @@ DOWNLOAD_GROUPS=	main
 SITES[main]=		https://www.python.org/ftp/python/${PORTVERSION}/
 DISTFILE[1]=		Python-${PORTVERSION}.tar.xz:main
 
-SPKGS[standard]=	single
+SPKGS[std]=		single
 
 OPTIONS_AVAILABLE=	DEBUG PYMALLOC
 OPTIONS_STANDARD=	DEBUG PYMALLOC
 OPT_ON[all]=		PYMALLOC
 
-RUN_DEPENDS=		autoselect-python:single:standard
-BUILD_DEPENDS=		libffi:dev:standard
-BUILDRUN_DEPENDS=	libffi:primary:standard
+RUN_DEPENDS=		autoselect-python:single:std
+BUILD_DEPENDS=		libffi:dev:std
+BUILDRUN_DEPENDS=	libffi:primary:std
 
-B_DEPS[linux]=		libuuid:dev:standard
-BR_DEPS[linux]=		libuuid:primary:standard
+B_DEPS[linux]=		libuuid:dev:std
+BR_DEPS[linux]=		libuuid:primary:std
 
-B_DEPS[sunos]=		libuuid:dev:standard
-BR_DEPS[sunos]=		libuuid:primary:standard
+B_DEPS[sunos]=		libuuid:dev:std
+BR_DEPS[sunos]=		libuuid:primary:std
 
 FPC_EQUIVALENT=		lang/python310
 
-USES=			bdb cpe ncurses pkgconfig readline ssl:openssl11 shebangfix
+USES=			bdb cpe ncurses pkgconfig readline ssl:openssl30 shebangfix
 			zlib gettext gmake expat bz2 xz
 DISTNAME=		Python-${PORTVERSION}
 INSTALL_REQ_TOOLCHAIN=	yes
@@ -66,8 +68,8 @@ INSTALL_TARGET=		altinstall
 TEST_TARGET=		buildbottest
 TEST_ARGS=		TESTOPTS=-j{{MAKE_JOBS_NUMBER}}
 MAKE_ARGS=		INSTALL_SHARED="{{INSTALL_LIB}}"
-SUB_FILES=		pkg-message-single
-SUB_LIST=		PYTHON_SUFFIX=${PYTHON_SUFFIX}
+SUB_FILES=		messages-single.ucl
+SUB_LIST=		VARIANT=v${PYTHON_SUFFIX2}
 PLIST_SUB=		XYDOT=${PYTHON_VER}
 			XY=${PYTHON_SUFFIX}
 			XYZDOT=${PORTVERSION}

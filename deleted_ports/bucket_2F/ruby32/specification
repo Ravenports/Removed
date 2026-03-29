@@ -7,8 +7,8 @@ NAMEBASE=		ruby32
 VERSION=		${PORTVERSION}
 REVISION=		${PORTREVISION}
 KEYWORDS=		lang ruby
-VARIANTS=		standard
-SDESC[standard]=	Object-oriented interpreted scripting language
+VARIANTS=		std
+SDESC[std]=		Object-oriented interpreted scripting language
 HOMEPAGE=		https://www.ruby-lang.org/en/
 CONTACT=		nobody
 
@@ -17,7 +17,7 @@ SITES[main]=		RUBY/${PORTVERSION:R}
 DISTFILE[1]=		ruby-${PORTVERSION}.tar.xz:main
 DIST_SUBDIR=		ruby
 
-SPKGS[standard]=	complete primary rdoc docs examples man
+SPKGS[std]=		set primary rdoc docs examples man
 
 OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none
@@ -29,13 +29,15 @@ LICENSE_SCHEME=		dual
 
 FPC_EQUIVALENT=		lang/ruby32
 
-BUILD_DEPENDS=		gdbm:dev:standard
-			libffi:dev:standard
-BUILDRUN_DEPENDS=	libyaml:single:standard
-			libffi:primary:standard
-			gmp:complete:standard
-			gdbm:primary:standard
-RUN_DEPENDS=		autoselect-ruby:single:standard
+BUILD_DEPENDS=		gdbm:dev:std
+			gmp:dev:std
+			libffi:dev:std
+			libyaml:dev:std
+BUILDRUN_DEPENDS=	gdbm:primary:std
+			gmp:primary:std
+			libffi:primary:std
+			libyaml:primary:std
+RUN_DEPENDS=		autoselect-ruby:single:std
 
 USES=			autoreconf cpe execinfo readline ssl ruby:v32,interp zlib
 DISTNAME=		ruby-${PORTVERSION}
@@ -73,6 +75,7 @@ VAR_OPSYS[sunos]=	CONFIGURE_ARGS=--disable-jit-support
 
 pre-configure:
 	${FIND} ${WRKSRC}/ -name "*.orig" -delete
+
 	# Disable all bundled gems
 	# We install these from other ports
 	cd ${BUILD_WRKSRC} && \
@@ -125,8 +128,7 @@ post-install:
 	${RM} ${STAGEDIR}${STD_DOCDIR}/.document
 
 	# remove empty directories
-	${RM} -r ${STAGEDIR}${PREFIX}/lib/ruby/gems
-	${RM} -r ${STAGEDIR}${PREFIX}/include/ruby-3.0/ruby-3.0
+	${FIND} ${STAGEDIR}${PREFIX}/lib/ruby/gems/${RUBY_VER}/gems -type d -empty -delete
 
 	# install examples
 	(cd ${WRKSRC}/sample/ && ${COPYTREE_SHARE} . ${STAGEDIR}${RUBY_EXAMPLESDIR}/)
