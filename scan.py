@@ -195,6 +195,59 @@ def reset_deleted_ports_tree():
     tree_directory.mkdir(parents=True, exist_ok=True)
 
 
+def remaining_ports(filter, rsource):
+    """
+    The bucket directories of the current state of the ravensource
+    repository is determined.  Any directories that are in the filter set
+    are removed.  The port directories remaining are returned.
+    """
+    results = set()
+    allports = get_bucket_subdirs(rsource)
+    for port in allports:
+        if port not in filter:
+            results.add(port)
+    return results
+
+
+def sync_purged_ports(filter, rsource):
+    """
+    1. Obtain a list of remaining ports (ports not in the filter).
+    2. If there is at least one, create an inclusion file for rsync
+    3. run rsync
+    """
+    destination = pathlib.Path(__file__).parent / "deleted_ports"
+    purged = remaining_ports(filter, rsource)
+    if purged:
+        with open("/tmp/folders.txt", "w") as fout:
+            for path in purged:
+                fout.write(f"{path}/\n")
+        slash_rsource = os.path.join(rsource, "")
+        slash_destination = os.path.join(str(destination), "")
+        # -r: Recursive (Must be explicit with --files-from)
+        # -l: Preserve symlinks
+        # -p: Preserve permissions
+        # -t: Preserve modification times
+        # -g: Preserve group
+        # -o: Preserve owner
+        # -D: Preserve devices/specials
+        # -R: Relative (Preserves the bucket_XX/subdir/ structure)
+        # -v: Verbose
+        cmd = [
+            "rsync", "-aR", "--delete",
+            "--info=NAME",
+            "--files-from=/tmp/folders.txt",
+            slash_rsource, slash_destination
+        ]
+        # print(f"Executing: {' '.join(cmd)}")
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+            transferred = result.stdout.strip()
+            if transferred:
+                print(transferred)
+        except subprocess.CalledProcessError as e:
+            print("Error during sync:\n", e.stderr)
+
+
 def main():
     """
     This is the entry point of the script
@@ -212,11 +265,11 @@ def main():
     #     print(path)
     # sys.exit(1)
 
+    if not previous_run:
+        reset_deleted_ports_tree()
     try:
         for counter, (commit_hash, iso_date) in enumerate(get_commit_order(rsource), 1):
-            if not previous_run:
-                reset_deleted_ports_tree()
-            else:
+            if previous_run:
                 if not previous_found:
                     if previous_run == commit_hash:
                         previous_found = True
@@ -228,8 +281,9 @@ def main():
                      print(f"Reached termination date. Stopping at {commit_hash}.")
                      break
 
-            print(f"Working on: {commit_hash} {iso_date} ({counter})")
-            # switch_to_commit(rsource, commit_hash)
+            print(f"Switched to commit: {commit_hash} {iso_date} ({counter})")
+            switch_to_commit(rsource, commit_hash)
+            sync_purged_ports(filter, rsource)
             save_last_commit(commit_hash)
     except KeyboardInterrupt:
         print("\nInterrupted by user (Ctrl+C). Cleaning up...")
