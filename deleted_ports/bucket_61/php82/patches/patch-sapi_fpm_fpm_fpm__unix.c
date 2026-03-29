@@ -1,6 +1,6 @@
---- sapi/fpm/fpm/fpm_unix.c.orig	2022-12-06 14:26:47 UTC
+--- sapi/fpm/fpm/fpm_unix.c.orig	2023-10-24 19:22:16 UTC
 +++ sapi/fpm/fpm/fpm_unix.c
-@@ -430,7 +430,7 @@ int fpm_unix_init_child(struct fpm_worke
+@@ -478,7 +478,7 @@ int fpm_unix_init_child(struct fpm_worke
  	}
  #endif
  

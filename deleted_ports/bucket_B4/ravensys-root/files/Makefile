@@ -52,6 +52,9 @@ common-skeleton:
 		${DESTDIR}${BASE}/usr/lib/pkgconfig \
 		${DESTDIR}${BASE}/usr/libexec \
 		${DESTDIR}${BASE}/usr/share/file \
+		${DESTDIR}${BASE}/usr/share/rvn-terminfo/d \
+		${DESTDIR}${BASE}/usr/share/rvn-terminfo/v \
+		${DESTDIR}${BASE}/usr/share/rvn-terminfo/x \
 		${DESTDIR}${BASE}/usr/local \
 		${DESTDIR}${BASE}/usr/include/arpa \
 		${DESTDIR}${BASE}/usr/include/net \
@@ -112,7 +115,7 @@ install-common: skeleton
 .for item in m4 bzip2 bunzip2 bzcat bzgrep bzegrep bzfgrep lockf \
 	grep file flex flex++ gzip gunzip zcat zcmp zdiff zegrep \
 	zfgrep zgrep lzcat lzcmp lzdiff lzegrep lzfgrep lzgrep lzma \
-	unlzma unxz xz xzcat xzcmp xzdiff xzegrep xzfgrep xzgrep yacc \
+	unlzma unxz xzcat xzcmp xzdiff xzegrep xzfgrep xzgrep yacc \
 	unzip less mtree bsdcat dupe genpatch portfix patch fetch \
 	rpcgen sed find xargs cmp diff diff3 sdiff \
 	install wc sort od mknod seq
@@ -123,12 +126,14 @@ install-common: skeleton
 .endfor
 
 	${BSD_INSTALL_PROGRAM} ${LOCALBASE}/toolchain/bin/objdump ${DESTDIR}${BASE}/usr/bin/objdump-sysroot
-.for item in nawk/awk less/more bmake/make \
+.for item in nawk/awk less/more bmake/make xz-static/xz \
 	bsdcpio/cpio bsdtar/tar ravensys-uname/uname nvi/vi
 	${BSD_INSTALL_PROGRAM} ${LOCALBASE}/bin/${item:H} ${DESTDIR}${BASE}/usr/bin/${item:T}
 .endfor
 	ln -s m4 ${DESTDIR}${BASE}/usr/bin/gm4
-	${BSD_INSTALL_DATA} ${LOCALBASE}/share/misc/terminfo.db.default ${DESTDIR}${BASE}/usr/share/terminfo.db
+	${BSD_INSTALL_DATA} ${LOCALBASE}/share/terminfo/d/dumb ${DESTDIR}${BASE}/usr/share/rvn-terminfo/d/
+	${BSD_INSTALL_DATA} ${LOCALBASE}/share/terminfo/v/vt100 ${DESTDIR}${BASE}/usr/share/rvn-terminfo/v/
+	${BSD_INSTALL_DATA} ${LOCALBASE}/share/terminfo/x/xterm ${DESTDIR}${BASE}/usr/share/rvn-terminfo/x/
 	${BSD_INSTALL_PROGRAM} ${LOCALBASE}/sbin/ravensw ${DESTDIR}${BASE}/usr/bin/
 	${BSD_INSTALL_PROGRAM} ${LOCALBASE}/sbin/makewhatis ${DESTDIR}${BASE}/usr/bin/
 	${BSD_INSTALL_DATA} ${LOCALBASE}/share/file/magic.mgc ${DESTDIR}${BASE}/usr/share/file/

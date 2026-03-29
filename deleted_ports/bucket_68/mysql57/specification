@@ -18,7 +18,7 @@ DOWNLOAD_GROUPS=	main
 SITES[main]=		MYSQL/MySQL-${MYSQL_RELEASE}
 DISTFILE[1]=		mysql-boost-${PORTVERSION}.tar.gz:main
 
-SPKGS[standard]=	complete server client
+SPKGS[standard]=	complete server client dev man
 
 OPTIONS_AVAILABLE=	ARCHIVE BLACKHOLE EXAMPLE FEDERATED INNOBASE PARTITION PERFSCHEMA PERFORMANCE
 			ALTSSL
@@ -40,9 +40,11 @@ LICENSE_SCHEME=		solo
 FPC_EQUIVALENT=		databases/mysql57-server
 
 BUILD_DEPENDS=		libedit:single:standard
-BUILDRUN_DEPENDS=	libevent:single:standard
+			libevent:dev:standard
+BUILDRUN_DEPENDS=	libevent:primary:standard
+
 EXRUN[client]=		libedit:single:standard
-			zlib:complete:standard
+			zlib:primary:standard
 # should add execinfo to client list, but USES=execinfo is a no-op
 # on some platforms, so it can't be hardcoded here.
 
@@ -93,6 +95,7 @@ RC_SUBR=		mysql-server:server
 USERS=			mysql
 GROUPS=			mysql
 USERGROUP_SPKG=		server
+INFO=			client:mysql
 
 # abi check requires compiler in stage
 INSTALL_REQ_TOOLCHAIN=	yes

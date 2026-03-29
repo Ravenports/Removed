@@ -8,6 +8,8 @@ DEF[STDCXX_VERSION]=	6.0.29
 DEF[TOOLCHAIN]=		{{LOCALBASE}}/toolchain
 DEF[DRACO_TAG]=		11.3.0-rev1
 DEF[DRACO_DIR]=		patches-11.3.0
+DEF[MBSD64_TARGET]=	EXTRACT_INFO(MIDNIGHT64_CC_TARGET)
+DEF[MBSD32_TARGET]=	EXTRACT_INFO(MIDNIGHT32_CC_TARGET)
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		gcc11
@@ -30,7 +32,7 @@ DISTFILE[5]=		patch-diff-ada-testsuite:draco
 DISTFILE[6]=		patch-diff-gcc-testsuite:draco
 DIST_SUBDIR=		gcc11_${DRACO_TAG}
 
-SPKGS[standard]=	complete compilers ada_run cxx_run fortran_run libs infopages nls
+SPKGS[standard]=	complete compilers cxx_run fortran_run libs infopages nls
 
 OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none
@@ -46,15 +48,14 @@ LICENSE_SCHEME=		multi
 
 FPC_EQUIVALENT=		lang/gcc11
 
-B_DEPS[freebsd]=	libiconv:static:standard
-B_DEPS[dragonfly]=	libiconv:static:standard
-B_DEPS[darwin]=		libiconv:static:standard
+C_USES[freebsd]=	iconv:build
+C_USES[dragonfly]=	iconv:build
+C_USES[midnightbsd]=	iconv:build
 
 BUILD_DEPENDS=		gmp:static:standard
 			mpfr:static:standard
 			mpc:static:standard
 BUILDRUN_DEPENDS=	ravensys-binutils:single:standard
-EXRUN[ada_run]=		gcc${BRANCH}:libs:standard
 EXRUN[cxx_run]=		gcc${BRANCH}:libs:standard
 EXRUN[fortran_run]=	gcc${BRANCH}:libs:standard
 EXRUN[compilers]=	gcc${BRANCH}:cxx_run:standard
@@ -73,7 +74,7 @@ PLIST_SUB=		GCCVER=${GCC_VERSION}
 PREFIX=			{{LOCALBASE}}/toolchain/{{NAMEBASE}}
 INSTALL_TARGET=		install-strip
 CONFIGURE_OUTSOURCE=	yes
-CONFIGURE_ARGS=		--enable-languages="c,c++,ada,fortran"
+CONFIGURE_ARGS=		--enable-languages="c,c++,fortran"
 			--with-local-prefix={{LOCALBASE}}
 			--with-gmp={{LOCALBASE}}
 			--with-mpc={{LOCALBASE}}
@@ -92,7 +93,7 @@ CONFIGURE_ARGS=		--enable-languages="c,c++,ada,fortran"
 			--disable-libssp
 			--with-pkgversion="Ravenports"
 
-# gcc9 is deprecated on Solaris 10, gcc10+ is not supported
+# gcc10+ is not supported on Solaris 10
 NOT_FOR_OPSYS=		sunos
 
 VAR_OPSYS[dragonfly]=	CONFIGURE_ARGS=--with-gnu-as
@@ -109,10 +110,12 @@ VAR_OPSYS[netbsd]=	CONFIGURE_ARGS=--disable-libstdcxx-pch
 			CONFIGURE_ARGS=--with-as=${TOOLCHAIN}/bin/as
 			CONFIGURE_ARGS=--with-ld=${TOOLCHAIN}/bin/ld
 			CONFIGURE_ARGS=--with-libiconv-prefix={{WRKDIR}}/fake
-VAR_OPSYS[darwin]=	CONFIGURE_ARGS=--disable-libstdcxx-pch
-			CONFIGURE_ARGS=--with-ld=/usr/bin/ld
-			CONFIGURE_ARGS=--with-as=/usr/bin/as
+VAR_OPSYS[midnightbsd]=	CONFIGURE_ARGS=--disable-libstdcxx-pch
+			CONFIGURE_ARGS=--with-gnu-as
+			CONFIGURE_ARGS=--with-as=${TOOLCHAIN}/bin/as
+			CONFIGURE_ARGS=--with-ld=${TOOLCHAIN}/bin/ld
 			CONFIGURE_ARGS=--with-libiconv-prefix={{WRKDIR}}/fake
+			MAKEFILE_LINE=CONFIGURE_TARGET=${MBSD64_TARGET}
 
 INFO=			infopages:cpp
 			infopages:cppinternals
@@ -120,9 +123,6 @@ INFO=			infopages:cpp
 			infopages:gccinstall
 			infopages:gccint
 			infopages:gfortran
-			infopages:gnat-style
-			infopages:gnat_rm
-			infopages:gnat_ugn
 			infopages:libquadmath
 			infopages:libitm
 			infopages:libgomp
@@ -166,34 +166,9 @@ post-patch:
 	${REINPLACE_CMD} -e 's|static:crtbeginT.o%s;||' \
 		${WRKSRC}/gcc/config/freebsd-spec.h
 
-post-patch-linux:
-	# undo BSD thin socket modification
-	${MV} ${WRKSRC}/gcc/ada/libgnat/g-socthi.ads.orig \
-		${WRKSRC}/gcc/ada/libgnat/g-socthi.ads
-
-post-patch-darwin:
-	# undo BSD thin socket modification
-	${MV} ${WRKSRC}/gcc/ada/libgnat/g-socthi.ads.orig \
-		${WRKSRC}/gcc/ada/libgnat/g-socthi.ads
-	${FIND} ${WRKSRC} -name configure | ${XARGS} \
-		${SED} -i.mac -e 's|apple-darwin|raven-darwin|' \
-		${WRKSRC}/gcc/configure
-
 post-install:
 	cp ${STAGEDIR}${PREFIX}/bin/gcc ${STAGEDIR}${PREFIX}/bin/cc
 	${RM} ${STAGEDIR}${MANPREFIX}/man/man7/*
-	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/gcc/${CONFIGURE_TARGET}/${GCC_VERSION}/adalib/libgnarl.${LIBEXT}
-	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/gcc/${CONFIGURE_TARGET}/${GCC_VERSION}/adalib/libgnat.${LIBEXT}
-	# remove when info pages re-enabled
-	${RM} ${STAGEDIR}${PREFIX}/share/info/libitm.info
-	${RM} ${STAGEDIR}${PREFIX}/share/info/libgomp.info
-	${RM} ${STAGEDIR}${PREFIX}/share/info/libquadmath.info
 
-post-install-dragonfly:
-	${RM} -r ${STAGEDIR}${PREFIX}/lib/gcc/${CONFIGURE_TARGET}/${GCC_VERSION}/include-fixed
-
-post-install-freebsd:
-	${RM} -r ${STAGEDIR}${PREFIX}/lib/gcc/${CONFIGURE_TARGET}/${GCC_VERSION}/include-fixed
-
-post-install-netbsd:
+	# do this for all platforms now
 	${RM} -r ${STAGEDIR}${PREFIX}/lib/gcc/${CONFIGURE_TARGET}/${GCC_VERSION}/include-fixed

@@ -1,5 +1,5 @@
-DEF[PORTVERSION]=	5.6.1
-DEF[IRRLICHT_VER]=	1.9.0mt8
+DEF[PORTVERSION]=	5.7.0
+DEF[IRRLICHT_VER]=	1.9.0mt10
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		minetest
@@ -19,7 +19,7 @@ DISTFILE[2]=		generated:game
 DISTFILE[3]=		generated:light
 DF_INDEX=		1 2 3
 
-SPKGS[standard]=	complete client server data docs nls
+SPKGS[standard]=	complete client server data man docs nls
 
 OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none
@@ -38,25 +38,28 @@ FPC_EQUIVALENT=		games/minetest
 
 BUILD_DEPENDS=		doxygen:single:standard
 			gmp:static:standard
+			leveldb:dev:standard
 			evdev-proto:single:standard
-BUILDRUN_DEPENDS=	curl:primary:standard
-			freetype:primary:standard
-			gmp:shared:standard
-			hiredis:single:standard
+			openal:dev:standard
+			libvorbis:dev:standard
+			hiredis:dev:standard
+			libGLU:dev:standard
+BUILDRUN_DEPENDS=	gmp:shared:standard
+			hiredis:primary:standard
 			irrlicht:single:standard
 			jsoncpp:single:standard
-			leveldb:single:standard
-			libogg:primary:standard
+			leveldb:primary:standard
 			libvorbis:primary:standard
 			luajit:single:standard
-			openal:single:standard
+			openal:primary:standard
 			spatialindex:single:standard
-			libGLU:single:standard
+			libGLU:primary:standard
 EXRUN[client]=		minetest:data:standard
 EXRUN[server]=		minetest:data:standard
 
-USES=			cmake gettext-tools iconv jpeg mesa dos2unix
-			ncurses png pgsql:client sqlite bz2 zstd cpe
+USES=			cmake gettext:build curl iconv jpeg dos2unix
+			ncurses png pgsql:client sqlite bz2 zstd cpe zlib
+			freetype
 XORG_COMPONENTS=	x11 xext xxf86vm sm ice xi
 CPE_VENDOR=		minetest
 CPE_PRODUCT=		minetest
@@ -68,5 +71,7 @@ CMAKE_ARGS=		-DBUILD_SERVER=TRUE
 
 post-install:
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/minetest*
-	${MV} ${WRKDIR}/minetest_game-${PORTVERSION} \
-		${STAGEDIR}${PREFIX}/share/minetest/games/minetest
+	${MKDIR} ${STAGEDIR}${PREFIX}/share/minetest/games/minetest
+	(cd ${WRKDIR}/minetest_game-${PORTVERSION} && \
+		${COPYTREE_SHARE} "game.conf menu mods" \
+		${STAGEDIR}${PREFIX}/share/minetest/games/minetest)

@@ -1,9 +1,8 @@
-DEF[PORTVERSION]=	1.2.1
+DEF[PORTVERSION]=	1.2.2
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		parcellite
 VERSION=		${PORTVERSION}
-REVISION=		1
 KEYWORDS=		deskutils
 VARIANTS=		standard
 SDESC[standard]=	Lightweight GTK+ clipboard manager
@@ -14,7 +13,7 @@ DOWNLOAD_GROUPS=	main
 SITES[main]=		GITHUB/rickyrockrat:parcellite:${PORTVERSION}
 DISTFILE[1]=		generated:main
 
-SPKGS[standard]=	complete primary nls
+SPKGS[standard]=	complete primary nls man
 
 OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none
@@ -28,15 +27,20 @@ LICENSE_SCHEME=		solo
 
 FPC_EQUIVALENT=		deskutils/parcellite
 
-USES=			autoreconf pkgconfig gmake gettext-tools gettext-runtime
+BUILD_DEPENDS=		harfbuzz:dev:standard
+
+USES=			autoreconf pkgconfig gmake gettext:build
 XORG_COMPONENTS=	x11
 GNOME_COMPONENTS=	gtk2 intltool
 MUST_CONFIGURE=		gnu
 CONFIGURE_ARGS=		--disable-appindicator
 LDFLAGS=		-lgio-2.0
+CPPFLAGS=		-Wno-deprecated-declarations
 
+VAR_OPSYS[netbsd]=	LDFLAGS=-lintl
 VAR_OPSYS[freebsd]=	LDFLAGS=-lintl
 VAR_OPSYS[dragonfly]=	LDFLAGS=-lintl
+VAR_OPSYS[midnightbsd]=	LDFLAGS=-lintl
 VAR_OPSYS[sunos]=	LDFLAGS=-lintl
 
 post-patch:
@@ -48,5 +52,9 @@ post-patch-dragonfly:
 		${WRKSRC}/src/utils.c
 
 post-patch-freebsd:
+	${REINPLACE_CMD} -e 's|/proc|/compat/linux/proc|g' \
+		${WRKSRC}/src/utils.c
+
+post-patch-midnightbsd:
 	${REINPLACE_CMD} -e 's|/proc|/compat/linux/proc|g' \
 		${WRKSRC}/src/utils.c

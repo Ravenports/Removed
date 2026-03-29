@@ -8,6 +8,8 @@ DEF[STDCXX_VERSION]=	6.0.28
 DEF[TOOLCHAIN]=		{{LOCALBASE}}/toolchain
 DEF[DRACO_TAG]=		10.4.0-base
 DEF[DRACO_DIR]=		patches-10.4.0
+DEF[MBSD64_TARGET]=	EXTRACT_INFO(MIDNIGHT64_CC_TARGET)
+DEF[MBSD32_TARGET]=	EXTRACT_INFO(MIDNIGHT32_CC_TARGET)
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		gcc10
@@ -46,9 +48,10 @@ LICENSE_SCHEME=		multi
 
 FPC_EQUIVALENT=		lang/gcc10
 
-B_DEPS[freebsd]=	libiconv:static:standard
-B_DEPS[dragonfly]=	libiconv:static:standard
-B_DEPS[darwin]=		libiconv:static:standard
+C_USES[freebsd]=	iconv:build
+C_USES[dragonfly]=	iconv:build
+C_USES[midnightbsd]=	iconv:build
+C_USES[darwin]=		iconv:build
 
 BUILD_DEPENDS=		gmp:static:standard
 			mpfr:static:standard
@@ -90,7 +93,7 @@ CONFIGURE_ARGS=		--enable-languages="c,c++,ada,fortran"
 			--disable-libcilkrts
 			--with-pkgversion="Ravenports"
 
-# gcc9 is deprecated on Solaris 10, gcc10 is not supported
+# gcc10+ is not supported on Solaris 10
 NOT_FOR_OPSYS=		sunos
 BROKEN[netbsd]=		Support has not been added yet (scheduled)
 
@@ -107,6 +110,12 @@ VAR_OPSYS[darwin]=	CONFIGURE_ARGS=--disable-libstdcxx-pch
 			CONFIGURE_ARGS=--with-ld=/usr/bin/ld
 			CONFIGURE_ARGS=--with-as=/usr/bin/as
 			CONFIGURE_ARGS=--with-libiconv-prefix={{WRKDIR}}/fake
+VAR_OPSYS[midnightbsd]=	CONFIGURE_ARGS=--disable-libstdcxx-pch
+			CONFIGURE_ARGS=--with-gnu-as
+			CONFIGURE_ARGS=--with-as=${TOOLCHAIN}/bin/as
+			CONFIGURE_ARGS=--with-ld=${TOOLCHAIN}/bin/ld
+			CONFIGURE_ARGS=--with-libiconv-prefix={{WRKDIR}}/fake
+			MAKEFILE_LINE=CONFIGURE_TARGET=${MBSD64_TARGET}
 
 INFO=			infopages:cpp
 			infopages:cppinternals
@@ -186,4 +195,7 @@ post-install-dragonfly:
 	${RM} -r ${STAGEDIR}${PREFIX}/lib/gcc/${CONFIGURE_TARGET}/${GCC_VERSION}/include-fixed
 
 post-install-freebsd:
+	${RM} -r ${STAGEDIR}${PREFIX}/lib/gcc/${CONFIGURE_TARGET}/${GCC_VERSION}/include-fixed
+
+post-install-midnightbsd:
 	${RM} -r ${STAGEDIR}${PREFIX}/lib/gcc/${CONFIGURE_TARGET}/${GCC_VERSION}/include-fixed

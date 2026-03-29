@@ -15,10 +15,11 @@ DOWNLOAD_GROUPS=	main
 SITES[main]=		https://downloads.mariadb.com/MariaDB/mariadb-${PORTVERSION}/source/
 DISTFILE[1]=		mariadb-${PORTVERSION}.tar.gz:main
 
-SPKGS[standard]=	complete server client docs
+SPKGS[standard]=	complete server client dev man docs
 
-OPTIONS_AVAILABLE=	none
-OPTIONS_STANDARD=	none
+OPTIONS_AVAILABLE=	ROCKSDB
+OPTIONS_STANDARD=	ROCKSDB
+# currently RocksDB doesn't build with gcc13's libstdc++
 
 LICENSE=		GPLv2:server
 LICENSE_FILE=		GPLv2:{{WRKSRC}}/COPYING
@@ -27,28 +28,32 @@ LICENSE_AWK=		TERMS:"^\#include"
 LICENSE_SOURCE=		TERMS:{{WRKSRC}}/libmysqld/libmysqld.c
 LICENSE_SCHEME=		solo
 
-FPC_EQUIVALENT=		databases/mariadb104-server
+FPC_EQUIVALENT=		databases/mariadb105-server
 
 BUILD_DEPENDS=		bison:primary:standard
-BUILDRUN_DEPENDS=	boost-libraries:single:standard
-			snappy:single:standard
-			msgpack:single:standard
+			msgpack:dev:standard
+			snappy:dev:standard
+			boost-libraries:dev:standard
+			krb5:dev:standard
+# zeromq detected but not used (?)
+# #			zeromq:dev:standard
+BUILDRUN_DEPENDS=	boost-libraries:primary:standard
+			snappy:primary:standard
+			msgpack:primary:standard
 			judy:primary:standard
 			krb5:primary:standard
-			curl:primary:standard
-			pcre2:primary:standard
-# zeromq detected but not used (?)
-# #			zeromq:single:standard
+# #			zeromq:primary:standard
 
-BR_DEPS[netbsd]=	openpam:single:standard
+B_DEPS[netbsd]=		openpam:dev:standard
+BR_DEPS[netbsd]=	openpam:primary:standard
 
 USERS=			mysql
 GROUPS=			mysql
 USERGROUP_SPKG=		server
 
-USES=			cmake zlib readline ncurses shebangfix cpe
+USES=			cmake zlib readline ncurses pcre2 shebangfix cpe
 			python:build perl:build pkgconfig iconv:translit
-			zstd lz4 lzo bz2 execinfo ssl:openssl30
+			curl zstd lz4 lzo bz2 execinfo ssl:openssl30
 GNOME_COMPONENTS=	libxml2
 CPE_VENDOR=		mariadb
 CPE_PRODUCT=		mariadb
@@ -94,6 +99,10 @@ INSTALL_REQ_TOOLCHAIN=	yes
 VAR_OPSYS[freebsd]=	CXXFLAGS=-DHAVE_POSIX_MEMALIGN=1
 VAR_OPSYS[netbsd]=	MAKEFILE_LINE=AUTHSOCKET="@comment "
 			MAKEFILE_LINE=PAM=
+
+[ROCKSDB].DESCRIPTION=			Build RocksDB LSM Engine
+[ROCKSDB].CMAKE_ARGS_ON=		-DPLUGIN_ROCKSDB=DYNAMIC
+[ROCKSDB].CMAKE_ARGS_OFF=		-DPLUGIN_ROCKSDB=NO
 
 post-patch:
 	${CP} ${WRKSRC}/cmake/os/FreeBSD.cmake \

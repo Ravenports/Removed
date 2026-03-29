@@ -1,4 +1,4 @@
-DEF[PORTVERSION]=	4.4.3
+DEF[PORTVERSION]=	4.4.4
 DEF[SO_AVCODEC]=	58.134.100
 DEF[SO_AVDEVICE]=	58.13.100
 DEF[SO_AVFILTER]=	7.110.100
@@ -12,6 +12,7 @@ DEF[SO_SCALE]=		5.9.100
 
 NAMEBASE=		ffmpeg4
 VERSION=		${PORTVERSION}
+REVISION=		1
 KEYWORDS=		multimedia audio net
 VARIANTS=		standard
 SDESC[standard]=	Legacy stream audio and video library
@@ -22,7 +23,7 @@ DOWNLOAD_GROUPS=	main
 SITES[main]=		https://ffmpeg.org/releases/
 DISTFILE[1]=		ffmpeg-${PORTVERSION}.tar.xz:main
 
-SPKGS[standard]=	complete primary examples docs
+SPKGS[standard]=	complete primary tools dev examples man docs
 
 OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none
@@ -33,40 +34,74 @@ LICENSE_FILE=		LGPL3+:{{WRKSRC}}/COPYING.LGPLv3
 LICENSE_TERMS=		primary:{{WRKSRC}}/LICENSE.md
 LICENSE_SCHEME=		multi
 
-FPC_EQUIVALENT=		multimedia/ffmpeg
+FPC_EQUIVALENT=		multimedia/ffmpeg4
 
-BUILD_DEPENDS=		nasm:primary:standard
+EXRUN[dev]=		libdrm:dev:standard
+			libgcrypt:dev:standard
+			libvpx:dev:standard
+			libass:dev:standard
+			libva:dev:standard
+			libvorbis:dev:standard
+			libtheora:dev:standard
+			libvdpau:dev:standard
+			x264:dev:standard
+			x265:dev:standard
+			xvid:dev:standard
+			WebP:dev:standard
+			librsvg:dev:standard
+			libxml2:dev:standard
+			glib:dev:standard
+			zlib:dev:standard
+			sdl2:dev:standard
+			gnutls:dev:standard
+			rtmpdump:dev:standard
+			gdk-pixbuf:dev:standard
+			pango:dev:standard
+
+BUILD_DEPENDS=		gettext:solinks:standard
 			gmp:static:standard
+			gnutls:dev:standard
+			libdrm:dev:standard
+			libgcrypt:dev:standard
+			libvpx:dev:standard
+			nasm:primary:standard
+			x264:dev:standard
+			x265:dev:standard
+			libass:dev:standard
+			libva:dev:standard
+			libvorbis:dev:standard
+			WebP:dev:standard
+			frei0r:dev:standard
+			rtmpdump:dev:standard
+			xvid:dev:standard
+			libtheora:dev:standard
+			libvdpau:dev:standard
 BUILDRUN_DEPENDS=	gmp:shared:standard
-			libass:single:standard
-			fontconfig:primary:standard
-			freetype:primary:standard
-			frei0r:single:standard
-			fribidi:single:standard
-			libgcrypt:single:standard
+			libass:primary:standard
+			frei0r:primary:standard
+			libgcrypt:primary:standard
 			gnutls:primary:standard
-# |			opencv:core:standard
-			rtmpdump:library:standard
-			libtheora:single:standard
-			libva:single:standard
-			libvdpau:single:standard
+			rtmpdump:primary:standard
+			libtheora:primary:standard
+			libva:primary:standard
+			libvdpau:primary:standard
 			libvorbis:primary:standard
-			libvpx:single:standard
-			libdrm:single:standard
-			librsvg:primary:standard
-			WebP:single:standard
-			x264:library:standard
-			x265:single:standard
-			xvid:single:standard
+			libvpx:primary:standard
+			libdrm:primary:standard
+			WebP:primary:standard
+			x264:primary:standard
+			x265:primary:standard
+			xvid:primary:standard
 
-RC_SUBR=		ffserver:primary
+EXRUN[tools]=		primary
 
 # opencv support removed because version 3.x requires c++ compilation
 
-USES=			cpe gmake iconv perl:build pkgconfig shebangfix
+USES=			cpe gmake iconv zlib perl:build
+			pkgconfig shebangfix gettext:build
 CPE_VENDOR=		ffmpeg
 CPE_PRODUCT=		ffmpeg
-GNOME_COMPONENTS=	libxml2
+GNOME_COMPONENTS=	libxml2 librsvg
 SDL_COMPONENTS=		sdl2
 MUST_CONFIGURE=		yes
 SHEBANG_FILES=		doc/texi2pod.pl

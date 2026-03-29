@@ -7,7 +7,7 @@ DEF[TAG]=		0dd7489
 
 NAMEBASE=		lumina-pdf
 VERSION=		${PORTVERSION}
-REVISION=		1
+REVISION=		2
 EPOCH=			2
 KEYWORDS=		deskutils
 VARIANTS=		standard
@@ -24,15 +24,19 @@ SPKGS[standard]=	complete primary nls
 OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none
 
-FPC_EQUIVALENT=		deskutils/lumina-pdf
+# FreeBSD has incorrect version 1.6.2
+# FPC_EQUIVALENT=		deskutils/lumina-pdf
 
 LICENSE=		BSD3CLAUSE:primary
 LICENSE_FILE=		BSD3CLAUSE:{{WRKSRC:H}}/LICENSE
 LICENSE_SCHEME=		solo
 
-BUILD_DEPENDS=		qt5-qttools:single:standard
-BUILDRUN_DEPENDS=	qt5-qtmultimedia:single:standard
-			qt5-qtsvg:single:standard
+BUILD_DEPENDS=		qt5-qttools:complete:standard
+			poppler:qt5dev:standard
+			qt5-qtsvg:dev:standard
+			qt5-qtmultimedia:dev:standard
+BUILDRUN_DEPENDS=	qt5-qtmultimedia:primary:standard
+			qt5-qtsvg:primary:standard
 			poppler:qt5:standard
 
 USES=			qt5

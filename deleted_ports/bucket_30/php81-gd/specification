@@ -24,9 +24,7 @@ OPT_ON[all]=		TRUETYPE JIS WEBP X11
 
 FPC_EQUIVALENT=		${KEYWORD}/php${SUFFIX}-${MODULE}
 
-BUILDRUN_DEPENDS=	freetype:primary:standard
-
-USES=			php:ext,${SUFFIX} zlib jpeg png cpe
+USES=			php:ext,${SUFFIX} zlib jpeg png freetype cpe
 CPE_VENDOR=		php
 CPE_PRODUCT=		php
 DISTNAME=		php-${PORTVERSION}/ext/{{PHP_MODNAME}}
@@ -46,7 +44,8 @@ EXTRACT_TAIL[1]=	php-${PORTVERSION}/ext/{{PHP_MODNAME}}
 
 [TRUETYPE].CONFIGURE_ENABLE_BOTH=	gd-native-ttf
 [WEBP].CONFIGURE_ARGS_ON=		--with-webp-dir={{LOCALBASE}}
-[WEBP].BUILDRUN_DEPENDS_ON=		WebP:single:standard
+[WEBP].BUILD_DEPENDS_ON=		WebP:dev:standard
+[WEBP].BUILDRUN_DEPENDS_ON=		WebP:primary:standard
 [JIS].CONFIGURE_ENABLE_BOTH=		gd-jis-conv
 [X11].XORG_COMPONENTS_ON=		xpm
 [X11].CONFIGURE_ARGS_ON=		--with-xpm-dir={{LOCALBASE}}

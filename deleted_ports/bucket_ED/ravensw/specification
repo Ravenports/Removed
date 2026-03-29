@@ -1,6 +1,6 @@
 DEF[PORTVERSION]=	1.11.1
 # branch: c-version
-DEF[REVISION]=		10
+DEF[REVISION]=		16
 DEF[ROLLING_TAG]=	${PORTVERSION}_rev${REVISION}
 DEF[SQLITE_VER]=	3.28.0
 DEF[SQLITE_LONGVER]=	${SQLITE_VER:S/.//:S/./0/}00
@@ -33,7 +33,7 @@ LICENSE=		BSD2CLAUSE:single
 LICENSE_FILE=		BSD2CLAUSE:{{WRKSRC}}/COPYING
 LICENSE_SCHEME=		solo
 
-BUILD_DEPENDS=		libarchive:single:ravensw
+BUILD_DEPENDS=		libarchive:dev:ravensw
 			libucl:single:ravensw
 			fetch:single:library
 			linenoise:single:standard
@@ -51,6 +51,7 @@ CONFIGURE_ARGS=		--mandir={{MANPREFIX}}/man
 			--pkgconfigdir={{PREFIX}}/lib/pkgconfig
 			--prefix={{PREFIX}}
 CFLAGS=			-Wno-error
+INFRASTRUCTURE=		yes
 
 VAR_OPSYS[sunos]=	CFLAGS=-DUSE_ESTREAM
 
@@ -60,7 +61,7 @@ OPTIMIZER_LEVEL=	0
 
 [RUNTESTS].DESCRIPTION=			Run kyua tests after build
 [RUNTESTS].BUILD_DEPENDS_ON=		kyua:single:standard
-					Zstandard:complete:standard
+					zstd:primary:standard
 
 post-extract:
 	# Install SQLite source

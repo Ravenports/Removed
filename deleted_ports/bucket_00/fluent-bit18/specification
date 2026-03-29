@@ -25,8 +25,6 @@ LICENSE_AWK=		TERMS:"_GNU_SOURCE"
 LICENSE_SOURCE=		TERMS:{{WRKSRC}}/src/fluent-bit.c
 LICENSE_SCHEME=		solo
 
-FPC_EQUIVALENT=		sysutils/fluent-bit
-
 USES=			cpe cmake bison zlib gmake shebangfix
 			cclibs:primary,library
 # Don't use execinfo, keep dependencies down
@@ -41,6 +39,10 @@ CMAKE_ARGS=		-DFLB_DEBUG=Off
 			-DFLB_OUT_PGSQL=Off
 			-DFLB_HTTP_SERVER=On
 RC_SUBR=		fluent-bit:primary
+
+post-extract:
+	${CP} ${MK_TEMPLATES}/config.sub ${WRKSRC}/lib/onigmo/config.sub
+	${CP} ${MK_TEMPLATES}/config.guess ${WRKSRC}/lib/onigmo/config.guess
 
 post-install:
 	${MV} ${STAGEDIR}${PREFIX}/etc/fluent-bit/fluent-bit.conf \

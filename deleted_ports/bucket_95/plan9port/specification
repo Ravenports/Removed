@@ -1,5 +1,5 @@
-DEF[PORTVERSION]=	20200816
-DEF[TAG]=		1f098ef
+DEF[PORTVERSION]=	20220913
+DEF[TAG]=		ffbdd1a
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		plan9port
@@ -10,7 +10,7 @@ KEYWORDS=		archivers converters databases deskutils devel dns
 VARIANTS=		standard
 SDESC[standard]=	Plan 9 from User Space
 HOMEPAGE=		https://9fans.github.io/plan9port/
-CONTACT=		Leonid_Bobrov[goleo@disroot.org]
+CONTACT=		nobody
 
 DOWNLOAD_GROUPS=	main data
 SITES[main]=		GITHUB/9fans:plan9port:${TAG}
@@ -33,10 +33,12 @@ LICENSE_SCHEME=		solo
 
 FPC_EQUIVALENT=		devel/plan9port
 
-USES=			perl:build shebangfix
+# Too many freebsd version checks on macros
+# On NetBSD, libthread only builds on i386
+NOT_FOR_OPSYS=		midnightbsd netbsd
+
+USES=			perl:build zlib:build fontconfig shebangfix
 XORG_COMPONENTS=	x11 xext xt
-BUILDRUN_DEPENDS=	fontconfig:primary:standard
-			freetype:primary:standard
 RUN_DEPENDS=		ghostscript:primary:standard
 SHEBANG_FILES=		src/cmd/map/mapdemo.rc
 			src/cmd/map/map.rc
@@ -59,13 +61,13 @@ SHEBANG_FILES=		src/cmd/map/mapdemo.rc
 SHEBANG_LANG=		rc
 
 post-extract:
-	${GREP} -rl "/usr/local" ${WRKSRC} | \
-		${XARGS} ${REINPLACE_CMD} -e 's|/usr/local|${LOCALBASE}|g'
 	${TAR} -C ${WRKSRC}/dict -xf ${DISTDIR}/pgw.tar.bz2
 	${TAR} -C ${WRKSRC}/dict -xf ${DISTDIR}/roget.tar.bz2
 	${TAR} -C ${WRKSRC}/sky -xf ${DISTDIR}/scat.tgz
 
-post-patch:
+pre-configure:
+	${GREP} -rl "/usr/local" ${WRKSRC} | \
+		${XARGS} ${REINPLACE_CMD} -e 's|/usr/local|${LOCALBASE}|g'
 	${REINPLACE_CMD} -e 's|/lib/font/bit|${PREFIX}/plan9/font|' \
 		${WRKSRC}/src/cmd/acme/acme.c
 	${REINPLACE_CMD} -e 's|#!/bin/rc|#!${PREFIX}/plan9/bin/rc|' \

@@ -1,4 +1,4 @@
-DEF[PORTVERSION]=	7.21.0
+DEF[PORTVERSION]=	8.3.1
 DEF[ETCDIR]=		{{PREFIX}}/etc/puppet
 DEF[RUBYDEF]=		EXTRACT_VERSION(RUBY_DEFAULT)
 DEF[RV]=		v${RUBYDEF:S/.//}
@@ -16,7 +16,7 @@ DOWNLOAD_GROUPS=	main
 SITES[main]=		GITHUB/puppetlabs:puppet:${PORTVERSION}
 DISTFILE[1]=		generated:main
 
-SPKGS[standard]=	complete primary examples
+SPKGS[standard]=	complete primary man examples
 
 OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none
@@ -35,7 +35,7 @@ BUILDRUN_DEPENDS=	ruby-facter:single:${RV}
 			ruby-locale:single:${RV}
 			ruby-multi_json:single:${RV}
 			ruby-puppet-resource_api:single:${RV}
-			ruby-concurrent-ruby:single:${RV}
+			ruby-concurrent-ruby1.1:single:${RV}
 			ruby-deep_merge:single:${RV}
 			ruby-scanf:single:${RV}
 

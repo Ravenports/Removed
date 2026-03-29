@@ -9,7 +9,7 @@ REVISION=		${PORTREVISION}
 KEYWORDS=		lang ruby
 VARIANTS=		standard
 SDESC[standard]=	Object-oriented interpreted scripting language
-HOMEPAGE=		http://www.ruby-lang.org/en/
+HOMEPAGE=		https://www.ruby-lang.org/en/
 CONTACT=		nobody
 
 DOWNLOAD_GROUPS=	main
@@ -29,10 +29,12 @@ LICENSE_SCHEME=		dual
 
 FPC_EQUIVALENT=		lang/ruby30
 
-BUILD_DEPENDS=		gdbm:primary:static
+BUILD_DEPENDS=		gdbm:dev:standard
+			libffi:dev:standard
 BUILDRUN_DEPENDS=	libyaml:single:standard
-			libffi:single:standard
+			libffi:primary:standard
 			gmp:complete:standard
+			gdbm:primary:standard
 RUN_DEPENDS=		autoselect-ruby:single:standard
 
 USES=			autoreconf cpe execinfo readline zlib
@@ -70,7 +72,7 @@ VAR_OPSYS[darwin]=	CONFIGURE_ENV=ac_cv_func_backtrace=no
 			MAKEFILE_LINE=MODULE=bundle
 VAR_OPSYS[sunos]=	CONFIGURE_ARGS=--disable-jit-support
 
-post-patch:
+pre-configure:
 	${FIND} ${WRKSRC}/ -name "*.orig" -delete
 	# Disable all bundled gems
 	# We install these from other ports
@@ -84,7 +86,7 @@ post-patch:
 	${RM} ${BUILD_WRKSRC}/man/bundle*
 	${RM} ${BUILD_WRKSRC}/man/gemfile*
 
-post-patch-linux:
+pre-configure-linux:
 	# <sys/vnode.h> does not exist on linux
 	${REINPLACE_CMD} -e '/vnode\.h/d' ${WRKSRC}/dir.c
 

@@ -3,6 +3,7 @@ DEF[SUFFIX]=		${PORTVERSION:R:S/.//}
 DEF[PG_USER]=		pgsql
 DEF[PG_GROUP]=		pgsql
 DEF[PG_UID]=		60000
+DEF[DATADIR]=		data${PORTVERSION:R}0
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		postgresql11
@@ -18,7 +19,7 @@ SITES[main]=		PGSQL/source/v${PORTVERSION}
 DISTFILE[1]=		postgresql-${PORTVERSION}.tar.bz2:main
 DIST_SUBDIR=		postgresql
 
-SPKGS[standard]=	complete server client contrib plperl plpython pltcl docs nls
+SPKGS[standard]=	complete server client contrib plperl plpython pltcl dev docs nls man
 
 OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none
@@ -35,22 +36,30 @@ BUILD_DEPENDS=		docbook-sgml:single:standard
 			docbook-dsssl:single:standard
 			openjade:single:standard
 			OpenSP:single:standard
-			readline:single:standard
-BUILDRUN_DEPENDS=	libxslt:single:standard
-BR_DEPS[linux]=		ossp-uuid:single:standard
-BR_DEPS[sunos]=		ossp-uuid:single:standard
-BR_DEPS[darwin]=	libuuid:single:standard
+			readline:dev:standard
+			readline:primary:standard
+			libxslt:dev:standard
+BUILDRUN_DEPENDS=	libxslt:primary:standard
+
+B_DEPS[linux]=		ossp-uuid:dev:standard
+BR_DEPS[linux]=		ossp-uuid:primary:standard
+
+B_DEPS[sunos]=		ossp-uuid:dev:standard
+BR_DEPS[sunos]=		ossp-uuid:primary:standard
+
+B_DEPS[darwin]=		libuuid:dev:standard
+BR_DEPS[darwin]=	libuuid:primary:standard
 
 EXRUN[server]=		postgresql11:client:standard
-EXRUN[client]=		gettext:runtime:standard
-			libxslt:single:standard
-			readline:single:standard
-			zlib:complete:standard
+EXRUN[client]=		gettext:primary:standard
+			libxslt:primary:standard
+			readline:primary:standard
+			zlib:primary:standard
 			ssl
 EXRUN[contrib]=		postgresql11:client:standard
-			libxslt:single:standard
-			zlib:complete:standard
-			gettext:runtime:standard
+			libxslt:primary:standard
+			zlib:primary:standard
+			gettext:primary:standard
 			ssl
 EXRUN[plpython]=	python
 EXRUN[plperl]=		perl
@@ -61,7 +70,8 @@ GROUPS=			${PG_GROUP}
 USERGROUP_SPKG=		server
 
 USES=			bison gmake perl:build tcl:build ssl python:build zlib
-			gettext-runtime gettext-tools cpe
+			gettext cpe
+GNOME_COMPONENTS=	libxml2
 CPE_VENDOR=		postgresql
 CPE_PRODUCT=		postgresql
 DISTNAME=		postgresql-${PORTVERSION}
@@ -83,6 +93,7 @@ CONFIGURE_ENV=		PTHREAD_LIBS="-lpthread"
 MAKE_ENV=		TCL_INCDIR="{{TCL_INCLUDEDIR}}"
 BUILD_TARGET=		world
 INSTALL_TARGET=		install-world
+INSTALL_REQ_TOOLCHAIN=	yes
 LDFLAGS=		-lpthread
 RC_SUBR=		postgresql:server
 PLIST_SUB=		PGVER=${PORTVERSION:R}
@@ -90,13 +101,18 @@ SUB_FILES=		502.pgsql
 SUB_LIST=		PG_GROUP=${PG_GROUP}
 			PG_USER=${PG_USER}
 			PG_UID=${PG_UID}
+			DATADIR=${DATADIR}
 
 VAR_OPSYS[sunos]=	CONFIGURE_ENV=ac_cv_search_bind_textdomain_codeset=-lintl
 			CONFIGURE_ARGS=--with-template=solaris
 			CONFIGURE_ARGS=--with-uuid=ossp
+			LDFLAGS=-L{{PREFIX}}/lib/ossp
+			LDFLAGS=-Wl,-rpath,{{PREFIX}}/lib/ossp
 VAR_OPSYS[freebsd]=	CONFIGURE_ARGS=--with-template=freebsd
 			CONFIGURE_ARGS=--with-uuid=bsd
 VAR_OPSYS[dragonfly]=	CONFIGURE_ARGS=--with-template=freebsd
+			CONFIGURE_ARGS=--with-uuid=bsd
+VAR_OPSYS[midnightbsd]=	CONFIGURE_ARGS=--with-template=freebsd
 			CONFIGURE_ARGS=--with-uuid=bsd
 VAR_OPSYS[netbsd]=	CONFIGURE_ARGS=--with-template=netbsd
 			CONFIGURE_ARGS=--with-uuid=bsd
@@ -106,13 +122,15 @@ VAR_OPSYS[darwin]=	CONFIGURE_ARGS=--with-template=darwin
 			CONFIGURE_ARGS=--with-uuid=e2fs
 VAR_OPSYS[linux]=	CONFIGURE_ARGS=--with-template=linux
 			CONFIGURE_ARGS=--with-uuid=ossp
+			LDFLAGS=-L{{PREFIX}}/lib/ossp
+			LDFLAGS=-Wl,-rpath,{{PREFIX}}/lib/ossp
 
 post-patch-sunos:
 	${REINPLACE_CMD} -e '/sqlmansect/d' \
 		${WRKSRC}/src/makefiles/Makefile.solaris
 
 post-install:
-	@${MKDIR} ${STAGEDIR}${PREFIX}/etc/periodic/daily
+	${MKDIR} ${STAGEDIR}${PREFIX}/etc/periodic/daily
 	${INSTALL_SCRIPT} ${WRKDIR}/502.pgsql \
 		${STAGEDIR}${PREFIX}/etc/periodic/daily
 	# install-world doesn't strip (and install-strip won't install enough)

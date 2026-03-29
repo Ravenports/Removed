@@ -24,11 +24,14 @@ VOPTS[gtk2]=		GTK2=ON
 
 FPC_EQUIVALENT=		x11-toolkits/wxgtk30
 
-BUILDRUN_DEPENDS=	libmspack:single:standard
-			libGLU:single:standard
+BUILD_DEPENDS=		harfbuzz:dev:standard
+			libmspack:dev:standard
+			libGLU:dev:standard
+BUILDRUN_DEPENDS=	libmspack:primary:standard
+			libGLU:primary:standard
 
-USES=			cpe gmake png jpeg tiff zlib mesa execinfo
-			expat iconv pkgconfig gettext-runtime
+USES=			cpe gmake png jpeg tiff zlib execinfo
+			expat iconv pkgconfig gettext
 XORG_COMPONENTS=	x11 sm xxf86vm xinerama
 CPE_VENDOR=		wxwidgets
 CPE_PRODUCT=		wxwidgets
@@ -51,6 +54,8 @@ SOVERSION=		${SOVERSION}
 DISTNAME=		wxWidgets-${PORTVERSION}
 
 VAR_OPSYS[freebsd]=	CONFIGURE_ARGS=--enable-precomp-headers=no
+VAR_OPSYS[netbsd]=	CONFIGURE_ARGS=--disable-precomp-headers
+VAR_OPSYS[midnightbsd]=	CONFIGURE_ARGS=--disable-precomp-headers
 
 [GTK2].DESCRIPTION=			Build with GTK+2 instead of GTK+3
 [GTK2].CONFIGURE_ARGS_ON=		--with-gtk=2

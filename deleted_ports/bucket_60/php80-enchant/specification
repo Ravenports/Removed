@@ -23,7 +23,9 @@ OPTIONS_STANDARD=	none
 
 FPC_EQUIVALENT=		${KEYWORD}/php${SUFFIX}-${MODULE}
 
-BUILDRUN_DEPENDS=	enchant:single:standard
+BUILD_DEPENDS=		glib:dev:standard
+			enchant:dev:standard
+BUILDRUN_DEPENDS=	enchant:primary:standard
 
 USES=			php:ext,${SUFFIX} pkgconfig cpe
 CPE_VENDOR=		php

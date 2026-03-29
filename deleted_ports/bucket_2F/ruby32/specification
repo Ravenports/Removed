@@ -9,7 +9,7 @@ REVISION=		${PORTREVISION}
 KEYWORDS=		lang ruby
 VARIANTS=		standard
 SDESC[standard]=	Object-oriented interpreted scripting language
-HOMEPAGE=		http://www.ruby-lang.org/en/
+HOMEPAGE=		https://www.ruby-lang.org/en/
 CONTACT=		nobody
 
 DOWNLOAD_GROUPS=	main
@@ -17,7 +17,7 @@ SITES[main]=		RUBY/${PORTVERSION:R}
 DISTFILE[1]=		ruby-${PORTVERSION}.tar.xz:main
 DIST_SUBDIR=		ruby
 
-SPKGS[standard]=	complete primary rdoc docs examples
+SPKGS[standard]=	complete primary rdoc docs examples man
 
 OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none
@@ -29,10 +29,12 @@ LICENSE_SCHEME=		dual
 
 FPC_EQUIVALENT=		lang/ruby32
 
-BUILD_DEPENDS=		gdbm:primary:static
+BUILD_DEPENDS=		gdbm:dev:standard
+			libffi:dev:standard
 BUILDRUN_DEPENDS=	libyaml:single:standard
-			libffi:single:standard
+			libffi:primary:standard
 			gmp:complete:standard
+			gdbm:primary:standard
 RUN_DEPENDS=		autoselect-ruby:single:standard
 
 USES=			autoreconf cpe execinfo readline ssl ruby:v32,interp zlib
