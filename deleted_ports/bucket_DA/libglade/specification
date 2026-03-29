@@ -7,7 +7,7 @@ REVISION=		1
 KEYWORDS=		devel
 VARIANTS=		standard
 SDESC[standard]=	Library for dynamically loading GLADE interfaces
-HOMEPAGE=		https://developer.gnome.org/libglade/stable/
+HOMEPAGE=		https://gitlab.gnome.org/Archive/libglade
 CONTACT=		Michael_Reim[kraileth@elderlinux.org]
 
 DOWNLOAD_GROUPS=	main
@@ -46,10 +46,6 @@ pre-patch:
 	${FIND} ${WRKSRC} -name "Makefile.in" -type f | \
 	${XARGS} ${REINPLACE_CMD} -e \
 	"s|test \"\$$\$$installfiles\" = '\$$(srcdir)/html/\*'|:|"
-
-post-patch:
-	${REINPLACE_CMD} -E 's/in (python.*)+ none/in none/' \
-		${WRKSRC}/configure
 
 post-install:
 	${MKDIR} ${STAGEDIR}${PREFIX}/lib/libglade/2.0

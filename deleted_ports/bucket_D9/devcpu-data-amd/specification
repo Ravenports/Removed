@@ -1,0 +1,50 @@
+DEF[PORTVERSION]=	20211115
+DEF[_REV]=		f5d5195
+# ----------------------------------------------------------------------------
+
+NAMEBASE=		devcpu-data-amd
+VERSION=		${PORTVERSION}
+KEYWORDS=		sysutils
+VARIANTS=		standard
+SDESC[standard]=	AMD CPUs microcode updates
+HOMEPAGE=		none
+CONTACT=		nobody
+
+DOWNLOAD_GROUPS=	main dummy
+SITES[main]=		https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/amd-ucode/
+SITES[dummy]=		https://leaf.dragonflybsd.org/~marino/dports-src/
+DISTFILE[1]=		dummy-tarball.tar.gz:dummy
+DISTFILE[2]=		microcode_amd.bin?id=${_REV}:main
+DISTFILE[3]=		microcode_amd_fam15h.bin?id=${_REV}:main
+DISTFILE[4]=		microcode_amd_fam16h.bin?id=${_REV}:main
+DISTFILE[5]=		microcode_amd_fam17h.bin?id=${_REV}:main
+DISTFILE[6]=		microcode_amd_fam19h.bin?id=${_REV}:main
+DIST_SUBDIR=		AMD_microcodes
+DF_INDEX=		1 2 3 4 5 6
+
+SPKGS[standard]=	single
+
+OPTIONS_AVAILABLE=	none
+OPTIONS_STANDARD=	none
+
+LICENSE=		CUSTOM1:single
+LICENSE_NAME=		CUSTOM1:"Advanced Micro Devices License Agreement"
+LICENSE_FILE=		CUSTOM1:{{FILESDIR}}/LICENSE
+LICENSE_SCHEME=		solo
+
+FPC_EQUIVALENT=		sysutils/devcpu-data-amd
+
+NOT_FOR_ARCH=		aarch64
+ONLY_FOR_OPSYS=		freebsd dragonfly
+
+SKIP_BUILD=		yes
+EXTRACT_ONLY=		1
+
+do-install:
+	${MKDIR} ${STAGEDIR}${PREFIX}/share/cpucontrol
+	${INSTALL_DATA} ${DISTDIR}/${DIST_SUBDIR}/microcode_amd.bin?id=${_REV} \
+		${STAGEDIR}${PREFIX}/share/cpucontrol/microcode_amd.bin
+.for X in 15 16 17 19
+	${INSTALL_DATA} ${DISTDIR}/${DIST_SUBDIR}/microcode_amd_fam${X}h.bin?id=${_REV} \
+		${STAGEDIR}${PREFIX}/share/cpucontrol/microcode_amd_fam${X}h.bin
+.endfor

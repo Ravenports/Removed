@@ -1,6 +1,6 @@
---- Lib/distutils/unixccompiler.py.orig	2020-12-07 14:02:38 UTC
+--- Lib/distutils/unixccompiler.py.orig	2021-11-15 17:43:00 UTC
 +++ Lib/distutils/unixccompiler.py
-@@ -232,32 +232,7 @@ class UnixCCompiler(CCompiler):
+@@ -233,32 +233,7 @@ class UnixCCompiler(CCompiler):
          # the configuration data stored in the Python installation, so
          # we use this hack.
          compiler = os.path.basename(sysconfig.get_config_var("CC"))

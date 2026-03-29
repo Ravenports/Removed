@@ -4,7 +4,7 @@
 CP=		cp -p
 MKDIR=		mkdir -p
 SRC=		gen_src
-ADA_FLAGS=	-O2 -gnatn -gnatws -gnat05
+ADA_FLAGS=	-O2 -gnatn -gnatws -gnat12
 C_FLAGS=	-O2
 ADB_SRCS!=	cd ${.CURDIR} && ls *.adb | sort -r
 GEN_SRCS=	sdefault.adb snames.adb xsnamest.adb
@@ -40,11 +40,11 @@ generate_sources:
 ${LIB_OBJS}: generate_sources
 
 install:
-	${MKDIR} ${DESTDIR}${PREFIX}/lib/gnat
+	${MKDIR} ${DESTDIR}${PREFIX}/share/gpr
 	${MKDIR} ${DESTDIR}${PREFIX}/lib/gnat-util
 	${MKDIR} ${DESTDIR}${PREFIX}/include/gnat-util
 
-	${BSD_INSTALL_DATA} ../gnat_util.gpr ${DESTDIR}${PREFIX}/lib/gnat
+	${BSD_INSTALL_DATA} ../gnat_util.gpr ${DESTDIR}${PREFIX}/share/gpr
 	find ../lib -type f -exec $(BSD_INSTALL_DATA) {} \
 		${DESTDIR}${PREFIX}/lib/gnat-util \;
 	find ../* -name \*\.ad\[bs\] -exec $(BSD_INSTALL_DATA) {} \

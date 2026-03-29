@@ -28,16 +28,8 @@ LICENSE_SCHEME=		solo
 
 FPC_EQUIVALENT=		databases/mariadb102-server
 
-BUILD_DEPENDS=		Zstandard:static:standard
-			bzip2:static:standard
-			lz4:static:standard
-			lzo:static:standard
-			bison:primary:standard
-BUILDRUN_DEPENDS=	Zstandard:shared:standard
-			bzip2:shared:standard
-			lz4:shared:standard
-			lzo:shared:standard
-			boost-libraries:rest:python_used
+BUILD_DEPENDS=		bison:primary:standard
+BUILDRUN_DEPENDS=	boost-libraries:rest:python_used
 			snappy:single:standard
 			msgpack:single:standard
 			judy:primary:standard
@@ -45,12 +37,15 @@ BUILDRUN_DEPENDS=	Zstandard:shared:standard
 # zeromq detected but not used (?)
 # #			zeromq:single:standard
 
+BR_DEPS[netbsd]=	openpam:single:standard
+
 USERS=			mysql
 GROUPS=			mysql
 USERGROUP_SPKG=		server
 
 USES=			cmake zlib ssl readline ncurses shebangfix cpe
-			python:build perl:build pkgconfig iconv:translit execinfo
+			python:build perl:build pkgconfig iconv:translit
+			zstd lz4 lzo bz2 execinfo
 CPE_VENDOR=		mariadb
 CPE_PRODUCT=		mariadb
 GNOME_COMPONENTS=	libxml2
@@ -87,13 +82,21 @@ CMAKE_ARGS=		-DCOMPILATION_COMMENT="Ravenports"
 			-Wno-dev
 DISTNAME=		mariadb-${PORTVERSION}
 SHEBANG_FILES=		scripts/*.sh
+PLIST_SUB=		AUTHSOCKET={{AUTHSOCKET}}
+			PAM={{PAM:U"@comment "}}
 
 # required for Linux (only) for ABI checks
 INSTALL_REQ_TOOLCHAIN=	yes
 
 VAR_OPSYS[freebsd]=	CXXFLAGS=-DHAVE_POSIX_MEMALIGN=1
+VAR_OPSYS[netbsd]=	MAKEFILE_LINE=AUTHSOCKET="@comment "
+			MAKEFILE_LINE=PAM=
 
 post-patch:
+	${CP} ${WRKSRC}/cmake/os/FreeBSD.cmake \
+		${WRKSRC}/cmake/os/DragonFly.cmake
+
+pre-configure:
 	${REINPLACE_CMD} 's|/usr/bin/env python|${PYTHON_CMD}|' \
 		${WRKSRC}/CMakeLists.txt
 	${REINPLACE_CMD} 's|%%PREFIX%%|${PREFIX}|g' \
@@ -101,8 +104,6 @@ post-patch:
 	${REINPLACE_CMD} 's|%%LOCALBASE%%|${LOCALBASE}|g' \
 		${WRKSRC}/scripts/mysql_config.sh \
 		${WRKSRC}/scripts/CMakeLists.txt
-	${CP} ${WRKSRC}/cmake/os/FreeBSD.cmake \
-		${WRKSRC}/cmake/os/DragonFly.cmake
 
 post-configure:
 	${REINPLACE_CMD} -Ee 's|(#define INCLUDE.*)"$$|\1 -I${PREFIX}/include"|' \
@@ -125,7 +126,7 @@ post-install:
 	# strip plugins and libraries
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/mysql/libmariadb.so
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/mysql/libmysqld.so
-	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/mysql/plugin/*.so
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/mysql/*/*.so
 	# strip binaries
 	@flist=$$(${FIND} ${STAGEDIR}${PREFIX}/bin -type f -perm /111 -print) ;\
 	for f in $$flist; do \
@@ -133,3 +134,8 @@ post-install:
 		&& ${ECHO_CMD} "Auto-stripping $$f"\
 		&& ${STRIP_CMD} $$f || ${TRUE} ;\
 	done
+	# if pam config file exists, set it as a sample
+	if [ -f "${STAGEDIR}${PREFIX}/etc/mariadb/user_map.conf" ]; then \
+		(cd ${STAGEDIR}${PREFIX}/etc/mariadb && \
+		${MV} user_map.conf user_map.conf.sample) ;\
+	fi

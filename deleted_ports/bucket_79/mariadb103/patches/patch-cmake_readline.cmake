@@ -1,11 +1,11 @@
---- cmake/readline.cmake.orig	2020-11-10 09:32:21 UTC
+--- cmake/readline.cmake.orig	2021-11-05 19:01:41 UTC
 +++ cmake/readline.cmake
 @@ -52,40 +52,17 @@ MACRO (MYSQL_CHECK_MULTIBYTE)
  ENDMACRO()
  
  MACRO (FIND_CURSES)
 + SET(CURSES_NEED_NCURSES True)
-  FIND_PACKAGE(Curses) 
+  FIND_PACKAGE(Curses REQUIRED)
   MARK_AS_ADVANCED(CURSES_CURSES_H_PATH CURSES_FORM_LIBRARY CURSES_HAVE_CURSES_H)
   IF(NOT CURSES_FOUND)
     SET(ERRORMSG "Curses library not found. Please install appropriate package,

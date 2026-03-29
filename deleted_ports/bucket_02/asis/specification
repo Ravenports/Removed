@@ -1,5 +1,6 @@
-DEF[PORTVERSION]=	2019
-DEF[DATE]=		20190517-18AB5
+DEF[PORTVERSION]=	2020
+# gcc-10.3.0 branch
+DEF[TAG]=		f1fd03e
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		asis
@@ -11,8 +12,8 @@ HOMEPAGE=		http://www.sigada.org/wg/asiswg/
 CONTACT=		John_Marino[draco@marino.st]
 
 DOWNLOAD_GROUPS=	main
-SITES[main]=		http://downloads.dragonlace.net/src/
-DISTFILE[1]=		asis-${PORTVERSION}-${DATE}-src.tar.gz:main
+SITES[main]=		GITHUB/simonjwright:ASIS:${TAG}
+DISTFILE[1]=		generated:main
 
 SPKGS[standard]=	complete primary docs
 
@@ -26,15 +27,17 @@ LICENSE_AWK=		TERMS:"^$$"
 LICENSE_SOURCE=		TERMS:{{WRKSRC}}/asis/asis.ads
 LICENSE_SCHEME=		solo
 
-BUILD_DEPENDS=		xmlada:primary:standard
+BUILD_DEPENDS=		gcc10:complete:standard
+# #			xmlada:primary:standard
 			python-Sphinx:single:python_default
+
 BUILDRUN_DEPENDS=	gnat-util:single:standard
 
 FPC_EQUIVALENT=		lang/asis
 
 USES=			gmake gprbuild
-DISTNAME=		asis-${PORTVERSION}-${DATE}-src
 MAKE_ARGS=		PROCESSORS={{MAKE_JOBS_NUMBER}}
+DISTNAME=		ASIS-${TAG}
 
 post-extract:
 	${REINPLACE_CMD} -e 's|OPSYS|ASISOPSYS|g' \
@@ -60,7 +63,7 @@ do-install:
 	${MKDIR} ${STAGEDIR}${PREFIX}/bin \
 		${STAGEDIR}${PREFIX}/include/asis \
 		${STAGEDIR}${PREFIX}/lib/asis \
-		${STAGEDIR}${PREFIX}/lib/gnat \
+		${STAGEDIR}${PREFIX}/share/gpr \
 		${STAGEDIR}${STD_DOCDIR}
 	${INSTALL_PROGRAM} ${WRKSRC}/tools/asistant/asistant \
 		${STAGEDIR}${PREFIX}/bin
@@ -68,5 +71,5 @@ do-install:
 		${STAGEDIR}${PREFIX}/include/asis
 	${INSTALL_DATA} ${WRKSRC}/lib/*.ali ${STAGEDIR}${PREFIX}/lib/asis
 	${INSTALL_DATA} ${WRKSRC}/lib/*.a ${STAGEDIR}${PREFIX}/lib/asis
-	${INSTALL_DATA} ${FILESDIR}/asis.gpr ${STAGEDIR}${PREFIX}/lib/gnat
+	${INSTALL_DATA} ${FILESDIR}/asis.gpr ${STAGEDIR}${PREFIX}/share/gpr
 	(cd ${WRKSRC}/doc/html && ${COPYTREE_SHARE} . ${STAGEDIR}${STD_DOCDIR})

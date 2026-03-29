@@ -1,7 +1,7 @@
 DEF[PORTVERSION]=	1.11.1
 # branch: c-version
-DEF[ROLLING_TAG]=	95f8b68
-DEF[REVISION]=		6
+DEF[REVISION]=		9
+DEF[ROLLING_TAG]=	${PORTVERSION}_rev${REVISION}
 DEF[SQLITE_VER]=	3.28.0
 DEF[SQLITE_LONGVER]=	${SQLITE_VER:S/.//:S/./0/}00
 DEF[SQLITE_YEAR]=	2019
@@ -37,17 +37,15 @@ BUILD_DEPENDS=		libarchive:single:ravensw
 			libucl:single:ravensw
 			fetch:single:library
 			linenoise:single:standard
-			expat:static:standard
 			libb2:single:standard
 			elftoolchain:libraries:standard
 			uthash:primary:standard
 			picosat:single:standard
-			Zstandard:static:standard
 			autoconf:single:standard
 			automake:single:standard
 B_DEPS[sunos]=		musl-fts:single:standard
 
-USES=			pkgconfig ssl:build
+USES=			pkgconfig ssl:build zstd:build expat:build
 MUST_CONFIGURE=		yes
 CONFIGURE_ARGS=		--mandir={{MANPREFIX}}/man
 			--pkgconfigdir={{PREFIX}}/lib/pkgconfig

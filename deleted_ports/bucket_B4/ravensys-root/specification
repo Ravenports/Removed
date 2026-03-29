@@ -1,21 +1,23 @@
-DEF[DF_RELEASE]=	5.8.0
+DEF[DF_RELEASE]=	6.0.0
 DEF[EXTRA_UBUNTU]=	4 5 6 7 8 9 10 11 12 13 17 18 19 21 22 23 24
 DEF[FREEBSD_RELEASE]=	12.2
-DEF[GCCX]=		EXTRACT_INFO(CURRENT_GCC)
+DEF[NETBSD_RELEASE]=	9.2
 DEF[X_FREEBSD_1]=	EXTRACT_VERSION(PLATFORM_FreeBSD_x86-64)
 DEF[X_DRAGONFLY]=	EXTRACT_VERSION(PLATFORM_DragonFly_x86-64)
 DEF[X_LINUX_1]=		EXTRACT_VERSION(PLATFORM_Linux_x86-64)
 DEF[X_SOLARIS]=		EXTRACT_VERSION(PLATFORM_SunOS_x86-64)
+DEF[X_NETBSD]=		EXTRACT_VERSION(PLATFORM_NetBSD_x86-64)
 DEF[X_APPLE]=		EXTRACT_VERSION(PLATFORM_MacOS_x86-64)
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		ravensys-root
-VERSION=		3.1
-REVISION=		3
+VERSION=		3.2
+REVISION=		5
 KEYWORDS=		raven
-VARIANTS=		dragonfly freebsd_amd64 linux sunos macos
+VARIANTS=		dragonfly freebsd_amd64 linux sunos macos netbsd_amd64
 SDESC[dragonfly]=	DragonFly64 system root for Ravenports build env
 SDESC[freebsd_amd64]=	FreeBSD-amd64 system root for Ravenports build env
+SDESC[netbsd_amd64]=	NetBSD-amd64 system root for Ravenports build env
 SDESC[linux]=		Linux system root for Ravenports build env
 SDESC[sunos]=		Solaris 10 system root for Ravenports build env
 SDESC[macos]=		MacOS/Darwin system root for Ravenports build env
@@ -24,11 +26,12 @@ CONTACT=		John_Marino[draco@marino.st]
 
 DOWNLOAD_GROUPS=	main avalon ubuntu1 ubuntu2 ubuntu3 ubuntu4 ubuntu5
 			ubuntu6 ubuntu7 ubuntu8 ubuntu9 ubuntu10 ubuntu11
-			freebsd_amd64 dragonlace
+			freebsd_amd64 dragonlace netbsd
 SITES[main]=		https://leaf.dragonflybsd.org/~marino/dports-src/
 SITES[avalon]=		https://mirror-master.dragonflybsd.org/iso-images/
 SITES[freebsd_amd64]=	http://ftp-archive.freebsd.org/pub/FreeBSD-Archive/old-releases/amd64/amd64/ISO-IMAGES/${FREEBSD_RELEASE}/
 SITES[dragonlace]=	http://downloads.dragonlace.net/misc/
+SITES[netbsd]=		https://cdn.netbsd.org/pub/NetBSD/NetBSD-${NETBSD_RELEASE}/images/
 SITES[ubuntu1]=		http://security.ubuntu.com/ubuntu/pool/main/g/glibc/
 SITES[ubuntu2]=		UBUNTU/h/hostname
 SITES[ubuntu3]=		UBUNTU/d/dash
@@ -65,25 +68,27 @@ DISTFILE[21]=		libacl1-dev_2.2.52-3_amd64.deb:ubuntu10
 DISTFILE[22]=		libacl1_2.2.52-3_amd64.deb:ubuntu10
 DISTFILE[23]=		libudev1_229-4ubuntu21.27_amd64.deb:ubuntu11
 DISTFILE[24]=		libudev-dev_229-4ubuntu21.27_amd64.deb:ubuntu11
+DISTFILE[25]=		NetBSD-${NETBSD_RELEASE}-amd64.iso:netbsd
 
 SPKGS[dragonfly]=	single
 SPKGS[freebsd_amd64]=	single
+SPKGS[netbsd_amd64]=	single
 SPKGS[linux]=		single
 SPKGS[sunos]=		single
 SPKGS[macos]=		single
 
-OPTIONS_AVAILABLE=	DRAGONFLY FREEBSDAMD64 LINUX SUNOS MACOS
+OPTIONS_AVAILABLE=	DRAGONFLY FREEBSDAMD64 LINUX SUNOS MACOS NET64
 OPTIONS_STANDARD=	none
-VOPTS[dragonfly]=	DRAGONFLY=ON FREEBSDAMD64=OFF LINUX=OFF SUNOS=OFF MACOS=OFF
-VOPTS[freebsd_amd64]=	DRAGONFLY=OFF FREEBSDAMD64=ON LINUX=OFF SUNOS=OFF MACOS=OFF
-VOPTS[linux]=		DRAGONFLY=OFF FREEBSDAMD64=OFF LINUX=ON SUNOS=OFF MACOS=OFF
-VOPTS[sunos]=		DRAGONFLY=OFF FREEBSDAMD64=OFF LINUX=OFF SUNOS=ON MACOS=OFF
-VOPTS[macos]=		DRAGONFLY=OFF FREEBSDAMD64=OFF LINUX=OFF SUNOS=OFF MACOS=ON
+VOPTS[dragonfly]=	DRAGONFLY=ON FREEBSDAMD64=OFF LINUX=OFF SUNOS=OFF MACOS=OFF NET64=OFF
+VOPTS[freebsd_amd64]=	DRAGONFLY=OFF FREEBSDAMD64=ON LINUX=OFF SUNOS=OFF MACOS=OFF NET64=OFF
+VOPTS[linux]=		DRAGONFLY=OFF FREEBSDAMD64=OFF LINUX=ON SUNOS=OFF MACOS=OFF NET64=OFF
+VOPTS[sunos]=		DRAGONFLY=OFF FREEBSDAMD64=OFF LINUX=OFF SUNOS=ON MACOS=OFF NET64=OFF
+VOPTS[macos]=		DRAGONFLY=OFF FREEBSDAMD64=OFF LINUX=OFF SUNOS=OFF MACOS=ON NET64=OFF
+VOPTS[netbsd_amd64]=	DRAGONFLY=OFF FREEBSDAMD64=OFF LINUX=OFF SUNOS=OFF MACOS=OFF NET64=ON
 
 INVALID_RPATH=		yes
 
 BUILD_DEPENDS=		nawk:single:standard
-			bzip2:static:standard
 			diffutils:primary:ravensys
 			libarchive:single:static
 			gnugrep:primary:ravensys
@@ -100,7 +105,7 @@ BUILD_DEPENDS=		nawk:single:standard
 			less:single:standard
 			nvi:single:standard
 			coreutils:primary:ravensys
-			binutils:single:ravensys
+			ravensys-binutils:single:standard
 			ncurses:primary:static
 			ravensw:single:standard
 			mandoc:single:standard
@@ -108,25 +113,17 @@ BUILD_DEPENDS=		nawk:single:standard
 			lockf:single:standard
 			fetch:single:standard
 			ravensys-utils:single:standard
+			ccache:primary:standard
 B_DEPS[linux]=		shadow:single:standard
 			bash:primary:static
 
+USES=			bz2:build
 SKIP_BUILD=		yes
 SINGLE_JOB=		yes
-EXTRACT_DIRTY=		2 3 ${EXTRA_UBUNTU} 14 15
+EXTRACT_DIRTY=		2 3 ${EXTRA_UBUNTU} 14 15 25
 EXTRACT_DEB_PACKAGE=	3 ${EXTRA_UBUNTU} 14
 
-PLIST_SUB=		SONAME_LIBM={{Libm_{{OPSYS}}}}
-			SONAME_LIBC={{Libc_{{OPSYS}}}}
-			SONAME_LIBUTIL={{Libutil_{{OPSYS}}}}
-			SONAME_LIBUSB={{Libusb_{{OPSYS}}}}
-			SONAME_LIBUSBHID={{Libusbhid_{{OPSYS}}}}
-			SONAME_LIBCRYPT={{Libcrypt_{{OPSYS}}}}
-			SONAME_LIBKVM={{Libkvm_{{OPSYS}}}}
-			SONAME_LIBRT={{Librt_{{OPSYS}}}}
-			SONAME_LIBRPCSVC={{Librpcsvc_{{OPSYS}}}}
-			SONAME_LIBCAM={{Libcam_{{OPSYS}}}}
-			BASE={{SYSPATH}}
+PLIST_SUB=		BASE={{SYSPATH}}
 
 MAKE_ENV=		OPSYS="{{OPSYS}}"
 			ARCH="{{ARCH}}"
@@ -135,23 +132,14 @@ MAKE_ENV=		OPSYS="{{OPSYS}}"
 			OSREL="{{OSREL}}"
 			OSMAJOR="{{MAJOR}}"
 			MKDIR="{{MKDIR}}"
-			GCCX=${GCCX}
-			libm={{Libm_{{OPSYS}}}}
-			libc={{Libc_{{OPSYS}}}}
-			libutil={{Libutil_{{OPSYS}}}}
-			libusb={{Libusb_{{OPSYS}}}}
-			libusbhid={{Libusbhid_{{OPSYS}}}}
-			libcrypt={{Libcrypt_{{OPSYS}}}}
-			libkvm={{Libkvm_{{OPSYS}}}}
-			libcam={{Libcam_{{OPSYS}}}}
-			librt={{Librt_{{OPSYS}}}}
-			librpcsvc={{Librpcsvc_{{OPSYS}}}}
+			GCCX=ravensys-gcc
 MAKE_ARGS=		BASE={{RSYS}}
 VAR_OPSYS[freebsd]=	MAKEFILE_LINE=SYSTEM=${X_FREEBSD_1}
 VAR_OPSYS[dragonfly]=	MAKEFILE_LINE=SYSTEM=${X_DRAGONFLY}
 VAR_OPSYS[linux]=	MAKEFILE_LINE=SYSTEM=${X_LINUX_1}
 VAR_OPSYS[sunos]=	MAKEFILE_LINE=SYSTEM=${X_SOLARIS}
 VAR_OPSYS[darwin]=	MAKEFILE_LINE=SYSTEM=${X_APPLE}
+VAR_OPSYS[netbsd]=	MAKEFILE_LINE=SYSTEM=${X_NETBSD}
 
 [DRAGONFLY].DESCRIPTION=		Ravenports system root for DragonFly
 [DRAGONFLY].ONLY_FOR_OPSYS_ON=		dragonfly
@@ -161,7 +149,7 @@ VAR_OPSYS[darwin]=	MAKEFILE_LINE=SYSTEM=${X_APPLE}
 [LINUX].ONLY_FOR_OPSYS_ON=		linux
 [LINUX].DF_INDEX_ON=			3 ${EXTRA_UBUNTU} 14
 
-[FREEBSDAMD64].DESCRIPTION=		Ravenports system root for FreeBSD-amd64
+[FREEBSDAMD64].DESCRIPTION=		Ravenports system root for FreeBSD/AMD64
 [FREEBSDAMD64].ONLY_FOR_OPSYS_ON=	freebsd
 [FREEBSDAMD64].DF_INDEX_ON=		15
 
@@ -173,6 +161,10 @@ VAR_OPSYS[darwin]=	MAKEFILE_LINE=SYSTEM=${X_APPLE}
 [MACOS].ONLY_FOR_OPSYS_ON=		darwin
 [MACOS].DF_INDEX_ON=			20
 
+[NET64].DESCRIPTION=			Ravenports system root for NetBSD/AMD64
+[NET64].ONLY_FOR_OPSYS_ON=		netbsd
+[NET64].DF_INDEX_ON=			25
+
 pre-fetch:
 	${SH} ${FILESDIR}/validate_pkgs.sh ${PREFIX} ${OPSYS} ${ARCH} \
 		${ARCH_STANDARD} ${OSVERSION} ${OSREL} ${MAJOR}
@@ -181,25 +173,7 @@ post-extract-DRAGONFLY-ON:
 	${MV} ${WRKDIR}/${NAMEBASE}_2 ${WRKDIR}/dragonfly
 	@${MKDIR} ${WRKSRC}
 	${INSTALL_DATA} ${FILESDIR}/Makefile ${WRKSRC}/
-
-post-install-DRAGONFLY-ON:
-	${SED} -e '/^git_daemon:/d; /^dhcpd:/d' ${FOS}/etc/group \
-		> ${STAGEDIR}${RSYS}/usr/share/group
-	${SED} -e '/^git_daemon:/d; /^dhcpd:/d' ${FOS}/etc/master.passwd \
-		> ${STAGEDIR}${RSYS}/usr/share/master.passwd
-	${INSTALL_DATA} ${FOS}/etc/defaults/rc.conf \
-		${STAGEDIR}${RSYS}/usr/share/rc.conf
-	/usr/sbin/pwd_mkdb -p -d ${STAGEDIR}${RSYS}/usr/share \
-		${STAGEDIR}${RSYS}/usr/share/master.passwd
-	${MKDIR} ${STAGEDIR}${RSYS}/var/run
-	# handle ldconfig hints
-	${INSTALL_PROGRAM} ${FOS}/sbin/ldconfig \
-		${STAGEDIR}${RSYS}/usr/bin/ldconfig
-	${FOS}/usr/sbin/chroot ${STAGEDIR}${RSYS} /usr/bin/ldconfig /usr/lib
-	${RM} ${STAGEDIR}${RSYS}/usr/bin/ldconfig
-	${MV} ${STAGEDIR}${RSYS}/var/run/ld-elf.so.hints \
-		${STAGEDIR}${RSYS}/usr/share/
-	${RM} -r ${STAGEDIR}${RSYS}/var
+	${INSTALL_DATA} ${FILESDIR}/dragonfly.mk ${WRKSRC}/system_specifics.mk
 
 post-extract-LINUX-ON:
 	${MV} ${WRKDIR}/${NAMEBASE}_3 ${WRKDIR}/linux
@@ -209,42 +183,15 @@ post-extract-LINUX-ON:
 .endfor
 	@${MKDIR} ${WRKSRC}
 	${INSTALL_DATA} ${FILESDIR}/Makefile ${WRKSRC}/
-
-post-install-LINUX-ON:
-	${INSTALL_DATA} ${FILESDIR}/linux-group \
-		${STAGEDIR}${RSYS}/usr/share/group
-	${INSTALL_DATA} ${FILESDIR}/linux-passwd \
-		${STAGEDIR}${RSYS}/usr/share/passwd
-	${INSTALL_DATA} ${FOS}/etc/ld.so.conf.d/x86_64-linux-gnu.conf \
-		${STAGEDIR}${RSYS}/usr/share/x86_64-linux-gnu.conf
-	${ECHO} "include /etc/ld.so.conf.d/*.conf" > ${STAGEDIR}${RSYS}/usr/share/ld.so.conf
-	${LN} -s asm-generic ${STAGEDIR}${RSYS}/usr/include/asm
+	${INSTALL_DATA} ${FILESDIR}/linux.mk ${WRKSRC}/system_specifics.mk
 
 post-extract-FREEBSDAMD64-ON:
 	${MV} ${WRKDIR}/${NAMEBASE}_15 ${WRKDIR}/freebsd
 	@${MKDIR} ${WRKSRC}
 	${INSTALL_DATA} ${FILESDIR}/Makefile ${WRKSRC}/
+	${INSTALL_DATA} ${FILESDIR}/freebsd.mk ${WRKSRC}/system_specifics.mk
 	(cd ${WRKDIR}/freebsd && ${TAR} -xf usr/freebsd-dist/base.txz \
 		--no-same-owner --no-same-permissions)
-
-post-install-FREEBSDAMD64-ON:
-	${INSTALL_DATA} ${FOS}/etc/group \
-		${STAGEDIR}${RSYS}/usr/share/group
-	${INSTALL_DATA} ${FOS}/etc/master.passwd \
-		${STAGEDIR}${RSYS}/usr/share/master.passwd
-	${INSTALL_DATA} ${FOS}/etc/defaults/rc.conf \
-		${STAGEDIR}${RSYS}/usr/share/rc.conf
-	/usr/sbin/pwd_mkdb -p -d ${STAGEDIR}${RSYS}/usr/share \
-		${STAGEDIR}${RSYS}/usr/share/master.passwd
-	${MKDIR} ${STAGEDIR}${RSYS}/var/run
-	# handle ldconfig hints
-	${INSTALL_PROGRAM} ${FOS}/sbin/ldconfig \
-		${STAGEDIR}${RSYS}/usr/bin/ldconfig
-	${FOS}/usr/sbin/chroot ${STAGEDIR}${RSYS} /usr/bin/ldconfig /usr/lib
-	${RM} ${STAGEDIR}${RSYS}/usr/bin/ldconfig
-	${MV} ${STAGEDIR}${RSYS}/var/run/ld-elf.so.hints \
-		${STAGEDIR}${RSYS}/usr/share/
-	${RM} -r ${STAGEDIR}${RSYS}/var
 
 post-extract-SUNOS-ON:
 	${MV} ${WRKDIR}/solaris_root_10_u8 ${WRKDIR}/sunos
@@ -257,12 +204,14 @@ post-extract-MACOS-ON:
 	${MV} ${WRKDIR}/mac-sysroot ${WRKDIR}/darwin
 	@${MKDIR} ${WRKSRC}
 	${INSTALL_DATA} ${FILESDIR}/Makefile ${WRKSRC}/
+	${INSTALL_DATA} ${FILESDIR}/sunos.mk ${WRKSRC}/system_specifics.mk
 
-post-install-MACOS-ON:
-	${CHMOD} 600 ${STAGEDIR}${RSYS}/usr/share/master.passwd
-	${STAGEDIR}${RSYS}/usr/sbin/pwd_mkdb -p -d ${STAGEDIR}${RSYS}/usr/share \
-		${STAGEDIR}${RSYS}/usr/share/master.passwd
-	# autogenerate System/Library part of manifest
-	(cd ${STAGEDIR}${PREFIX} && \
-		${FIND} ${SYSPATH}/System \( -type f -or -type l \) | ${SORT} \
-		>> ${WRKDIR}/.manifest.single.mktmp)
+post-extract-NET64-ON:
+	@${MKDIR} ${WRKSRC} ${WRKDIR}/netbsd
+	(cd ${WRKDIR}/netbsd \
+		&& ${TAR} -xf ${WRKDIR}/${NAMEBASE}_25/amd64/binary/sets/base.tar.xz \
+		&& ${TAR} -xf ${WRKDIR}/${NAMEBASE}_25/amd64/binary/sets/comp.tar.xz \
+		&& ${TAR} -xf ${WRKDIR}/${NAMEBASE}_25/amd64/binary/sets/etc.tar.xz)
+	${RM} -r ${WRKDIR}/${NAMEBASE}_25
+	${INSTALL_DATA} ${FILESDIR}/Makefile ${WRKSRC}/
+	${INSTALL_DATA} ${FILESDIR}/netbsd.mk ${WRKSRC}/system_specifics.mk

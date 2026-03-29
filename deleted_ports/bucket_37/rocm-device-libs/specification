@@ -1,4 +1,4 @@
-DEF[PORTVERSION]=	4.0.0
+DEF[PORTVERSION]=	4.5.2
 DEF[TAG]=		rocm-${PORTVERSION}
 # ----------------------------------------------------------------------------
 
@@ -24,7 +24,10 @@ LICENSE_NAME=		CUSTOM1:"ROCm-Device-Libs Release License"
 LICENSE_FILE=		CUSTOM1:{{WRKSRC}}/LICENSE
 LICENSE_SCHEME=		solo
 
-BUILD_DEPENDS=		clang:complete:standard
-
-USES=			cmake
+USES=			cmake clang zlib
 LDFLAGS=		-lpthread
+
+post-patch:
+	# fix build on linux
+	echo 'target_link_options(prepare-builtins PUBLIC "-Wl,-rpath,${LOCALBASE}/lib")'\
+		>> ${WRKSRC}/utils/prepare-builtins/CMakeLists.txt

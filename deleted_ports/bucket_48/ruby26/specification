@@ -55,9 +55,11 @@ CONFIGURE_ENV=		debugflags=
 			ac_cv_build={{CONFIGURE_TARGET}}
 			stack_protector=no
 CFLAGS=			-Wno-attributes
+			-Wno-address-of-packed-member
 PLIST_SUB=		XY={{RUBY_SUFFIX}}
 			XDOTY={{RUBY_VER}}
 			MODULE={{MODULE:Uso}}
+			MJIT="{{MJIT}}"
 CPE_VENDOR=		ruby-lang
 CPE_PRODUCT=		ruby
 CPE_VERSION=		${PORTVERSION}

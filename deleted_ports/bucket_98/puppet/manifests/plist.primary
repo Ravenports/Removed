@@ -24,6 +24,7 @@
 %%RUBY_SITELIBDIR%%/puppet/error.rb
 %%RUBY_SITELIBDIR%%/puppet/etc.rb
 %%RUBY_SITELIBDIR%%/puppet/face.rb
+%%RUBY_SITELIBDIR%%/puppet/facter_impl.rb
 %%RUBY_SITELIBDIR%%/puppet/file_bucket.rb
 %%RUBY_SITELIBDIR%%/puppet/file_serving.rb
 %%RUBY_SITELIBDIR%%/puppet/file_system.rb
@@ -169,6 +170,7 @@
 %%RUBY_SITELIBDIR%%/puppet/file_serving/mount/modules.rb
 %%RUBY_SITELIBDIR%%/puppet/file_serving/mount/pluginfacts.rb
 %%RUBY_SITELIBDIR%%/puppet/file_serving/mount/plugins.rb
+%%RUBY_SITELIBDIR%%/puppet/file_serving/mount/scripts.rb
 %%RUBY_SITELIBDIR%%/puppet/file_serving/mount/tasks.rb
 %%RUBY_SITELIBDIR%%/puppet/file_system/file_impl.rb
 %%RUBY_SITELIBDIR%%/puppet/file_system/jruby.rb
@@ -437,8 +439,11 @@
 %%RUBY_SITELIBDIR%%/puppet/network/http/api/indirected_routes.rb
 %%RUBY_SITELIBDIR%%/puppet/network/http/api/indirection_type.rb
 %%RUBY_SITELIBDIR%%/puppet/network/http/api/master.rb
+%%RUBY_SITELIBDIR%%/puppet/network/http/api/server.rb
 %%RUBY_SITELIBDIR%%/puppet/network/http/api/master/v3.rb
 %%RUBY_SITELIBDIR%%/puppet/network/http/api/master/v3/environments.rb
+%%RUBY_SITELIBDIR%%/puppet/network/http/api/server/v3.rb
+%%RUBY_SITELIBDIR%%/puppet/network/http/api/server/v3/environments.rb
 %%RUBY_SITELIBDIR%%/puppet/node/environment.rb
 %%RUBY_SITELIBDIR%%/puppet/node/facts.rb
 %%RUBY_SITELIBDIR%%/puppet/pal/catalog_compiler.rb
@@ -823,6 +828,7 @@
 %%RUBY_SITELIBDIR%%/puppet/scheduler/scheduler.rb
 %%RUBY_SITELIBDIR%%/puppet/scheduler/splay_job.rb
 %%RUBY_SITELIBDIR%%/puppet/scheduler/timer.rb
+%%RUBY_SITELIBDIR%%/puppet/settings/alias_setting.rb
 %%RUBY_SITELIBDIR%%/puppet/settings/array_setting.rb
 %%RUBY_SITELIBDIR%%/puppet/settings/autosign_setting.rb
 %%RUBY_SITELIBDIR%%/puppet/settings/base_setting.rb

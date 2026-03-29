@@ -5,11 +5,11 @@ DEF[STRIP_LIBS]=	activatable adblock bookmarks colorful-tabs session status-cloc
 
 NAMEBASE=		midori
 VERSION=		${PORTVERSION}
-REVISION=		1
+REVISION=		3
 KEYWORDS=		www
 VARIANTS=		standard
 SDESC[standard]=	Lightweight and fast WebkitGTK-based www browser
-HOMEPAGE=		https://www.midori-browser.org
+HOMEPAGE=		https://github.com/midori-browser/core
 CONTACT=		Michael_Reim[kraileth@elderlinux.org]
 
 DOWNLOAD_GROUPS=	main
@@ -38,7 +38,7 @@ BUILD_DEPENDS=		vala:single:standard
 BUILDRUN_DEPENDS=	gcr:primary:standard
 			libpeas:primary:python_default
 			libsoup:primary:standard
-			webkit2:complete:gtk3
+			webkitgtk:complete:standard
 RUN_DEPENDS=		libarchive:single:standard
 
 SOVERSION=		${SOVERSION}

@@ -1,9 +1,8 @@
-DEF[PORTVERSION]=	1.4.8
+DEF[PORTVERSION]=	1.5.1
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		Zstandard
 VERSION=		${PORTVERSION}
-REVISION=		1
 KEYWORDS=		archivers
 VARIANTS=		standard
 SDESC[standard]=	Fast real-time compression algorithm (aka zstd)
@@ -29,9 +28,7 @@ LICENSE_SCHEME=		dual
 
 FPC_EQUIVALENT=		archivers/zstd
 
-BUILD_DEPENDS=		zlib:static:standard
-
-USES=			cpe gmake
+USES=			cpe gmake zlib:build
 CPE_VENDOR=		facebook
 CPE_PRODUCT=		zstandard
 BUILD_TARGET=		default
@@ -43,6 +40,8 @@ MAKE_ARGS=		INCLUDEDIR="{{PREFIX}}/include"
 			INSTALL_SCRIPT="{{INSTALL_SCRIPT}}"
 			INSTALL_DATA="{{INSTALL_DATA}}"
 			INSTALL_MAN="{{INSTALL_MAN}}"
+			INSTALL=install
+			HASH=md5
 SOVERSION=		${PORTVERSION}
 INSTALL_REQ_TOOLCHAIN=	yes
 
@@ -54,6 +53,4 @@ post-patch-sunos:
 	${REINPLACE_CMD} -e 's| DragonFly| DragonFly SunOS|' \
 		${WRKSRC}/Makefile
 	${REINPLACE_CMD} -e 's|LDFLAGS +=|LDFLAGS += -lrt|' \
-		${WRKSRC}/programs/Makefile
-	${REINPLACE_CMD} -e 's|ginstall|install|' \
 		${WRKSRC}/programs/Makefile

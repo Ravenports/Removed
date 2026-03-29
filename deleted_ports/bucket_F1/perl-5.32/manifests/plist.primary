@@ -247,6 +247,8 @@
 %%ONLY-DRAGONFLY%%%%ARCH_LIB%%/auto/NDBM_File/NDBM_File.%%BUNDLE%%
 %%ONLY-FREEBSD%%%%ARCH_LIB%%/NDBM_File.pm
 %%ONLY-FREEBSD%%%%ARCH_LIB%%/auto/NDBM_File/NDBM_File.%%BUNDLE%%
+%%ONLY-NETBSD%%%%ARCH_LIB%%/NDBM_File.pm
+%%ONLY-NETBSD%%%%ARCH_LIB%%/auto/NDBM_File/NDBM_File.%%BUNDLE%%
 %%ONLY-SUNOS%%%%ARCH_LIB%%/NDBM_File.pm
 %%ONLY-SUNOS%%%%ARCH_LIB%%/ODBM_File.pm
 %%ONLY-SUNOS%%%%ARCH_LIB%%/auto/NDBM_File/NDBM_File.%%BUNDLE%%
@@ -937,6 +939,7 @@
 %%PRIV_LIB%%/pods/perl5302delta.pod
 %%PRIV_LIB%%/pods/perl5303delta.pod
 %%PRIV_LIB%%/pods/perl5320delta.pod
+%%PRIV_LIB%%/pods/perl5321delta.pod
 %%PRIV_LIB%%/pods/perl561delta.pod
 %%PRIV_LIB%%/pods/perl56delta.pod
 %%PRIV_LIB%%/pods/perl581delta.pod
@@ -997,6 +1000,7 @@
 %%PRIV_LIB%%/pods/perlfunc.pod
 %%PRIV_LIB%%/pods/perlgit.pod
 %%PRIV_LIB%%/pods/perlglossary.pod
+%%PRIV_LIB%%/pods/perlgov.pod
 %%PRIV_LIB%%/pods/perlgpl.pod
 %%PRIV_LIB%%/pods/perlguts.pod
 %%PRIV_LIB%%/pods/perlhack.pod
@@ -1060,6 +1064,7 @@
 %%PRIV_LIB%%/pods/perlriscos.pod
 %%PRIV_LIB%%/pods/perlrun.pod
 %%PRIV_LIB%%/pods/perlsec.pod
+%%PRIV_LIB%%/pods/perlsecpolicy.pod
 %%PRIV_LIB%%/pods/perlsolaris.pod
 %%PRIV_LIB%%/pods/perlsource.pod
 %%PRIV_LIB%%/pods/perlstyle.pod
