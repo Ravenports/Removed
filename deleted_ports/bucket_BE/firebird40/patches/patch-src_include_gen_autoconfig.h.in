@@ -1,4 +1,4 @@
---- src/include/gen/autoconfig.h.in.orig	2021-05-29 15:05:06 UTC
+--- src/include/gen/autoconfig.h.in.orig	2022-08-10 09:04:28 UTC
 +++ src/include/gen/autoconfig.h.in
 @@ -54,6 +54,9 @@
  /* Define this if OS is FreeBSD */

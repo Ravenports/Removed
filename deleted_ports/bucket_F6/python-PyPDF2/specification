@@ -1,36 +1,53 @@
-DEF[PORTVERSION]=	1.26.0
+DEF[PORTVERSION]=	3.0.0
 # ------------------------------------------------------------------------
 
 NAMEBASE=		python-PyPDF2
 VERSION=		${PORTVERSION}
 KEYWORDS=		python
-VARIANTS=		py39 py310
-SDESC[py39]=		Pure Python PDF Toolkit (3.9)
+VARIANTS=		py310 py311
 SDESC[py310]=		Pure Python PDF Toolkit (3.10)
+SDESC[py311]=		Pure Python PDF Toolkit (3.11)
 HOMEPAGE=		none
 CONTACT=		Python_Automaton[python@ironwolf.systems]
 
 DOWNLOAD_GROUPS=	main
-SITES[main]=		PYPI/P/PyPDF2
-DISTFILE[1]=		PyPDF2-${PORTVERSION}.tar.gz:main
+SITES[main]=		PYPIWHL/7c/1a/61927101df543a68019a5ef83cc8a14a38ddace96a22a5bfe87a350538ab
+DISTFILE[1]=		pypdf2-${PORTVERSION}-py3-none-any.whl:main
 
-SPKGS[py39]=		single
 SPKGS[py310]=		single
+SPKGS[py311]=		single
 
-OPTIONS_AVAILABLE=	PY39 PY310
+OPTIONS_AVAILABLE=	PY310 PY311
 OPTIONS_STANDARD=	none
-VOPTS[py39]=		PY39=ON PY310=OFF
-VOPTS[py310]=		PY39=OFF PY310=ON
+VOPTS[py310]=		PY310=ON PY311=OFF
+VOPTS[py311]=		PY310=OFF PY311=ON
 
 # License listed at PyPI
-# UNKNOWN
+# Not provided.
 
 GENERATED=		yes
-DISTNAME=		PyPDF2-${PORTVERSION}
+DISTNAME=		pypdf2-${PORTVERSION}.dist-info
 
-# install_requires extracted from setup.py
+# Requires-Dist extracted from wheel metadata
+# typing_extensions >= 3.10.0.0; python_version < '3.10'
+# dataclasses; python_version < '3.7'
+# PyCryptodome ; extra == "crypto"
+# black ; extra == "dev"
+# pip-tools ; extra == "dev"
+# pre-commit<2.18.0 ; extra == "dev"
+# pytest-cov ; extra == "dev"
+# flit ; extra == "dev"
+# wheel ; extra == "dev"
+# sphinx ; extra == "docs"
+# sphinx_rtd_theme ; extra == "docs"
+# myst_parser ; extra == "docs"
+# PyCryptodome ; extra == "full"
+# Pillow ; extra == "full"
+# Pillow ; extra == "image"
 
+[PY310].USES_ON=			python:py310,wheel
+[PY311].USES_ON=			python:py311,wheel
 
-[PY39].USES_ON=				python:py39,sutools
-[PY310].USES_ON=			python:py310,sutools
-
+USES=			cpe
+CPE_VENDOR=		pypdf2_project
+CPE_PRODUCT=		pypdf2

@@ -1,9 +1,9 @@
---- scripts/wsrep_sst_mariabackup.sh.orig	2021-11-05 18:07:43 UTC
+--- scripts/wsrep_sst_mariabackup.sh.orig	2022-05-18 11:19:09 UTC
 +++ scripts/wsrep_sst_mariabackup.sh
-@@ -739,7 +739,7 @@ recv_joiner()
+@@ -722,7 +722,7 @@ recv_joiner()
      local ltcmd="$tcmd"
      if [ $tmt -gt 0 ]; then
-         if [ -n "$(command -v timeout)" ]; then
+         if [ -n "$(commandex timeout)" ]; then
 -            if timeout --help | grep -qw -- '-k'; then
 +            if timeout --help 2>&1 | grep -qw -- '-k'; then
                  ltcmd="timeout -k $(( tmt+10 )) $tmt $tcmd"

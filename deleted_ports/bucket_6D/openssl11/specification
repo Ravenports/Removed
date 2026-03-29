@@ -1,4 +1,4 @@
-DEF[PORTVERSION]=	1.1.1m
+DEF[PORTVERSION]=	1.1.1s
 DEF[SOVERSION]=		1.1
 DEF[NAMEBASE]=		openssl11
 DEF[BASE]=		{{PREFIX}}/${NAMEBASE}
@@ -6,6 +6,7 @@ DEF[BASE]=		{{PREFIX}}/${NAMEBASE}
 
 NAMEBASE=		${NAMEBASE}
 VERSION=		${PORTVERSION}
+REVISION=		1
 KEYWORDS=		security devel
 VARIANTS=		standard
 SDESC[standard]=	SSL and crypto library
@@ -104,9 +105,6 @@ post-install-SHARED-OFF:
 	${RMDIR} ${STAGEDIR}${BASE}/lib/engines-*
 
 post-install:
-.for i in rc4 md4 idea rc5 md2 rc2 ripemd mdc2
-	${RM} ${STAGEDIR}${BASE}/include/openssl/${i}.h
-.endfor
 	${STRIP_CMD} ${STAGEDIR}${BASE}/bin/openssl
 	${RM} ${STAGEDIR}${PREFIX}/etc/${NAMEBASE}/openssl.cnf
 	${RM} ${STAGEDIR}${PREFIX}/etc/${NAMEBASE}/ct_log_list.cnf

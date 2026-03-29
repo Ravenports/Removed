@@ -1,4 +1,4 @@
---- doc/Makefile.orig	2021-11-08 22:04:02 UTC
+--- doc/Makefile.orig	2022-11-07 21:49:11 UTC
 +++ doc/Makefile
 @@ -12,5 +12,5 @@ subdir = doc
  top_builddir = ..

@@ -1,7 +1,8 @@
 amdgcn/bitcode/asanrtl.bc
-amdgcn/bitcode/hc.bc
 amdgcn/bitcode/hip.bc
 amdgcn/bitcode/ockl.bc
+amdgcn/bitcode/oclc_abi_version_400.bc
+amdgcn/bitcode/oclc_abi_version_500.bc
 amdgcn/bitcode/oclc_correctly_rounded_sqrt_off.bc
 amdgcn/bitcode/oclc_correctly_rounded_sqrt_on.bc
 amdgcn/bitcode/oclc_daz_opt_off.bc
@@ -18,6 +19,11 @@ amdgcn/bitcode/oclc_isa_version_1032.bc
 amdgcn/bitcode/oclc_isa_version_1033.bc
 amdgcn/bitcode/oclc_isa_version_1034.bc
 amdgcn/bitcode/oclc_isa_version_1035.bc
+amdgcn/bitcode/oclc_isa_version_1036.bc
+amdgcn/bitcode/oclc_isa_version_1100.bc
+amdgcn/bitcode/oclc_isa_version_1101.bc
+amdgcn/bitcode/oclc_isa_version_1102.bc
+amdgcn/bitcode/oclc_isa_version_1103.bc
 amdgcn/bitcode/oclc_isa_version_600.bc
 amdgcn/bitcode/oclc_isa_version_601.bc
 amdgcn/bitcode/oclc_isa_version_602.bc
@@ -40,6 +46,7 @@ amdgcn/bitcode/oclc_isa_version_908.bc
 amdgcn/bitcode/oclc_isa_version_909.bc
 amdgcn/bitcode/oclc_isa_version_90a.bc
 amdgcn/bitcode/oclc_isa_version_90c.bc
+amdgcn/bitcode/oclc_isa_version_940.bc
 amdgcn/bitcode/oclc_unsafe_math_off.bc
 amdgcn/bitcode/oclc_unsafe_math_on.bc
 amdgcn/bitcode/oclc_wavefrontsize64_off.bc

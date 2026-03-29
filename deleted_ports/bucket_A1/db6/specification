@@ -13,7 +13,8 @@ HOMEPAGE=		https://www.oracle.com/database/berkeley-db/db.html
 CONTACT=		nobody
 
 DOWNLOAD_GROUPS=	main
-SITES[main]=		http://download.oracle.com/berkeley-db/
+# SITES[main]=		https://download.oracle.com/berkeley-db/
+SITES[main]=		http://mirror.umd.edu/gentoo/distfiles/
 DISTFILE[1]=		db-${PORTVERSION}.tar.gz:main
 DIST_SUBDIR=		bdb
 
@@ -30,7 +31,8 @@ LICENSE_AWK=		TERMS:"^ \*$$"
 LICENSE_SOURCE=		TERMS:{{WRKSRC}}/LICENSE
 LICENSE_SCHEME=		solo
 
-FPC_EQUIVALENT=		databases/db6
+# Removed from FPC (not downloadable without registration (??))
+# FPC_EQUIVALENT=		databases/db6
 
 USES=			cpe gmake libtool c++:shared
 CPE_VENDOR=		oracle
