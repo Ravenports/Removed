@@ -11,9 +11,11 @@ otherwise it starts from the very first commit.
 """
 
 import datetime
+import glob
 import os
 import pathlib
 import re
+import shutil
 import subprocess
 import sys
 import yaml
@@ -109,20 +111,112 @@ def get_unix_epoch(commit_time):
         return None
 
 
+def return_to_head(repo_path):
+    """
+    Moves the repository from an arbitrary commit back to the
+    remote's default branch head (main/master).
+    """
+    try:
+        # 'origin/HEAD' is a symbolic ref that points to the default branch
+        subprocess.run(
+            ["git", "-C", repo_path, "checkout", "origin/HEAD"],
+            check=True,
+            capture_output=True,
+            text=True
+        )
+        print("Successfully returned to HEAD.")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to return to HEAD: {e.stderr.strip()}")
+
+
+def switch_to_commit(repo_path, commit_hash):
+    """
+    Switches the repository to a specific commit hash.
+    Note: This puts the repo in 'detached HEAD' state.
+    """
+    try:
+        subprocess.run(
+            ["git", "-C", repo_path, "checkout", commit_hash],
+            check=True,
+            capture_output=True,
+            text=True
+        )
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"Error: Could not switch to {commit_hash}. {e.stderr.strip()}")
+        return False
+
+
+def get_bucket_subdirs(base_path):
+    """
+    Equivalent to: find bucket_?? -maxdepth 1 -mindepth 1 -type d
+    Returns: ['bucket_00/libwebsockets', 'bucket_00/aspell-fo', ...]
+    """
+    base = pathlib.Path(base_path)
+    return [
+        str(p.relative_to(base))
+        for p in base.glob("bucket_??/*")
+        if p.is_dir()
+    ]
+
+
+def build_filter_from_conspiracy(conspiracy_path):
+    """
+    Read conspiracy_variants file and construct an array of ports from it.
+    """
+    results = set()
+    variants = pathlib.Path(conspiracy_path) / "Mk" / "Misc" / "conspiracy_variants"
+    if not variants.is_file():
+        print("The conspiracy variants map cannot be found")
+        sys.exit(1)
+
+    with variants.open("r") as fin:
+        for line in fin:
+            parts = line.split()
+            if len(parts) >= 2:
+                bucket_id, portname, *_ = parts
+                directory = f"bucket_{bucket_id}/{portname}"
+                results.add(directory)
+    return results
+
+
+def reset_deleted_ports_tree():
+    """
+    Completely remove any existing tree and create an empty directory.
+    This is done on the first run, or when the previous commit is not
+    available.
+    """
+    tree_directory = pathlib.Path(__file__).parent / "deleted_ports"
+    if tree_directory.exists():
+        if tree_directory.is_dir():
+            shutil.rmtree(tree_directory)
+        else:
+            tree_directory.unlink()
+    tree_directory.mkdir(parents=True, exist_ok=True)
+
+
 def main():
     """
     This is the entry point of the script
     """
     config = read_configuration()
+    rsource = config["location"]["ravensource"]
+    csource = config["location"]["conspiracy"]
     termination_epoch = get_termination_date()
     previous_run = read_last_commit()
     previous_found = False
 
+    filter = build_filter_from_conspiracy(csource)
+    # results = get_bucket_subdirs(rsource)
+    # for path in results:
+    #     print(path)
+    # sys.exit(1)
+
     try:
-        for counter, (commit_hash, iso_date) in enumerate(
-            get_commit_order(config["location"]["ravensource"]), 1
-        ):
-            if previous_run:
+        for counter, (commit_hash, iso_date) in enumerate(get_commit_order(rsource), 1):
+            if not previous_run:
+                reset_deleted_ports_tree()
+            else:
                 if not previous_found:
                     if previous_run == commit_hash:
                         previous_found = True
@@ -135,11 +229,15 @@ def main():
                      break
 
             print(f"Working on: {commit_hash} {iso_date} ({counter})")
+            # switch_to_commit(rsource, commit_hash)
             save_last_commit(commit_hash)
+    except KeyboardInterrupt:
+        print("\nInterrupted by user (Ctrl+C). Cleaning up...")
     except BrokenPipeError:
         devnull = os.open(os.devnull, os.O_WRONLY)
         os.dup2(devnull, sys.stdout.fileno())
-        sys.exit(0)
+    finally:
+        return_to_head(rsource)
 
 
 if __name__ == "__main__":
