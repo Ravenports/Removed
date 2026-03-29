@@ -26,9 +26,11 @@ BUILD_DEPENDS=		xmlada:primary:standard
 			python-Sphinx:single:python_default
 BUILDRUN_DEPENDS=	gnat-util:single:standard
 
+FPC_EQUIVALENT=		lang/asis
+
 USES=			gmake gprbuild
 DISTNAME=		asis-gpl-${PORTVERSION}-src
-MAKE_ENV=		PROCESSORS={{MAKE_JOBS_NUMBER}}
+MAKE_ARGS=		PROCESSORS={{MAKE_JOBS_NUMBER}}
 
 post-extract:
 	@${REINPLACE_CMD} -e 's|OPSYS|ASISOPSYS|g' \

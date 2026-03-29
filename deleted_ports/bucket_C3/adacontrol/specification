@@ -1,4 +1,4 @@
-DEF[PORTVERSION]=	1.18r9
+DEF[PORTVERSION]=	1.19r10
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		adacontrol
@@ -26,6 +26,8 @@ LICENSE_FILE=		GPLv2+:{{WRKSRC}}/COPYING
 			GMGPL:{{WRKDIR}}/LICENSE
 LICENSE_SCHEME=		multi
 
+FPC_EQUIVALENT=		lang/adacontrol
+
 BUILD_DEPENDS=		asis:primary:standard
 
 USES=			gprbuild
@@ -33,19 +35,16 @@ DISTNAME=		adactl-${PORTVERSION}
 BUILD_WRKSRC=		{{WRKSRC}}/src
 BUILD_TARGET=		build
 
-[PROJECTS].BUILD_DEPENDS_ON=		gnatcoll:primary:standard
+[PROJECTS].DESCRIPTION=			Use project support from gnatcoll
+[PROJECTS].BUILD_DEPENDS_ON=		gnatcoll:single:project
 
 post-extract:
 	 ${AWK} '/^-- Ada$$/ {exit}; {print $$0}' ${WRKSRC}/src/adactl.adb \
 		> ${WRKDIR}/LICENSE
 
 do-patch-PROJECTS-OFF:
-	(cd ${WRKSRC}/src && ${MV} \
-		implementation_options-i_options_from_gpr_project.adb \
-		implementation_options-i_options_from_gpr_project_gpr.adb)
-	(cd ${WRKSRC}/src && ${MV} \
-		implementation_options-i_options_from_gpr_project_nogpr.adb \
-		implementation_options-i_options_from_gpr_project.adb)
+	${REINPLACE_CMD} -e 's|GPR_Project_File|No_Project_File|' \
+		${WRKSRC}/src/implementation_options-project_file.ads
 	${REINPLACE_CMD} -e '/gnatcoll/d' ${WRKSRC}/build.gpr
 
 do-build:

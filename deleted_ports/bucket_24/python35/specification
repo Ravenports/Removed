@@ -6,6 +6,7 @@ DEF[PYTHON_SUFFIX]=	${PYTHON_VER:S/.//g}
 
 NAMEBASE=		python${PYTHON_SUFFIX}
 VERSION=		${PORTVERSION}
+REVISION=		3
 KEYWORDS=		lang python
 VARIANTS=		standard
 SDESC[standard]=	Interpreted object-oriented programming language
@@ -22,14 +23,18 @@ OPTIONS_AVAILABLE=	THREADS DEBUG PYMALLOC
 OPTIONS_STANDARD=	THREADS DEBUG PYMALLOC
 OPT_ON[all]=		THREADS PYMALLOC
 
+BUILD_DEPENDS=		expat:static:standard
+			bzip2:static:standard
 BUILDRUN_DEPENDS=	libffi:single:standard
-			zlib:complete:standard
-			expat:complete:standard
-			bzip2:complete:standard
+			expat:shared:standard
+			bzip2:shared:standard
 			xz:single:standard
 BROKEN_SSL=		openssl-devel
 
-USES=			cpe ncurses pkgconfig readline ssl shebangfix
+FPC_EQUIVALENT=		lang/python35
+
+USES=			bdb cpe ncurses pkgconfig readline ssl shebangfix
+			gettext-runtime zlib
 DISTNAME=		Python-${PORTVERSION}
 INSTALL_REQ_TOOLCHAIN=	yes
 SINGLE_JOB=		yes
@@ -59,14 +64,17 @@ PLIST_SUB=		XYDOT=${PYTHON_VER}
 			XY=${PYTHON_SUFFIX}
 			XYZDOT=${PORTVERSION}
 			LOW_OPSYS={{OPSYS:tl}}
-			OSMAJOR={{MAJOR:R}}
 			ABI={{ABIFLAGS}}
+VAR_OPSYS[linux]=	PLIST_SUB=SOABI=.cpython-${PYTHON_SUFFIX}m-x86_64-linux-gnu
+			PLIST_SUB=PLAT={{OPSYS:tl}}
+VAR_OPSYS[dragonfly]=	PLIST_SUB=SOABI=
+			PLIST_SUB=PLAT={{OPSYS:tl}}{{MAJOR:R}}
+VAR_OPSYS[freebsd]=	PLIST_SUB=SOABI=
+			PLIST_SUB=PLAT={{OPSYS:tl}}{{MAJOR:R}}
 
-[THREADS].DESCRIPTION=			Enable threading support
 [THREADS].CONFIGURE_WITH_BOTH=		threads
 [THREADS].LDFLAGS_ON=			-pthread
 
-[DEBUG].DESCRIPTION=			Build with debugging support
 [DEBUG].CONFIGURE_WITH_BOTH=		pydebug
 [DEBUG].MAKEFILE_ON=			ABIFLAGS:=d{{ABIFLAGS}}
 
@@ -77,6 +85,8 @@ PLIST_SUB=		XYDOT=${PYTHON_VER}
 post-patch:
 	${REINPLACE_CMD} -e 's|/usr/local/bin/python|${python_CMD}|' \
 		${WRKSRC}/Lib/cgi.py
+	${REINPLACE_CMD} -e 's|/usr/local/include/db4|${PREFIX}/include/db${BDB_VER}|' \
+		${WRKSRC}/setup.py
 
 post-install-DEBUG-OFF:
 	# Upstream Issue: http://bugs.python.org/issue17975
@@ -86,3 +96,5 @@ post-install:
 	for i in ${STAGEDIR}${PREFIX}/lib/python${PYTHON_VER}/lib-dynload/*.so; do \
 		${STRIP_CMD} $$i; \
 	done
+	${INSTALL_DATA} ${WRKSRC}/Tools/gdb/libpython.py \
+		${STAGEDIR}${PREFIX}/lib/libpython${PYTHON_VER}${ABIFLAGS}.so.1.0-gdb.py

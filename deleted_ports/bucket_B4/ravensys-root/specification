@@ -1,29 +1,69 @@
-DEF[DF_RELEASE]=	4.8.0
+DEF[DF_RELEASE]=	5.0.0
+DEF[LINUX_KERNEL]=	4.4.0-53
+DEF[LINUX_OSREL]=	${LINUX_KERNEL:DL="-":H}
+DEF[LINUX_MAJOR]=	${LINUX_OSREL:R}
+DEF[LINUX_VERSION]=	${LINUX_KERNEL:S/-//:S/.//:S/./0/}
+DEF[EXTRA_UBUNTU]=	4 5 6 7 8 9 10 11 12 13
+DEF[FREEBSD_RELEASE]=	11.1
+DEF[FREE_KERNEL_VER]=	1101001
+DEF[GCCX]=		EXTRACT_INFO(CURRENT_GCC)
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		ravensys-root
-VERSION=		1.0
+VERSION=		1.4
+REVISION=		2
 KEYWORDS=		raven
-VARIANTS=		dragonfly freebsd64
+VARIANTS=		dragonfly freebsd64 linux sunos
 SDESC[dragonfly]=	DragonFly64 system root for Ravenports build env
 SDESC[freebsd64]=	FreeBSD64 system root for Ravenports build env
+SDESC[linux]=		Linux system root for Ravenports build env
+SDESC[sunos]=		Solaris 10 system root for Ravenports build env
 HOMEPAGE=		none
 CONTACT=		John_Marino[draco@marino.st]
 
-DOWNLOAD_GROUPS=	main avalon
-SITES[main]=		http://dummy.org
-SITES[avalon]=		http://avalon.dragonflybsd.org/snapshots/x86_64/images/
-# SITES[avalon]=	http://mirror-master.dragonflybsd.org/iso-images/
-# DISTFILE[1]=		dfly-x86_64-${DF_RELEASE}_REL.iso.bz2:avalon
-DISTFILE[1]=		DragonFly-x86_64-20170412-DEV-v4.9.0.157.g88cde.iso.bz2:avalon
+DOWNLOAD_GROUPS=	main avalon ubuntu1 ubuntu2 ubuntu3 ubuntu4 ubuntu5
+			ubuntu6 ubuntu7 ubuntu8 freebsd dragonlace
+SITES[main]=		https://leaf.dragonflybsd.org/~marino/dports-src/
+SITES[avalon]=		http://mirror-master.dragonflybsd.org/iso-images/
+SITES[freebsd]=		https://download.freebsd.org/ftp/releases/amd64/amd64/ISO-IMAGES/${FREEBSD_RELEASE}/
+SITES[dragonlace]=	http://downloads.dragonlace.net/misc/
+SITES[ubuntu1]=		http://security.ubuntu.com/ubuntu/pool/main/g/glibc/
+SITES[ubuntu2]=		UBUNTU/h/hostname
+SITES[ubuntu3]=		UBUNTU/d/dash
+SITES[ubuntu4]=		UBUNTU/p/pax
+SITES[ubuntu5]=		UBUNTU/d/debianutils
+SITES[ubuntu6]=		UBUNTU/b/bsdmainutils
+SITES[ubuntu7]=		http://security.ubuntu.com/ubuntu/pool/main/s/shadow/
+SITES[ubuntu8]=		http://security.ubuntu.com/ubuntu/pool/main/l/linux/
+
+DISTFILE[1]=		dummy-tarball.tar.gz:main
+DISTFILE[2]=		dfly-x86_64-${DF_RELEASE}_REL.iso.bz2:avalon
+DISTFILE[3]=		libc6_2.23-0ubuntu9_amd64.deb:ubuntu1
+DISTFILE[4]=		libc6-dev_2.23-0ubuntu9_amd64.deb:ubuntu1
+DISTFILE[5]=		hostname_3.16ubuntu2_amd64.deb:ubuntu2
+DISTFILE[6]=		dash_0.5.8-2.1ubuntu2_amd64.deb:ubuntu3
+DISTFILE[7]=		pax_20151013-1_amd64.deb:ubuntu4
+DISTFILE[8]=		debianutils_4.7_amd64.deb:ubuntu5
+DISTFILE[9]=		libc-bin_2.23-0ubuntu9_amd64.deb:ubuntu1
+DISTFILE[10]=		bsdmainutils_9.0.6ubuntu3_amd64.deb:ubuntu6
+DISTFILE[11]=		passwd_4.2-3.1ubuntu5.3_amd64.deb:ubuntu7
+DISTFILE[12]=		linux-libc-dev_4.4.0-78.99_amd64.deb:ubuntu8
+DISTFILE[13]=		libc6-dev-amd64_2.23-0ubuntu9_i386.deb:ubuntu1
+DISTFILE[14]=		libc6-dev_2.23-0ubuntu9_i386.deb:ubuntu1
+DISTFILE[15]=		FreeBSD-${FREEBSD_RELEASE}-RELEASE-amd64-disc1.iso:freebsd
+DISTFILE[16]=		solaris_root_10_u8.v05.tar.xz:dragonlace
 
 SPKGS[dragonfly]=	single
 SPKGS[freebsd64]=	single
+SPKGS[linux]=		single
+SPKGS[sunos]=		single
 
-OPTIONS_AVAILABLE=	DRAGONFLY FREEBSD
+OPTIONS_AVAILABLE=	DRAGONFLY FREEBSD LINUX SUNOS
 OPTIONS_STANDARD=	none
-VOPTS[dragonfly]=	DRAGONFLY=ON FREEBSD=OFF
-VOPTS[freebsd64]=	DRAGONFLY=OFF FREEBSD=ON
+VOPTS[dragonfly]=	DRAGONFLY=ON FREEBSD=OFF LINUX=OFF SUNOS=OFF
+VOPTS[freebsd64]=	DRAGONFLY=OFF FREEBSD=ON LINUX=OFF SUNOS=OFF
+VOPTS[linux]=		DRAGONFLY=OFF FREEBSD=OFF LINUX=ON SUNOS=OFF
+VOPTS[sunos]=		DRAGONFLY=OFF FREEBSD=OFF LINUX=OFF SUNOS=ON
 
 INVALID_RPATH=		yes
 
@@ -33,19 +73,17 @@ BUILD_DEPENDS=		nawk:single:standard
 			libarchive:single:static
 			sha256:single:standard
 			gnugrep:single:standard
-			fetch:single:standard
 			file:single:ravensys
 			findutils:single:standard
 			flex:primary:standard
 			gzip:single:standard
 			xz:single:static
 			unzip:core:standard
-			m4:primary:standard
+			m4:primary:noprefix
 			bmake:single:standard
-			patch:single:standard
+			bsd-patch:single:standard
 			sed:single:standard
 			byacc:single:standard
-			libdl:single:standard
 			ravensys-uname:single:standard
 			less:single:standard
 			nvi:single:standard
@@ -55,9 +93,22 @@ BUILD_DEPENDS=		nawk:single:standard
 			ncurses:primary:static
 			pkg-bsd:static:standard
 			makewhatis:single:standard
+			genpatch:single:standard
+B_DEPS[linux]=		shadow:single:standard
+			fetch:single:standard
+			bash:primary:static
+B_DEPS[dragonfly]=	libdl:single:standard
+			fetch:single:standard
+B_DEPS[freebsd]=	libdl:single:standard
+			fetch:single:standard
+B_DEPS[sunos]=		wget:primary:ravensys
+			bash:primary:static
+			bsd-which:single:standard
 
 SKIP_BUILD=		yes
-EXTRACT_DIRTY=		1
+SINGLE_JOB=		yes
+EXTRACT_DIRTY=		2 3 ${EXTRA_UBUNTU} 14 15
+EXTRACT_DEB_PACKAGE=	3 ${EXTRA_UBUNTU} 14
 
 PLIST_SUB=		SONAME_LIBM={{Libm_{{OPSYS}}}}
 			SONAME_LIBC={{Libc_{{OPSYS}}}}
@@ -65,26 +116,41 @@ PLIST_SUB=		SONAME_LIBM={{Libm_{{OPSYS}}}}
 			SONAME_LIBUSB={{Libusb_{{OPSYS}}}}
 			SONAME_LIBUSBHID={{Libusbhid_{{OPSYS}}}}
 			SONAME_LIBCRYPT={{Libcrypt_{{OPSYS}}}}
+			SONAME_LIBKVM={{Libkvm_{{OPSYS}}}}
+			SONAME_LIBRT={{Librt_{{OPSYS}}}}
 			BASE=share/raven/sysroot/{{OPSYS}}
 
 MAKE_ENV=		OPSYS="{{OPSYS}}"
 			MKDIR="{{MKDIR}}"
+			GCCX=${GCCX}
 			libm={{Libm_{{OPSYS}}}}
 			libc={{Libc_{{OPSYS}}}}
 			libutil={{Libutil_{{OPSYS}}}}
 			libusb={{Libusb_{{OPSYS}}}}
 			libusbhid={{Libusbhid_{{OPSYS}}}}
 			libcrypt={{Libcrypt_{{OPSYS}}}}
+			libkvm={{Libkvm_{{OPSYS}}}}
+			librt={{Librt_{{OPSYS}}}}
 MAKE_ARGS=		BASE={{RSYS}}
 
 [DRAGONFLY].DESCRIPTION=		Ravenports system root for DragonFly
-[DRAGONFLY].DF_INDEX_ON=		1
+[DRAGONFLY].ONLY_FOR_OPSYS_ON=		dragonfly
+[DRAGONFLY].DF_INDEX_ON=		2
+
+[LINUX].DESCRIPTION=			Ravenports system root for Linux
+[LINUX].ONLY_FOR_OPSYS_ON=		linux
+[LINUX].DF_INDEX_ON=			3 ${EXTRA_UBUNTU} 14
 
 [FREEBSD].DESCRIPTION=			Ravenports system root for FreeBSD
-# [FREEBSD].DF_INDEX_ON=		2
+[FREEBSD].ONLY_FOR_OPSYS_ON=		freebsd
+[FREEBSD].DF_INDEX_ON=			15
+
+[SUNOS].DESCRIPTION=			Ravenports system root for Solaris 10
+[SUNOS].ONLY_FOR_OPSYS_ON=		sunos
+[SUNOS].DF_INDEX_ON=			16
 
 post-extract-DRAGONFLY-ON:
-	${MV} ${WRKDIR}/${NAMEBASE}_1 ${WRKDIR}/dragonfly
+	${MV} ${WRKDIR}/${NAMEBASE}_2 ${WRKDIR}/dragonfly
 	@${MKDIR} ${WRKSRC}
 	${INSTALL_DATA} ${FILESDIR}/Makefile ${WRKSRC}/
 
@@ -106,14 +172,76 @@ post-install-DRAGONFLY-ON:
 	${MV} ${STAGEDIR}${RSYS}/var/run/ld-elf.so.hints \
 		${STAGEDIR}${RSYS}/usr/share/
 	${RM} -r ${STAGEDIR}${RSYS}/var
-	# create termcap.db
-	${INSTALL_DATA} ${FILESDIR}/termcap.src \
-		${STAGEDIR}${RSYS}/usr/share/termcap
-	(cd ${STAGEDIR}${RSYS}/usr/share && \
-		${FOS}/usr/bin/cap_mkdb -f termcap ./termcap)
 
 	# Approach only works for DragonFly.
 	${FOS}/usr/bin/make -V .MAKE.DF.OSREL   > ${STAGEDIR}${RSYS}/usr/share/OSRELEASE
 	${FOS}/usr/bin/make -V .MAKE.DF.OSREL   > ${STAGEDIR}${RSYS}/usr/share/OSMAJOR
 	${FOS}/usr/bin/make -V .MAKE.DF.VERSION > ${STAGEDIR}${RSYS}/usr/share/OSVERSION
 	echo "x86_64"                           > ${STAGEDIR}${RSYS}/usr/share/STDARCH
+
+post-extract-LINUX-ON:
+	${MV} ${WRKDIR}/${NAMEBASE}_3 ${WRKDIR}/linux
+.for NDX in ${EXTRA_UBUNTU}
+	cp -a ${WRKDIR}/${NAMEBASE}_${NDX}/* ${WRKDIR}/linux/
+	${RM} -r ${WRKDIR}/${NAMEBASE}_${NDX}
+.endfor
+	@${MKDIR} ${WRKSRC}
+	${INSTALL_DATA} ${FILESDIR}/Makefile ${WRKSRC}/
+
+post-install-LINUX-ON:
+	${INSTALL_DATA} ${FILESDIR}/linux-group \
+		${STAGEDIR}${RSYS}/usr/share/group
+	${INSTALL_DATA} ${FILESDIR}/linux-passwd \
+		${STAGEDIR}${RSYS}/usr/share/passwd
+	${INSTALL_DATA} ${FOS}/etc/ld.so.conf.d/x86_64-linux-gnu.conf \
+		${STAGEDIR}${RSYS}/usr/share/x86_64-linux-gnu.conf
+	echo "${LINUX_OSREL}"   > ${STAGEDIR}${RSYS}/usr/share/OSRELEASE
+	echo "${LINUX_MAJOR}"   > ${STAGEDIR}${RSYS}/usr/share/OSMAJOR
+	echo "${LINUX_VERSION}" > ${STAGEDIR}${RSYS}/usr/share/OSVERSION
+	echo "x86_64"           > ${STAGEDIR}${RSYS}/usr/share/STDARCH
+	echo "include /etc/ld.so.conf.d/*.conf" > ${STAGEDIR}${RSYS}/usr/share/ld.so.conf
+	${LN} -s asm-generic ${STAGEDIR}${RSYS}/usr/include/asm
+
+post-extract-FREEBSD-ON:
+	${MV} ${WRKDIR}/${NAMEBASE}_15 ${WRKDIR}/freebsd
+	@${MKDIR} ${WRKSRC}
+	${INSTALL_DATA} ${FILESDIR}/Makefile ${WRKSRC}/
+	(cd ${WRKDIR}/freebsd && ${TAR} -xf usr/freebsd-dist/base.txz \
+		--no-same-owner --no-same-permissions)
+
+post-install-FREEBSD-ON:
+	${INSTALL_DATA} ${FOS}/etc/group \
+		${STAGEDIR}${RSYS}/usr/share/group
+	${INSTALL_DATA} ${FOS}/etc/master.passwd \
+		${STAGEDIR}${RSYS}/usr/share/master.passwd
+	${INSTALL_DATA} ${FOS}/etc/defaults/rc.conf \
+		${STAGEDIR}${RSYS}/usr/share/rc.conf
+	${FOS}/usr/sbin/pwd_mkdb -p -d ${STAGEDIR}${RSYS}/usr/share \
+		${STAGEDIR}${RSYS}/usr/share/master.passwd
+	${MKDIR} ${STAGEDIR}${RSYS}/var/run
+	# handle ldconfig hints
+	${INSTALL_PROGRAM} ${FOS}/sbin/ldconfig \
+		${STAGEDIR}${RSYS}/usr/bin/ldconfig
+	${FOS}/usr/sbin/chroot ${STAGEDIR}${RSYS} /usr/bin/ldconfig /usr/lib
+	${RM} ${STAGEDIR}${RSYS}/usr/bin/ldconfig
+	${MV} ${STAGEDIR}${RSYS}/var/run/ld-elf.so.hints \
+		${STAGEDIR}${RSYS}/usr/share/
+	${RM} -r ${STAGEDIR}${RSYS}/var
+
+	${ECHO} ${FREEBSD_RELEASE}   > ${STAGEDIR}${RSYS}/usr/share/OSRELEASE
+	${ECHO} ${FREEBSD_RELEASE:R} > ${STAGEDIR}${RSYS}/usr/share/OSMAJOR
+	${ECHO} ${FREE_KERNEL_VER}   > ${STAGEDIR}${RSYS}/usr/share/OSVERSION
+	echo "x86_64"                > ${STAGEDIR}${RSYS}/usr/share/STDARCH
+
+post-extract-SUNOS-ON:
+	${MV} ${WRKDIR}/solaris_root_10_u8 ${WRKDIR}/sunos
+	@${MKDIR} ${WRKSRC}
+	${INSTALL_DATA} ${FILESDIR}/Makefile ${WRKSRC}/
+	${RM} ${WRKDIR}/sunos/usr/include/png.h
+	${RM} ${WRKDIR}/sunos/usr/include/pngconf.h
+
+post-install-SUNOS-ON:
+	${ECHO} 5.10      > ${STAGEDIR}${RSYS}/usr/share/OSRELEASE
+	${ECHO} 5.10      > ${STAGEDIR}${RSYS}/usr/share/OSMAJOR
+	${ECHO} 510200910 > ${STAGEDIR}${RSYS}/usr/share/OSVERSION
+	${ECHO} x86_64    > ${STAGEDIR}${RSYS}/usr/share/STDARCH

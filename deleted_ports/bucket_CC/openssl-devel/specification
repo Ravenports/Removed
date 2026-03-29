@@ -1,4 +1,4 @@
-DEF[PORTVERSION]=	1.1.0e
+DEF[PORTVERSION]=	1.1.0g
 DEF[OPENSSL_SHLIBVER]=	10
 # ----------------------------------------------------------------------------
 
@@ -7,11 +7,11 @@ VERSION=		${PORTVERSION}
 KEYWORDS=		security devel
 VARIANTS=		standard
 SDESC[standard]=	SSL and crypto library
-HOMEPAGE=		http://www.openssl.org/
+HOMEPAGE=		https://www.openssl.org/
 CONTACT=		nobody
 
 DOWNLOAD_GROUPS=	main
-SITES[main]=		http://www.openssl.org/source/
+SITES[main]=		https://www.openssl.org/source/
 DISTFILE[1]=		openssl-${PORTVERSION}.tar.gz:main
 
 SPKGS[standard]=	single
@@ -25,6 +25,8 @@ OPT_ON[i386]=		I386
 LICENSE=		OpenSSL:single
 LICENSE_FILE=		OpenSSL:{{WRKSRC}}/LICENSE
 LICENSE_SCHEME=		solo
+
+FPC_EQUIVALENT=		security/openssl-devel
 
 USES=			cpe perl:build
 DISTNAME=		openssl-${PORTVERSION}
@@ -52,7 +54,6 @@ TEST_TARGET=		test
 
 [SKIP_MANPAGES].DESCRIPTION=		Avoid installing OpenSSL manpages
 
-[ASM].DESCRIPTION=			Optimized Assembler code
 [ASM].CONFIGURE_ARGS_OFF=		no-asm
 
 [EC].DESCRIPTION=			Optimize NIST elliptic curves
@@ -68,7 +69,6 @@ TEST_TARGET=		test
 [SSL3].DESCRIPTION=			SSLv3 protocol support
 [SSL3].CONFIGURE_ARGS_ON=		enable-ssl3 enable-ssl3-method
 
-[THREADS].DESCRIPTION=			Threading support
 [THREADS].CONFIGURE_ARGS_OFF=		no-threads
 
 [I386].DESCRIPTION=			Optimize for i386 (instead of i486+)
@@ -86,6 +86,10 @@ post-patch:
 post-patch-SKIP_MANPAGES-ON:
 	${GREP} -L openssl_manual_section ${WRKSRC}/doc/crypto/*.pod | ${XARGS} ${RM}
 	${GREP} -L openssl_manual_section ${WRKSRC}/doc/ssl/*.pod | ${XARGS} ${RM}
+
+post-patch-freebsd:
+	${REINPLACE_CMD} -e '/define HAVE_CRYPTODEV/d' \
+		${WRKSRC}/crypto/engine/eng_cryptodev.c
 
 post-configure:
 	${REINPLACE_CMD} \

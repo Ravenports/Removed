@@ -10,7 +10,7 @@ VERSION=		${PORTVERSION}
 KEYWORDS=		databases
 VARIANTS=		standard
 SDESC[standard]=	Powerful, open source object-relational database
-HOMEPAGE=		http://www.postgresql.org/
+HOMEPAGE=		https://www.postgresql.org/
 CONTACT=		nobody
 
 DOWNLOAD_GROUPS=	main
@@ -28,30 +28,39 @@ LICENSE=		PostgreSQL:server
 LICENSE_FILE=		PostgreSQL:{{WRKSRC}}/COPYRIGHT
 LICENSE_SCHEME=		solo
 
+FPC_EQUIVALENT=		databases/postgresql94-server
+
 BROKEN_SSL=		openssl-devel
 
 BUILD_DEPENDS=		docbook-sgml:single:standard
 			docbook-dsssl:single:standard
 			openjade:single:standard
 			OpenSP:single:standard
-			zlib:complete:standard
 			libxslt:single:standard
+			readline:single:standard
 BUILDRUN_DEPENDS=	libxml2:single:standard
+BR_DEPS[linux]=		ossp-uuid:single:standard
 
 EXRUN[server]=		postgresql${SUFFIX}:client:standard
 EXRUN[client]=		gettext:runtime:standard
+			readline:single:standard
+			zlib:complete:standard
 			ssl
 EXRUN[contrib]=		postgresql${SUFFIX}:client:standard
+			libxslt:single:standard
 			libxml2:single:standard
 			zlib:complete:standard
 			gettext:runtime:standard
 			ssl
+EXRUN[plpython]=	python
+EXRUN[plperl]=		perl
+EXRUN[pltcl]=		tcl
 
 USERS=			${PG_USER}
 GROUPS=			${PG_GROUP}
 USERGROUP_SPKG=		server
 
-USES=			bison gmake perl:build tcl:build ssl python:build
+USES=			bison gmake perl:build tcl:build ssl python:build zlib
 DISTNAME=		postgresql-${PORTVERSION}
 MUST_CONFIGURE=		gnu
 CONFIGURE_ARGS=		--with-libraries="{{PREFIX}}/lib"
