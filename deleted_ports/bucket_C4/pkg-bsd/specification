@@ -1,21 +1,28 @@
-DEF[PORTVERSION]=	1.10.99.6
-DEF[ROLLING_TAG]=	15f134e
+DEF[PORTVERSION]=	1.10.99.7
+DEF[ROLLING_TAG]=	38c8e9f
+DEF[SQLITE_VER]=	3.23.1
+DEF[SQLITE_LONGVER]=	${SQLITE_VER:S/.//:S/./0/}00
+DEF[SQLITE_YEAR]=	2018
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		pkg-bsd
 VERSION=		${PORTVERSION}
-REVISION=		6
+REVISION=		3
 KEYWORDS=		raven
 VARIANTS=		standard
 SDESC[standard]=	BSD binary package manager
 HOMEPAGE=		https://github.com/freebsd/pkg/blob/master/README.md
 CONTACT=		nobody
 
-DOWNLOAD_GROUPS=	main
+DOWNLOAD_GROUPS=	main sqlite
 SITES[main]=		GITHUB/jrmarino:pkg:${ROLLING_TAG}
+SITES[sqlite]=		https://www.sqlite.org/${SQLITE_YEAR}/
+			http://www2.sqlite.org/${SQLITE_YEAR}/
 DISTFILE[1]=		generated:main
+DISTFILE[2]=		sqlite-autoconf-${SQLITE_LONGVER}.tar.gz:sqlite
+DF_INDEX=		1 2
 
-SPKGS[standard]=	complete shared static
+SPKGS[standard]=	shared static
 
 OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none
@@ -33,7 +40,7 @@ BUILD_DEPENDS=		libarchive-devel:static:standard
 			autoconf:single:standard
 			automake:single:standard
 BR_DEPS[linux]=		libbsd:single:standard
-BR_DEPS[sunos]=		libbsd4sol:single:standard
+B_DEPS[sunos]=		libbsd4sol:single:standard
 			musl-fts:single:standard
 
 USES=			libtool:build
@@ -42,9 +49,18 @@ CONFIGURE_ARGS=		--disable-maintainer-mode
 			--mandir={{MANPREFIX}}/man
 INSTALL_TARGET=		install-strip
 CFLAGS=			-Wno-error
+# debugging		-O0 -g
 SINGLE_JOB=		yes
+SUB_FILES=		pkg.c
 
 VAR_OPSYS[sunos]=	CFLAGS=-I{{LOCALBASE}}/include/bsd
+
+post-extract:
+	# Use a newer sqlite than the provided 3.15.2 version
+	(cd ${WRKDIR}/sqlite-autoconf-${SQLITE_LONGVER}/ && \
+		cp sqlite3.[ch] shell.c ${WRKSRC}/external/sqlite/)
+	${REINPLACE_CMD} -e 's|SQLITE_CDECL main|SQLITE_CDECL sqlite3_shell|'\
+		${WRKSRC}/external/sqlite/shell.c
 
 pre-patch:
 	${REINPLACE_CMD} -e 's/larchive/larchive-devel/' \
@@ -63,11 +79,19 @@ post-patch-sunos:
 	${REINPLACE_CMD} -e 's|-lutil ||' \
 		${WRKSRC}/libpkg/Makefile.in \
 		${WRKSRC}/tests/Makefile.in
+	${REINPLACE_CMD} -e '/enable-new-dtags/d' \
+		${WRKSRC}/src/Makefile.in
+
+post-build:
+	(cd ${WRKDIR} && ${CC} pkg.c -o pkg-selector)
 
 post-install:
 	${RM} ${STAGEDIR}${PREFIX}/sbin/pkg2ng
 	${MV} ${STAGEDIR}${PREFIX}/lib/libpkg_static.a \
 		${STAGEDIR}${PREFIX}/lib/libpkg.a
+	${MV} ${STAGEDIR}${PREFIX}/sbin/pkg \
+		${STAGEDIR}${PREFIX}/sbin/pkg-dynamic
+	${MV} ${WRKDIR}/pkg-selector ${STAGEDIR}${PREFIX}/sbin/pkg
 	${INSTALL_SCRIPT} ${WRKSRC}/scripts/periodic/411.pkg-backup \
 		${WRKSRC}/scripts/periodic/490.status-pkg-changes \
 		${STAGEDIR}${PREFIX}/etc/periodic/daily/

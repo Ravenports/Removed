@@ -102,7 +102,7 @@ INSTALL_REQ_TOOLCHAIN=	yes
 [FEDERATED].SUB_LIST_OFF=		FEDER=""
 
 post-extract:
-	@${RM} -rv ${WRKSRC}/sql/sql_hints.yy.cc ${WRKSRC}/sql/sql_hints.yy.h
+	${RM} -rv ${WRKSRC}/sql/sql_hints.yy.cc ${WRKSRC}/sql/sql_hints.yy.h
 
 post-patch:
 	${REINPLACE_CMD} -e 's|/usr/bin/perl|${PREFIX}/bin/perl|' \
@@ -114,7 +114,7 @@ post-install:
 		${STAGEDIR}${MY_SECDIR} \
 		${STAGEDIR}${MY_TMPDIR}
 	${INSTALL_DATA} ${WRKDIR}/my.cnf.sample \
-		${STAGEDIR}${PREFIX}/etc/mysql/my.cnf.sample
+		${STAGEDIR}${ETCDIR}/my.cnf.sample
 
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/mysql/lib*.so
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/mysql/plugin/*.so

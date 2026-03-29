@@ -1,5 +1,6 @@
-DEF[PERL_VER]=		5.24
 DEF[PORTVERSION]=	EXTRACT_VERSION(PERL_5.24_VERSION)
+DEF[GCC_CURRENT]=	EXTRACT_INFO(CURRENT_GCC)
+DEF[PERL_VER]=		${PORTVERSION:R}
 DEF[MAINTAINER]=	John Marino
 DEF[MAINT_MAIL]=	draco@marino.st
 # ----------------------------------------------------------------------------
@@ -24,9 +25,10 @@ OPTIONS_STANDARD=	MULTIPLICITY THREADS BIT64INT DEBUG
 OPT_ON[all]=		MULTIPLICITY THREADS
 OPT_ON[i386]=		BIT64INT
 
-LICENSE=		ART10:primary GPLv1:primary
+LICENSE=		ART10:primary GPLv1+:primary
 LICENSE_FILE=		ART10:{{WRKSRC}}/Artistic
-			GPLv1:{{WRKSRC}}/Copying
+			GPLv1+:{{WRKSRC}}/Copying
+LICENSE_TERMS=		primary:{{WRKDIR}}/TERMS
 LICENSE_SCHEME=		dual
 
 FPC_EQUIVALENT=		lang/perl5.24
@@ -44,7 +46,7 @@ CONFIGURE_ARGS=		-Dcf_by="${MAINTAINER}"
 			-Di_gdbm
 			-Dlocincpth="{{BDB_INCLUDE_DIR}} {{PREFIX}}/include"
 			-Dloclibpth="{{BDB_LIB_DIR}} {{PREFIX}}/lib"
-			-Aldflags="-Wl,-rpath,{{PREFIX}}/lib"
+			-Aldflags="-Wl,-rpath,{{PREFIX}}/lib:{{PREFIX}}/toolchain/${GCC_CURRENT}/{{MULTILIB}}"
 INSTALL_REQ_TOOLCHAIN=	yes
 TEST_TARGET=		test_harness
 TEST_ENV=		{{MAKE_ENV}}
@@ -64,6 +66,10 @@ TEST_ENV=		{{MAKE_ENV}}
 
 [DEBUG].CONFIGURE_ARGS_ON=		-Doptimize="-g" -DDEBUGGING
 [DEBUG].CONFIGURE_ARGS_OFF=		-Doptimize="-O{{OPTIMIZER_LEVEL}}"
+
+post-extract:
+	${AWK} '/^LICENSING/,/^spells all this/' \
+		${WRKSRC}/README > ${WRKDIR}/TERMS
 
 post-patch:
 	# GDBM is missing the runpath

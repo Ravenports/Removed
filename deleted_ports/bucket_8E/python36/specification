@@ -30,7 +30,7 @@ BUILDRUN_DEPENDS=	libffi:single:standard
 			xz:single:standard
 BROKEN_SSL=		openssl-devel
 
-FPC_EQUIVALENT=		lang/python35
+FPC_EQUIVALENT=		lang/python36
 
 USES=			bdb cpe ncurses pkgconfig readline ssl shebangfix
 			zlib gettext-runtime
@@ -52,7 +52,7 @@ CONFIGURE_ARGS=		--with-system-ffi
 			--enable-ipv6
 CONFIGURE_ENV=		OPT=""
 			DISABLED_EXTENSIONS="_sqlite3 _tkinter _gdbm"
-CFLAGS=			-I{{NCURSESINC}}
+CPPFLAGS=		-I{{NCURSESINC}}
 INSTALL_TARGET=		altinstall
 TEST_TARGET=		buildbottest
 TEST_ARGS=		TESTOPTS=-j{{MAKE_JOBS_NUMBER}}
@@ -76,6 +76,10 @@ VAR_OPSYS[freebsd]=	PLIST_SUB=SOABI=
 			PLIST_SUB=SCD=
 			PLIST_SUB=FULLABI={{ABIFLAGS}}
 			PLIST_SUB=PLAT={{OPSYS:tl}}{{MAJOR:R}}
+VAR_OPSYS[sunos]=	PLIST_SUB=SOABI=
+			PLIST_SUB=SCD=
+			PLIST_SUB=PLAT=sunos5
+			PLIST_SUB=FULLABI={{ABIFLAGS}}
 
 [THREADS].CONFIGURE_WITH_BOTH=		threads
 [THREADS].LDFLAGS_ON=			-pthread

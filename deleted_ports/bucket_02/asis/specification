@@ -19,7 +19,10 @@ OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none
 
 LICENSE=		GPLv3+:primary
+LICENSE_TERMS=		primary:{{WRKDIR}}/TERMS
 LICENSE_FILE=		GPLv3+:{{WRKSRC}}/COPYING3
+LICENSE_AWK=		TERMS:"^$$"
+LICENSE_SOURCE=		TERMS:{{WRKSRC}}/asis/asis.ads
 LICENSE_SCHEME=		solo
 
 BUILD_DEPENDS=		xmlada:primary:standard
@@ -33,12 +36,12 @@ DISTNAME=		asis-gpl-${PORTVERSION}-src
 MAKE_ARGS=		PROCESSORS={{MAKE_JOBS_NUMBER}}
 
 post-extract:
-	@${REINPLACE_CMD} -e 's|OPSYS|ASISOPSYS|g' \
+	${REINPLACE_CMD} -e 's|OPSYS|ASISOPSYS|g' \
 		-e 's|(prefix)|(DESTDIR)$$(prefix)|g' \
 		${WRKSRC}/Makefile \
 		${WRKSRC}/Makefile.stub \
 		${WRKSRC}/common.gpr
-	@${RM} -r ${WRKSRC}/gnat
+	${RM} -r ${WRKSRC}/gnat
 
 do-build:
 	# This target is recreated because -j cannot be set, but

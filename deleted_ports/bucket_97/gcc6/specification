@@ -37,8 +37,7 @@ LICENSE_FILE=		GPLv2+:{{WRKSRC}}/COPYING
 			GPLv3RLE:{{WRKSRC}}/COPYING.RUNTIME
 LICENSE_SCHEME=		multi
 
-# FreeBSD uses a different version scheme
-# FPC_EQUIVALENT=		lang/gcc6-aux
+FPC_EQUIVALENT=		lang/gcc6
 
 BUILD_DEPENDS=		gmp:static:standard
 			mpfr:static:standard
@@ -100,7 +99,7 @@ INFO=			infopages:cpp
 post-patch:
 	# Update LINK_SPEC to add gcc-aux lib runpath in every binary
 	@${ECHO} "Configuring LINK_SPEC runpath"
-	@${REINPLACE_CMD} -e 's;\@PREFIX\@;${PREFIX:H};' \
+	${REINPLACE_CMD} -e 's;\@PREFIX\@;${PREFIX:H};' \
 		-e 's;\@GCCAUX\@;${NAMEBASE};' \
 		${WRKSRC}/gcc/config/dragonfly.h \
 		${WRKSRC}/gcc/config/i386/freebsd64.h \

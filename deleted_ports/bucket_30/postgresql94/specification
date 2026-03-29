@@ -36,19 +36,19 @@ BUILD_DEPENDS=		docbook-sgml:single:standard
 			docbook-dsssl:single:standard
 			openjade:single:standard
 			OpenSP:single:standard
-			libxslt:single:standard
 			readline:single:standard
-BUILDRUN_DEPENDS=	libxml2:single:standard
+BUILDRUN_DEPENDS=	libxslt:single:standard
 BR_DEPS[linux]=		ossp-uuid:single:standard
+BR_DEPS[sunos]=		ossp-uuid:single:standard
 
 EXRUN[server]=		postgresql${SUFFIX}:client:standard
 EXRUN[client]=		gettext:runtime:standard
+			libxslt:single:standard
 			readline:single:standard
 			zlib:complete:standard
 			ssl
 EXRUN[contrib]=		postgresql${SUFFIX}:client:standard
 			libxslt:single:standard
-			libxml2:single:standard
 			zlib:complete:standard
 			gettext:runtime:standard
 			ssl
@@ -89,8 +89,14 @@ SUB_LIST=		PG_GROUP=${PG_GROUP}
 			PG_USER=${PG_USER}
 			PG_UID=${PG_UID}
 
+VAR_OPSYS[sunos]=	CONFIGURE_ENV=ac_cv_search_bind_textdomain_codeset=-lintl
+
 [NLS].CONFIGURE_ENABLE_BOTH=		nls
 [NLS].USES_ON=				gettext-runtime gettext-tools
+
+post-patch-sunos:
+	${REINPLACE_CMD} -e '/sqlmansect/d' \
+		${WRKSRC}/src/makefiles/Makefile.solaris
 
 post-install:
 	@${MKDIR} ${STAGEDIR}${PREFIX}/etc/periodic/daily

@@ -20,9 +20,10 @@ OPTIONS_STANDARD=	none
 
 FPC_EQUIVALENT=		devel/sdl_gnat
 
+# USES=mesa sets BUILDRUNS, so specify mesa manually
 BUILD_DEPENDS=		mesa:libs:standard
 			sdl1_ttf:single:standard
 
 post-patch:
-	@${REINPLACE_CMD} -e 's|@PREFIX@|${LOCALBASE}|' \
+	${REINPLACE_CMD} -e 's|@PREFIX@|${LOCALBASE}|' \
 		${WRKSRC}/gnat_sdl.gpr

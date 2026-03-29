@@ -39,10 +39,12 @@ LICENSE_FILE=		CUSTOM1:{{WRKSRC}}/LICENSE.TXT
 LICENSE_NAME=		CUSTOM1:"LLVM Release License"
 LICENSE_SCHEME=		solo
 
+BROKEN[freebsd]=	Inexplicable signal 9 during stage installation
+
 FPC_EQUIVALENT=		devel/llvm50
 
 USES=			cmake:outsource ncurses perl:build python:build
-			execinfo shebangfix zlib c++:llvm,clang
+			execinfo shebangfix zlib c++:llvm compiler:clang
 GNOME_COMPONENTS=	libxml2
 DISTNAME=		llvm-${PORTVERSION}.src
 SHEBANG_FILES=		tools/clang/tools/scan-view/bin/scan-view
@@ -53,19 +55,19 @@ SHEBANG_FILES=		tools/clang/tools/scan-view/bin/scan-view
 			tools/clang/tools/extra/include-fixer/find-all-symbols/tool/run-find-all-symbols.py
 CMAKE_INSTALL_PREFIX=	{{PREFIX}}/llvm${SUFFIX}
 CMAKE_ARGS=		-DLLVM_BUILD_LLVM_DYLIB=ON
-			-DCMAKE_BUILD_TYPE=Release
 			-DCMAKE_INSTALL_RPATH:STRING="{{LOCALBASE}}/llvm${SUFFIX}/lib"
 			-DLLVM_HOST_TRIPLE:STRING="{{CONFIGURE_TARGET}}"
+CMAKE_BUILD_TYPE=	Release
 PLIST_SUB=		NAMEBASE="llvm${SUFFIX}"
 			LLVM_RELEASE="${LLVM_VERSION}"
 			LLVM_MAJOR="${MAJOR}"
 
 # llvm linking requires vast amounts of memory per builder
 # On FreeBSD and Linux using swapfiles, the build can thrash the disk so much
-# that the watchdog always kicks in.  Limiting to 2 builders seems to allow
-# jobs to complete using mechanical disk swap files
+# that the watchdog always kicks in.  For llvm50, mandating a single job
+# seems to be the most effective approach to avoid this.
 
-MAKE_JOBS_NUMBER_LIMIT=	2
+SINGLE_JOB=		yes
 
 [GOLD].DESCRIPTION=			Build the LLVM Gold plugin for LTO
 [OPENMP].DESCRIPTION=			Install libomp, the LLVM OpenMP runtime library

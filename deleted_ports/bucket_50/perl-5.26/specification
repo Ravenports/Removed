@@ -7,6 +7,7 @@ DEF[MAINT_MAIL]=	draco@marino.st
 
 NAMEBASE=		perl-${PERL_VER}
 VERSION=		${PORTVERSION}
+REVISION=		1
 KEYWORDS=		lang perl devel
 VARIANTS=		standard
 SDESC[standard]=	Practical Extraction and Report Language
@@ -25,15 +26,17 @@ OPTIONS_STANDARD=	MULTIPLICITY THREADS BIT64INT DEBUG
 OPT_ON[all]=		MULTIPLICITY THREADS
 OPT_ON[i386]=		BIT64INT
 
-LICENSE=		ART10:primary GPLv1:primary
+LICENSE=		ART10:primary GPLv1+:primary
 LICENSE_FILE=		ART10:{{WRKSRC}}/Artistic
-			GPLv1:{{WRKSRC}}/Copying
+			GPLv1+:{{WRKSRC}}/Copying
+LICENSE_TERMS=		primary:{{WRKDIR}}/TERMS
 LICENSE_SCHEME=		dual
 
 FPC_EQUIVALENT=		lang/perl5.26
 
 BUILDRUN_DEPENDS=	gdbm:single:standard
 			db5:static:standard
+RUN_DEPENDS=		autoselect-perl:single:standard
 
 USES=			bdb cpe perl-interp cclibs:primary
 
@@ -45,7 +48,7 @@ CONFIGURE_ARGS=		-Dcf_by="${MAINTAINER}"
 			-Di_gdbm
 			-Dlocincpth="{{BDB_INCLUDE_DIR}} {{PREFIX}}/include"
 			-Dloclibpth="{{BDB_LIB_DIR}} {{PREFIX}}/lib"
-			-Aldflags="-Wl,-rpath,{{PREFIX}}/lib:{{PREFIX}}/toolchain/${GCC_CURRENT}/{{MULTILIB}} -Wl,-rpath-link,{{ASLIB}}"
+			-Aldflags="-Wl,-rpath,{{PREFIX}}/lib:{{PREFIX}}/toolchain/${GCC_CURRENT}/{{MULTILIB}}"
 INSTALL_REQ_TOOLCHAIN=	yes
 TEST_TARGET=		test_harness
 TEST_ENV=		{{MAKE_ENV}}
@@ -66,6 +69,10 @@ TEST_ENV=		{{MAKE_ENV}}
 [DEBUG].CONFIGURE_ARGS_ON=		-Doptimize="-g" -DDEBUGGING
 [DEBUG].CONFIGURE_ARGS_OFF=		-Doptimize="-O{{OPTIMIZER_LEVEL}}"
 
+post-extract:
+	${AWK} '/^LICENSING/,/^spells all this/' \
+		${WRKSRC}/README > ${WRKDIR}/TERMS
+
 post-patch:
 	# GDBM is missing the runpath
 	${REINPLACE_CMD} -e 's|@PREFIX@|${PREFIX}|' \
@@ -73,7 +80,10 @@ post-patch:
 		${WRKSRC}/ext/NDBM_File/Makefile.PL \
 		${WRKSRC}/ext/ODBM_File/Makefile.PL
 	${REINPLACE_CMD} -e 's|@WRKSRC@|${WRKSRC}|' \
-		${WRKSRC}/cpan/DB_File/Makefile.PL \
+		${WRKSRC}/cpan/DB_File/Makefile.PL
+	${REINPLACE_CMD} -e 's|/usr/local|${PREFIX}|g' \
+		${WRKSRC}/cpan/CPAN/scripts/cpan \
+		${WRKSRC}/cpan/Encode/bin/enc2xs
 
 post-patch-sunos:
 	${REINPLACE_CMD} -e '/^libs = / s/= /= -lm /' \
