@@ -215,7 +215,7 @@ def remaining_ports(filter, rsource):
             if calced == port:
                 results.add(port)
             else:
-                print("SKIP MISPLACED {port}, should be located at ${calced}")
+                print("SKIP MISPLACED {port}, should be located at {calced}")
     return results
 
 
