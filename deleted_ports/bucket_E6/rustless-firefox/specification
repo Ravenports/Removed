@@ -10,7 +10,7 @@ HOMEPAGE=		https://www.mozilla.org/en-US/firefox/organizations/
 CONTACT=		nobody
 
 DOWNLOAD_GROUPS=	main
-SITES[main]=		https://archive.mozilla.org/pub/firefox/releases/${PORTVERSION}esr/source/
+SITES[main]=		MOZILLA/firefox/releases/${PORTVERSION}esr/source
 DISTFILE[1]=		firefox-${PORTVERSION}esr.source.tar.xz:main
 
 SPKGS[standard]=	single
@@ -27,7 +27,6 @@ LICENSE_SCHEME=		solo
 # FPC_EQUIVALENT=	started as www/firefox-esr, but this will expire
 
 BUILD_DEPENDS=		python-sqlite3:single:py27
-			video4linux:headers:standard
 			autoconf213:single:standard
 			bzip2:static:standard
 			yasm:single:standard
@@ -40,7 +39,6 @@ BUILDRUN_DEPENDS=	nss:primary:standard
 			libvpx:single:standard
 			libffi:single:standard
 			sqlite:single:standard
-			video4linux:primary:standard
 			hunspell:single:standard
 			icu:single:standard
 			bzip2:shared:standard
@@ -152,6 +150,9 @@ post-patch:
 	${REINPLACE_CMD} -Ee '/^MOZ_FIX_LINK_PATHS=/ s|"|"-Wl,-rpath,${PREFIX}/lib/firefox |' \
 		${WRKSRC}/js/src/old-configure.in \
 		${WRKSRC}/old-configure.in
+	${REINPLACE_CMD} -e "s|'-Werror=format'||" \
+		${WRKSRC}/js/src/moz.build \
+		${WRKSRC}/js/xpconnect/src/moz.build
 
 	# set configuration
 	for arg in ${QMAKE_ARGS} ; do \

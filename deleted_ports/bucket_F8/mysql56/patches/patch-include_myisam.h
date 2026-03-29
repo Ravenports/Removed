@@ -1,6 +1,6 @@
---- include/myisam.h.orig	2018-09-10 10:17:55 UTC
+--- include/myisam.h.orig	2019-09-27 07:04:56 UTC
 +++ include/myisam.h
-@@ -49,7 +49,7 @@ extern "C" {
+@@ -56,7 +56,7 @@ extern "C" {
    The following defines can be increased if necessary.
    But beware the dependency of MI_MAX_POSSIBLE_KEY_BUFF and MI_MAX_KEY_LENGTH.
  */

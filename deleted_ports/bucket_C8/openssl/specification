@@ -1,5 +1,6 @@
-DEF[PORTVERSION]=	1.0.2q
+DEF[PORTVERSION]=	1.0.2u
 DEF[OPENSSL_SHLIBVER]=	9
+DEF[BASE]=		{{PREFIX}}/openssl
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		openssl
@@ -28,6 +29,8 @@ LICENSE_SCHEME=		solo
 
 FPC_EQUIVALENT=		security/openssl
 
+RUN_DEPENDS=		autoselect-ssl:single:standard
+
 USES=			cpe perl:build
 DISTNAME=		openssl-${PORTVERSION}
 SINGLE_JOB=		yes
@@ -38,9 +41,8 @@ CONFIGURE_ARGS=		no-md2
 			no-sctp
 			no-gmp
 MAKE_ARGS=		WHOLE_ARCHIVE_FLAG=--whole-archive
-MAKE_ENV=		LIBRPATH="{{PREFIX}}/lib"
+MAKE_ENV=		LIBRPATH="{{BASE}}/lib"
 			GREP_OPTIONS=
-TEST_TARGET=		test
 
 [SKIP_MANPAGES].DESCRIPTION=		Avoid installing OpenSSL manpages
 
@@ -97,9 +99,10 @@ do-configure:
 	${REINPLACE_CMD} -e "s|options 386|options|" ${WRKSRC}/config
 	(cd ${WRKSRC} && ${SETENV} CC="${CC}" FREEBSDCC="${CC}" \
 		CFLAGS="${CFLAGS}" PERL="${PERL}" \
-		./config --prefix=${PREFIX} --openssldir=openssl \
-		--install_prefix=${STAGEDIR} -L${PREFIX}/lib \
-		${CONFIGURE_ARGS})
+		./config --prefix=${BASE} \
+		--openssldir=${PREFIX}/etc/openssl \
+		--install_prefix=${STAGEDIR} \
+		-L${BASE}/lib ${CONFIGURE_ARGS})
 
 post-configure:
 	${REINPLACE_CMD} \
@@ -107,13 +110,24 @@ post-configure:
 		-e 's|LIBVERSION=[^ ]* |LIBVERSION=${OPENSSL_SHLIBVER} |' \
 		${WRKSRC}/Makefile
 
+post-install:
+	${STRIP_CMD} ${STAGEDIR}${BASE}/bin/openssl
+
 post-install-SHARED-ON:
 .for i in libcrypto libssl
-	${INSTALL_LIB} ${WRKSRC}/$i.so.${OPENSSL_SHLIBVER} ${STAGEDIR}${PREFIX}/lib
-	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/$i.so.${OPENSSL_SHLIBVER}
-	${LN} -sf $i.so.${OPENSSL_SHLIBVER} ${STAGEDIR}${PREFIX}/lib/$i.so
+	${INSTALL_LIB} ${WRKSRC}/$i.so.${OPENSSL_SHLIBVER} ${STAGEDIR}${BASE}/lib
+	${STRIP_CMD} ${STAGEDIR}${BASE}/lib/$i.so.${OPENSSL_SHLIBVER}
+	${LN} -sf $i.so.${OPENSSL_SHLIBVER} ${STAGEDIR}${BASE}/lib/$i.so
 .endfor
-	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/engines/*.so
+	${STRIP_CMD} ${STAGEDIR}${BASE}/lib/engines/*.so
 
-post-install:
-	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/openssl
+post-install-SHARED-OFF:
+	${RMDIR} ${STAGEDIR}${BASE}/lib/engines
+
+post-install-SKIP_MANPAGES-ON:
+	${RM} -r ${STAGEDIR}${MANPREFIX}/man
+
+post-install-SKIP_MANPAGES-OFF:
+	${MKDIR} ${STAGEDIR}${PREFIX}/etc/man.d
+	${ECHO_CMD} "MANPATH ${PREFIX}/openssl/share/man" \
+		>> ${STAGEDIR}${PREFIX}/etc/man.d/openssl.conf

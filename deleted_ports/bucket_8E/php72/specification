@@ -8,7 +8,7 @@ VERSION=		${PORTVERSION}
 KEYWORDS=		lang www php
 VARIANTS=		standard
 SDESC[standard]=	PHP Hypertext Preprocessor version ${PORTVERSION:R}
-HOMEPAGE=		http://php.net/
+HOMEPAGE=		https://php.net/
 CONTACT=		nobody
 
 DOWNLOAD_GROUPS=	main
@@ -34,7 +34,7 @@ USES=			cpe gmake
 CPE_PRODUCT=		php
 GNOME_COMPONENTS=	libxml2
 DISTNAME=		php-${PORTVERSION}
-RC_SUBR=		php-fpm:single
+RC_SUBR=		php${SUFFIX}-fpm:single
 MUST_CONFIGURE=		gnu
 DESTDIRNAME=		INSTALL_ROOT
 
@@ -48,12 +48,15 @@ CONFIGURE_ARGS=		--with-layout=GNU
 			--enable-libxml
 			--enable-mysqlnd
 			--enable-hash
+			--enable-maintainer-zts
 			--with-libxml-dir={{LOCALBASE}}
 			--with-pcre-regex={{LOCALBASE}}
 			--program-suffix=${SUFFIX}
 CONFIGURE_ENV=		ac_cv_decimal_fp_supported="no"
 			lt_cv_path_SED="sed"
+# #			pthreads_working="yes"
 PLIST_SUB=		SUFFIX=${SUFFIX} SOMAJOR=${SOMAJOR}
+SUB_LIST=		SUFFIX=${SUFFIX}
 
 BR_DEPS[darwin]=	libiconv:static:standard
 
@@ -85,6 +88,7 @@ post-patch:
 	${REINPLACE_CMD} -e "/includedir=/ s|php|php${SUFFIX}|" \
 		${WRKSRC}/scripts/phpize.in
 	${REINPLACE_CMD} -e "/include_dir=/ s|php|php${SUFFIX}|" \
+		-e "/^ldflags=/ s|@PHP|-L${PREFIX}/lib/php${SUFFIX} @PHP|" \
 		${WRKSRC}/scripts/php-config.in
 	${REINPLACE_CMD} -e "s|darwin|darwin-disable|" \
 		${WRKSRC}/sapi/cgi/config9.m4 \

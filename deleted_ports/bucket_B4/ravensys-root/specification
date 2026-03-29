@@ -1,18 +1,18 @@
-DEF[DF_RELEASE]=	5.4.0
+DEF[DF_RELEASE]=	5.6.2
 DEF[LINUX_KERNEL]=	4.4.0-53
 DEF[LINUX_OSREL]=	${LINUX_KERNEL:DL="-":H}
 DEF[LINUX_MAJOR]=	${LINUX_OSREL:R}
 DEF[LINUX_VERSION]=	${LINUX_KERNEL:S/-//:S/.//:S/./0/}
-DEF[EXTRA_UBUNTU]=	4 5 6 7 8 9 10 11 12 13 17 18 19
+DEF[EXTRA_UBUNTU]=	4 5 6 7 8 9 10 11 12 13 17 18 19 21 22
 DEF[FREEBSD_RELEASE]=	11.1
 DEF[FREE_KERNEL_VER]=	1101001
-DEF[DFLY_KERNEL_VER]=	500400
+DEF[DFLY_KERNEL_VER]=	500600
 DEF[GCCX]=		EXTRACT_INFO(CURRENT_GCC)
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		ravensys-root
-VERSION=		1.5
-REVISION=		0
+VERSION=		3.0
+REVISION=		1
 KEYWORDS=		raven
 VARIANTS=		dragonfly freebsd_amd64 linux sunos macos
 SDESC[dragonfly]=	DragonFly64 system root for Ravenports build env
@@ -24,11 +24,11 @@ HOMEPAGE=		none
 CONTACT=		John_Marino[draco@marino.st]
 
 DOWNLOAD_GROUPS=	main avalon ubuntu1 ubuntu2 ubuntu3 ubuntu4 ubuntu5
-			ubuntu6 ubuntu7 ubuntu8 ubuntu9
+			ubuntu6 ubuntu7 ubuntu8 ubuntu9 ubuntu10
 			freebsd_amd64 dragonlace
 SITES[main]=		https://leaf.dragonflybsd.org/~marino/dports-src/
 SITES[avalon]=		https://mirror-master.dragonflybsd.org/iso-images/
-SITES[freebsd_amd64]=	https://download.freebsd.org/ftp/releases/amd64/amd64/ISO-IMAGES/${FREEBSD_RELEASE}/
+SITES[freebsd_amd64]=	http://ftp-archive.freebsd.org/pub/FreeBSD-Archive/old-releases/amd64/amd64/ISO-IMAGES/${FREEBSD_RELEASE}/
 SITES[dragonlace]=	http://downloads.dragonlace.net/misc/
 SITES[ubuntu1]=		http://security.ubuntu.com/ubuntu/pool/main/g/glibc/
 SITES[ubuntu2]=		UBUNTU/h/hostname
@@ -39,6 +39,7 @@ SITES[ubuntu6]=		UBUNTU/b/bsdmainutils
 SITES[ubuntu7]=		http://security.ubuntu.com/ubuntu/pool/main/s/shadow/
 SITES[ubuntu8]=		http://security.ubuntu.com/ubuntu/pool/main/l/linux/
 SITES[ubuntu9]=		UBUNTU/a/attr
+SITES[ubuntu10]=	UBUNTU/a/acl
 
 DISTFILE[1]=		dummy-tarball.tar.gz:main
 DISTFILE[2]=		dfly-x86_64-${DF_RELEASE}_REL.iso.bz2:avalon
@@ -60,6 +61,8 @@ DISTFILE[17]=		locales_2.23-0ubuntu10_all.deb:ubuntu1
 DISTFILE[18]=		libattr1-dev_2.4.47-2_amd64.deb:ubuntu9
 DISTFILE[19]=		libattr1_2.4.47-2_amd64.deb:ubuntu9
 DISTFILE[20]=		mac_root_10.13.6.v01.tar.zst:dragonlace
+DISTFILE[21]=		libacl1-dev_2.2.52-3_amd64.deb:ubuntu10
+DISTFILE[22]=		libacl1_2.2.52-3_amd64.deb:ubuntu10
 
 SPKGS[dragonfly]=	single
 SPKGS[freebsd_amd64]=	single
@@ -103,8 +106,8 @@ BUILD_DEPENDS=		nawk:single:standard
 			coreutils:single:standard
 			binutils:single:standard
 			ncurses:primary:static
-			pkg-bsd:static:standard
-			makewhatis:single:standard
+			ravensw:single:standard
+			mandoc:single:standard
 			genpatch:single:standard
 			lockf:single:standard
 			fetch:single:standard
@@ -127,6 +130,7 @@ PLIST_SUB=		SONAME_LIBM={{Libm_{{OPSYS}}}}
 			SONAME_LIBCRYPT={{Libcrypt_{{OPSYS}}}}
 			SONAME_LIBKVM={{Libkvm_{{OPSYS}}}}
 			SONAME_LIBRT={{Librt_{{OPSYS}}}}
+			SONAME_LIBRPCSVC={{Librpcsvc_{{OPSYS}}}}
 			BASE={{SYSPATH}}
 
 MAKE_ENV=		OPSYS="{{OPSYS}}"
@@ -140,6 +144,7 @@ MAKE_ENV=		OPSYS="{{OPSYS}}"
 			libcrypt={{Libcrypt_{{OPSYS}}}}
 			libkvm={{Libkvm_{{OPSYS}}}}
 			librt={{Librt_{{OPSYS}}}}
+			librpcsvc={{Librpcsvc_{{OPSYS}}}}
 MAKE_ARGS=		BASE={{RSYS}}
 
 [DRAGONFLY].DESCRIPTION=		Ravenports system root for DragonFly

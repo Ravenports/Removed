@@ -7,7 +7,6 @@ DEF[MAINT_MAIL]=	draco@marino.st
 
 NAMEBASE=		perl-${PERL_VER}
 VERSION=		${PORTVERSION}
-REVISION=		2
 KEYWORDS=		lang perl devel
 VARIANTS=		standard
 SDESC[standard]=	Practical Extraction and Report Language
@@ -49,6 +48,7 @@ CONFIGURE_ARGS=		-Dcf_by="${MAINTAINER}"
 			-Dlocincpth="{{BDB_INCLUDE_DIR}} {{PREFIX}}/include"
 			-Dloclibpth="{{BDB_LIB_DIR}} {{PREFIX}}/lib"
 			-Aldflags="-Wl,-rpath,{{PREFIX}}/lib:{{PREFIX}}/toolchain/${GCC_CURRENT}/{{MULTILIB}}"
+PLIST_SUB=		PREFIX={{PREFIX}}
 INSTALL_REQ_TOOLCHAIN=	yes
 TEST_TARGET=		test_harness
 TEST_ENV=		{{MAKE_ENV}}
@@ -86,6 +86,9 @@ post-patch:
 		${WRKSRC}/cpan/Encode/bin/enc2xs
 
 post-patch-sunos:
+	${SED} -i.sunos \
+		-e 's| -fstack-protector-strong||' \
+		-e 's| -fstack-protector||' ${WRKSRC}/Configure
 	${REINPLACE_CMD} -e '/^libs = / s/= /= -lm /' \
 		${WRKSRC}/Makefile.SH
 

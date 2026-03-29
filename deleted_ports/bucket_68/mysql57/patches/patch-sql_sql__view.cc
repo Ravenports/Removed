@@ -1,6 +1,6 @@
---- sql/sql_view.cc.orig	2018-10-04 05:48:22 UTC
+--- sql/sql_view.cc.orig	2019-09-27 07:00:15 UTC
 +++ sql/sql_view.cc
-@@ -778,46 +778,46 @@ static const int required_view_parameter
+@@ -785,46 +785,46 @@ static const int required_view_parameter
  */
  static File_option view_parameters[]=
  {{{ C_STRING_WITH_LEN("query")},

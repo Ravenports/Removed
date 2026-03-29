@@ -1,21 +1,28 @@
-DEF[PORTVERSION]=	2017
-DEF[RELEASE_TAG]=	ba0c4c0
+DEF[PORTVERSION]=	2018
 DEF[PYCOMPILE]=		{{PREFIX}}/lib/python{{PYTHON_VER}}/compileall.py
 DEF[GCCVER]=		EXTRACT_INFO(CURRENT_GCC)
-DEF[PYVER]=		py27
+DEF[HASH]=		39569c5
+DEF[ALS_VERSION]=	f25f576
+DEF[TOOLS_DATE]=	2019-20190517-195C4
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		gps
 VERSION=		${PORTVERSION}
+REVISION=		1
 KEYWORDS=		devel
 VARIANTS=		standard
 SDESC[standard]=	GNAT Programming Studio - IDE for Ada plus
 HOMEPAGE=		https://www.adacore.com/gnatpro/toolsuite/gps/
 CONTACT=		John_Marino[draco@marino.st]
 
-DOWNLOAD_GROUPS=	main
-SITES[main]=		GITHUB/AdaCore:gps:${RELEASE_TAG}
+DOWNLOAD_GROUPS=	main dragon als
+SITES[main]=		GITHUB/AdaCore:gps:${HASH}
+SITES[als]=		GITHUB/AdaCore:ada_language_server:${ALS_VERSION}
+SITES[dragon]=		http://downloads.dragonlace.net/src/
 DISTFILE[1]=		generated:main
+DISTFILE[2]=		generated:als
+DISTFILE[3]=		libadalang-tools-${TOOLS_DATE}-src.tar.gz:dragon
+DF_INDEX=		1 2 3
 
 SPKGS[standard]=	complete primary docs examples
 
@@ -26,29 +33,26 @@ LICENSE=		GPLv3+:primary
 LICENSE_FILE=		GPLv3+:{{WRKSRC}}/COPYING3
 LICENSE_TERMS=		primary:{{WRKDIR}}/TERMS
 LICENSE_AWK=		TERMS:"^$$"
-LICENSE_SOURCE=		TERMS:{{WRKSRC}}/gps/src/gps-main.adb
+LICENSE_SOURCE=		TERMS:{{WRKSRC}}/gnatstudio/src/gps-main.adb
 LICENSE_SCHEME=		solo
 
-# FreeBSD deleted because Brooks and Antoine too lazy to change llvm reference
-# FPC_EQUIVALENT=		devel/gps
-
 BUILD_DEPENDS=		gnat-util:single:standard
-			python-Sphinx:single:${PYVER}
+			gnatcoll-db:complete:standard
+			gnatcoll-bindings:python:standard
 BUILDRUN_DEPENDS=	fontconfig:primary:standard
 			freetype:primary:standard
 			clang:compiler:standard
 			gtkada:primary:standard
-			python-pygobject:primary:${PYVER}
-			libadalang:single:${PYVER}
-			gnatcoll:primary:standard
+			python-pygobject:primary:python_used
+			libadalang:single:standard
 RUN_DEPENDS=		librsvg:primary:standard
 			gdb:single:standard
-			python-pep8:single:${PYVER}
-			python-jedi:single:${PYVER}
+			python-pep8:single:python_used
+			python-jedi:single:python_used
 EXRUN[primary]=		${GCCVER}:complete:standard
 
 USES=			gprbuild:buildrun gettext-tools gmake pkgconfig zlib
-			perl:build python:${PYVER} shebangfix iconv
+			perl:build python:py27 shebangfix iconv
 XORG_COMPONENTS=	x11
 GNOME_COMPONENTS=	gtk3 cairo gdkpixbuf
 
@@ -61,7 +65,7 @@ MAKE_ARGS=		PROCESSORS={{MAKE_JOBS_NUMBER}}
 			PYTHON_CMD={{PYTHON_CMD}}
 SUB_FILES=		gps
 SUB_LIST=		ADA_PATH={{PREFIX}}/toolchain/${GCCVER}/bin
-SHEBANG_FILES=		share/support/core/gps_utils/internal/dialogs.py
+SHEBANG_FILES=		share/support/core/gs_utils/internal/dialogs.py
 			share/plug-ins/spark2014.py
 
 # note: librsvg2 is needed to display the svg icons in the menu.  Actually
@@ -72,17 +76,20 @@ SHEBANG_FILES=		share/support/core/gps_utils/internal/dialogs.py
 
 [DEBUG].MAKE_ARGS_ON=			Build=Debug
 [DEBUG].MAKE_ARGS_OFF=			Build=Production
+[DEBUG].MAKEFILE_ON=			WITH_DEBUG=yes
 
 post-extract:
+	${MV} ${WRKDIR}/libadalang-tools-* ${WRKSRC}/laltools
+	${MV} ${WRKDIR}/ada_language_server-* ${WRKSRC}/ada_language_server
 	${MV} ${WRKSRC}/Makefile.gnat ${WRKSRC}/Makefile.gnat.ignore
-	${FIND} ${WRKSRC}/share -name "*.pyc" -delete
-	${RM} ${WRKSRC}/share/support/core/cross_references.py
+# #	${FIND} ${WRKSRC}/share -name "*.pyc" -delete
+# #	${RM} ${WRKSRC}/share/support/core/cross_references.py
 
 post-patch:
 	${RM} ${WRKSRC}/share/plug-ins/*.orig
 	${ECHO} "GNAT_SOURCES=" > ${WRKSRC}/Makefile.gnat
 	${REINPLACE_CMD} -e 's|@PREFIX@|${PREFIX}|g' \
-		${WRKSRC}/gps/gps.gpr \
+		${WRKSRC}/gnatstudio/gps.gpr \
 		${WRKSRC}/gnatdoc/gnatdoc.gpr \
 		${WRKSRC}/widgets/widgets.gpr
 	${REINPLACE_CMD} -e '/Gdb_Command/ s|"gdb"|"${PREFIX}/bin/gdb"|' \
@@ -98,21 +105,28 @@ post-patch:
 	${REINPLACE_CMD} \
 		-e 's|-lclang|-Wl,-rpath,${LOCALBASE}/lib -lclang|' \
 		${WRKSRC}/configure
+	${REINPLACE_CMD} -e 's/relocatable/static/g' \
+		-e '/GPRBUILD_BUILD_TYPE_FLAGS=/ s|FLAGS=|FLAGS=-j${MAKE_JOBS_NUMBER} |' \
+		-e 's| -ws||' \
+		${WRKSRC}/gnatstudio/Makefile
+	${REINPLACE_CMD} -e 's/relocatable/static/g' \
+		${WRKSRC}/testsuite/Makefile
 
 do-build:
 	${CP} ${PREFIX}/include/gnat-util/impunit.* ${WRKSRC}/distrib
 	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} \
-		${MAKE_CMD} ${MAKE_ARGS} ${ALL_TARGET}
-	cd ${WRKSRC}/docs && ${SETENV} ${MAKE_ENV} \
-		${MAKE_CMD} ${MAKE_ARGS} all
+		${MAKE_CMD} ${MAKE_ARGS} ${BUILD_TARGET}
+	# block all docs (Sphinx is python3 only)
+	# cd ${WRKSRC}/docs && ${SETENV} ${MAKE_ENV} \
+	#	${MAKE_CMD} ${MAKE_ARGS} all
 	${PYTHON_CMD} ${PYCOMPILE} ${WRKSRC}/share/plug-ins
 	${PYTHON_CMD} ${PYCOMPILE} ${WRKSRC}/share/library
 	${PYTHON_CMD} ${PYCOMPILE} ${WRKSRC}/share/support
 
 post-install:
-	${RM} -r ${STAGEDIR}${PREFIX}/share/doc/gps/html/*/_sources
+	# ${RM} -r ${STAGEDIR}${PREFIX}/share/doc/gps/html/*/_sources
 	${FIND} ${STAGEDIR}${PREFIX} -type f -name ".gitignore" -delete
 	${INSTALL_SCRIPT} ${WRKDIR}/gps ${STAGEDIR}${PREFIX}/bin
 	echo "This is the GPS GPL Edition for Ravenports." \
-		> ${STAGEDIR}${PREFIX}/share/gps/about.txt
+		> ${STAGEDIR}${PREFIX}/share/gnatstudio/about.txt
 	${FIND} ${STAGEDIR}${PREFIX} -type d -empty -delete

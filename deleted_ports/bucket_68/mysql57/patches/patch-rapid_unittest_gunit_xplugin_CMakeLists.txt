@@ -1,14 +1,14 @@
---- rapid/unittest/gunit/xplugin/CMakeLists.txt.orig	2018-10-04 05:48:22 UTC
+--- rapid/unittest/gunit/xplugin/CMakeLists.txt.orig	2019-09-27 07:00:15 UTC
 +++ rapid/unittest/gunit/xplugin/CMakeLists.txt
-@@ -69,7 +69,6 @@ ADD_DEFINITIONS(
+@@ -78,7 +78,6 @@ ADD_DEFINITIONS(
  )
  
  INCLUDE_DIRECTORIES(SYSTEM
 -    ${BOOST_INCLUDE_DIR}
      ${PROTOBUF_INCLUDE_DIRS}
      ${SSL_INCLUDE_DIRS}
-     ${LIBEVENT_INCLUDE_DIR}
-@@ -79,6 +78,7 @@ INCLUDE_DIRECTORIES(SYSTEM
+     ${LIBEVENT_INCLUDE_DIRS}
+@@ -88,6 +87,7 @@ INCLUDE_DIRECTORIES(SYSTEM
  )
  
  INCLUDE_DIRECTORIES(

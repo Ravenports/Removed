@@ -9,7 +9,7 @@ VERSION=		${PORTVERSION}
 KEYWORDS=		lang www php ${KEYWORD}
 VARIANTS=		standard
 SDESC[standard]=	PHP ${PORTVERSION:R} extension: ${MODULE} Client URL library
-HOMEPAGE=		http://php.net/
+HOMEPAGE=		https://php.net/
 CONTACT=		nobody
 
 DOWNLOAD_GROUPS=	main
@@ -25,7 +25,7 @@ FPC_EQUIVALENT=		${KEYWORD}/php${SUFFIX}-${MODULE}
 
 BUILDRUN_DEPENDS=	curl:primary:standard
 
-USES=			php:ext,${SUFFIX}
+USES=			php:ext,${SUFFIX} ssl
 DISTNAME=		php-${PORTVERSION}/ext/{{PHP_MODNAME}}
 CONFIGURE_ARGS=		--with-${MODULE}={{LOCALBASE}}
 EXTRACT_HEAD[1]=	{{TAR}} -xf

@@ -23,8 +23,8 @@ OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none
 
 LICENSE=		BSD2CLAUSE:primary RUBY:primary
-LICENSE_FILE=		BSD2CLAUSE:{{WRKSRC}}/COPYING
-			RUBY:{{WRKSRC}}/BSDL
+LICENSE_FILE=		RUBY:{{WRKSRC}}/COPYING
+			BSD2CLAUSE:{{WRKSRC}}/BSDL
 LICENSE_SCHEME=		dual
 
 FPC_EQUIVALENT=		lang/ruby24
@@ -61,11 +61,13 @@ CPE_UPDATE=		p${PATCHLEVEL}
 INSTALL_REQ_TOOLCHAIN=	yes
 
 VAR_OPSYS[darwin]=	CONFIGURE_ENV=ac_cv_func_backtrace=no
+VAR_OPSYS[dragonfly]=	CFLAGS=-fuse-ld=gold
 
 post-patch:
 	${FIND} ${WRKSRC}/ -name "*.orig" -delete
 	# We install these from other ports
-.for d in bin/rake doc/rake lib/rake test/rake man/rake.1 lib/rake.rb ext/win32ole bin/gem
+.for d in bin/rake doc/rake lib/rake test/rake man/rake.1 lib/rake.rb\
+	ext/win32ole ext/dbm ext/gdbm bin/gem
 	${RM} -r ${BUILD_WRKSRC}/${d}
 .endfor
 

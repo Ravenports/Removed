@@ -1,0 +1,27 @@
+--- Makefile.orig	2019-06-24 16:08:57 UTC
++++ Makefile
+@@ -92,19 +92,19 @@ check: all
+ install: all install-bin install-include install-lib install-man
+ install-bin: $(INSTALLABLE)
+ 	$(INSTALL) -d "$(DESTDIR)$(BINDIR)"
+-	$(INSTALL) $^ "$(DESTDIR)$(BINDIR)"
++	$(BSD_INSTALL_PROGRAM) $^ "$(DESTDIR)$(BINDIR)"
+ install-include:
+ 	$(INSTALL) -d "$(DESTDIR)$(INCDIR)"
+-	$(INSTALL) -m 644 gif_lib.h "$(DESTDIR)$(INCDIR)"
++	$(BSD_INSTALL_DATA) gif_lib.h "$(DESTDIR)$(INCDIR)"
+ install-lib:
+ 	$(INSTALL) -d "$(DESTDIR)$(LIBDIR)"
+-	$(INSTALL) -m 644 libgif.a "$(DESTDIR)$(LIBDIR)/libgif.a"
+-	$(INSTALL) -m 755 libgif.so "$(DESTDIR)$(LIBDIR)/libgif.so.$(LIBVER)"
++	$(BSD_INSTALL_DATA) libgif.a "$(DESTDIR)$(LIBDIR)/libgif.a"
++	$(BSD_INSTALL_LIB) libgif.so "$(DESTDIR)$(LIBDIR)/libgif.so.$(LIBVER)"
+ 	ln -sf libgif.so.$(LIBVER) "$(DESTDIR)$(LIBDIR)/libgif.so.$(LIBMAJOR)"
+ 	ln -sf libgif.so.$(LIBMAJOR) "$(DESTDIR)$(LIBDIR)/libgif.so"
+ install-man:
+ 	$(INSTALL) -d "$(DESTDIR)$(MANDIR)/man1"
+-	$(INSTALL) -m 644 doc/*.1 "$(DESTDIR)$(MANDIR)/man1"
++	$(BSD_INSTALL_MAN) doc/*.1 "$(DESTDIR)$(MANDIR)/man1"
+ uninstall: uninstall-man uninstall-include uninstall-lib uninstall-bin
+ uninstall-bin:
+ 	cd "$(DESTDIR)$(BINDIR)" && rm -f $(INSTALLABLE)

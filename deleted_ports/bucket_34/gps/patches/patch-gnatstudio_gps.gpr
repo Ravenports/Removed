@@ -1,0 +1,10 @@
+--- gnatstudio/gps.gpr.orig	2019-11-27 16:28:14 UTC
++++ gnatstudio/gps.gpr
+@@ -81,6 +81,7 @@ project GPS is
+ 
+       --  for Switches ("Ada") use ("-lgmem");
+       --  for Switches ("Ada") use ("-pg");
++      for Linker_Options use ("-Wl,-rpath,@PREFIX@/lib");
+    end Linker;
+ 
+    package CodePeer is

@@ -9,7 +9,7 @@ REVISION=		${PORTREVISION}
 KEYWORDS=		databases ada
 VARIANTS=		standard
 SDESC[standard]=	APQ Ada95 MySQL database driver
-HOMEPAGE=		https://bitbucket.org/kowframework/apq-mysql
+HOMEPAGE=		none
 CONTACT=		John_Marino[draco@marino.st]
 
 DOWNLOAD_GROUPS=	main
@@ -38,7 +38,7 @@ BUILD_DEPENDS=		bash:primary:standard
 			mysql56:client:standard
 BUILDRUN_DEPENDS=	apq-base:single:standard
 
-USES=			gprbuild
+USES=			gprbuild execinfo zlib
 MUST_CONFIGURE=		yes
 CONFIGURE_ARGS=		--prefix={{PREFIX}}
 			--disable-relocatable

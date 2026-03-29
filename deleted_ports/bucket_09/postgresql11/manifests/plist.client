@@ -3,6 +3,7 @@
 %%NLS-ON%%share/locale/cs/LC_MESSAGES/libpq5-%%PGVER%%.mo
 %%NLS-ON%%share/locale/cs/LC_MESSAGES/pg_config-%%PGVER%%.mo
 %%NLS-ON%%share/locale/cs/LC_MESSAGES/pg_dump-%%PGVER%%.mo
+%%NLS-ON%%share/locale/cs/LC_MESSAGES/pg_verify_checksums-%%PGVER%%.mo
 %%NLS-ON%%share/locale/cs/LC_MESSAGES/pgscripts-%%PGVER%%.mo
 %%NLS-ON%%share/locale/cs/LC_MESSAGES/psql-%%PGVER%%.mo
 %%NLS-ON%%share/locale/de/LC_MESSAGES/ecpg-%%PGVER%%.mo
@@ -18,6 +19,7 @@
 %%NLS-ON%%share/locale/es/LC_MESSAGES/libpq5-%%PGVER%%.mo
 %%NLS-ON%%share/locale/es/LC_MESSAGES/pg_config-%%PGVER%%.mo
 %%NLS-ON%%share/locale/es/LC_MESSAGES/pg_dump-%%PGVER%%.mo
+%%NLS-ON%%share/locale/es/LC_MESSAGES/pg_verify_checksums-%%PGVER%%.mo
 %%NLS-ON%%share/locale/es/LC_MESSAGES/pgscripts-%%PGVER%%.mo
 %%NLS-ON%%share/locale/es/LC_MESSAGES/psql-%%PGVER%%.mo
 %%NLS-ON%%share/locale/fr/LC_MESSAGES/ecpg-%%PGVER%%.mo
@@ -94,6 +96,7 @@
 %%NLS-ON%%share/locale/zh_CN/LC_MESSAGES/libpq5-%%PGVER%%.mo
 %%NLS-ON%%share/locale/zh_CN/LC_MESSAGES/pg_config-%%PGVER%%.mo
 %%NLS-ON%%share/locale/zh_CN/LC_MESSAGES/pg_dump-%%PGVER%%.mo
+%%NLS-ON%%share/locale/zh_CN/LC_MESSAGES/pg_verify_checksums-%%PGVER%%.mo
 %%NLS-ON%%share/locale/zh_CN/LC_MESSAGES/pgscripts-%%PGVER%%.mo
 %%NLS-ON%%share/locale/zh_CN/LC_MESSAGES/psql-%%PGVER%%.mo
 %%NLS-ON%%share/locale/zh_TW/LC_MESSAGES/ecpg-%%PGVER%%.mo
@@ -515,6 +518,9 @@ include/postgresql/server/fe_utils/simple_list.h
 include/postgresql/server/fe_utils/string_utils.h
 include/postgresql/server/foreign/fdwapi.h
 include/postgresql/server/foreign/foreign.h
+include/postgresql/server/jit/jit.h
+include/postgresql/server/jit/llvmjit.h
+include/postgresql/server/jit/llvmjit_emit.h
 include/postgresql/server/lib/binaryheap.h
 include/postgresql/server/lib/bipartite_match.h
 include/postgresql/server/lib/bloomfilter.h
@@ -572,6 +578,7 @@ include/postgresql/server/optimizer/geqo_recombination.h
 include/postgresql/server/optimizer/geqo_selection.h
 include/postgresql/server/optimizer/joininfo.h
 include/postgresql/server/optimizer/orclauses.h
+include/postgresql/server/optimizer/paramassign.h
 include/postgresql/server/optimizer/pathnode.h
 include/postgresql/server/optimizer/paths.h
 include/postgresql/server/optimizer/placeholder.h

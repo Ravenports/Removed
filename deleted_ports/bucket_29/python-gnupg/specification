@@ -1,0 +1,38 @@
+# manually supported
+DEF[PORTVERSION]=	3.1.1
+# ------------------------------------------------------------------------
+
+NAMEBASE=		python-gnupg
+VERSION=		${PORTVERSION}
+KEYWORDS=		python devel
+VARIANTS=		py38 py37
+SDESC[py38]=		Python wrapper for GnuPG (PY 38)
+SDESC[py37]=		Python wrapper for GnuPG (PY 37)
+HOMEPAGE=		https://github.com/isislovecruft/python-gnupg
+CONTACT=		Python_Automaton[python@ironwolf.systems]
+
+DOWNLOAD_GROUPS=	main
+SITES[main]=		GITHUB/isislovecruft:python-gnupg:${PORTVERSION}
+DISTFILE[1]=		generated:main
+
+SPKGS[py38]=		single
+SPKGS[py37]=		single
+
+OPTIONS_AVAILABLE=	PY38 PY37
+OPTIONS_STANDARD=	none
+VOPTS[py38]=		PY38=ON PY37=OFF
+VOPTS[py37]=		PY38=OFF PY37=ON
+
+# Output of setup.py --license
+# GPLv3+
+
+GENERATED=		yes
+
+# install_requires extracted from setup.py (using python 2.7)
+# psutil>=1.2.1
+
+[PY38].USES_ON=				python:py38
+[PY38].BUILDRUN_DEPENDS_ON=		python-psutil:single:py38
+
+[PY37].USES_ON=				python:py37
+[PY37].BUILDRUN_DEPENDS_ON=		python-psutil:single:py37

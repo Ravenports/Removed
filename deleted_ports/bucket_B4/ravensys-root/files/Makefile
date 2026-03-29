@@ -98,7 +98,6 @@ Bin_Linux=	/bin/hostname \
 # /usr/bin/less*  (sysutils/less)
 # /usr/bin/mtree  (sysutils/mtree)
 # /usr/bin/sort   (sysutils/coreutils)
-# /usr/bin/pkg-static (ports-mgmt/pkg)
 # /usr/bin/objdump-sysroot (devel/binutils)
 
 Usr_Bin_DragonFly= \
@@ -147,6 +146,7 @@ static_lib_generic=	/usr/lib/libc.a \
 			/usr/lib/librt.a \
 			/usr/lib/libutil.a \
 			/usr/lib/libcrypt.a \
+			/usr/lib/librpcsvc.a \
 			/usr/lib/libpthread.a
 static_lib_FreeBSD=	${static_lib_generic} \
 			/usr/lib/libbsdxml.a \
@@ -158,6 +158,7 @@ static_lib_FreeBSD=	${static_lib_generic} \
 			/usr/lib/libthr.a \
 			/usr/lib/libusb.a \
 			/usr/lib/libusbhid.a \
+			/usr/lib/libjail.a \
 			/usr/lib/Scrt1.o \
 			/usr/lib/gcrt1.o \
 			/usr/lib/crt1.o \
@@ -203,6 +204,7 @@ dynamic_generic=	/lib/${libc} \
 			/lib/${libutil} \
 			/lib/${libcrypt} \
 			/lib/${libkvm} \
+			/usr/lib/${librpcsvc} \
 			/usr/lib/${librt}
 dynamic_lib_FreeBSD=	${dynamic_generic} \
 			/lib/${Libbsdxml_FreeBSD} \
@@ -212,6 +214,7 @@ dynamic_lib_FreeBSD=	${dynamic_generic} \
 			/lib/${Libthr_FreeBSD} \
 			/lib/${Libdevstat_FreeBSD} \
 			/usr/lib/libexecinfo.so.1 \
+			/lib/libjail.so.1 \
 			/usr/lib/${Libprocstat_FreeBSD} \
 			/usr/lib/${libusb} \
 			/usr/lib/${libusbhid}
@@ -254,14 +257,13 @@ Linux_shared_libs=	${Linux_C_lib} \
 			libnss_nisplus-2.23.so/libnss_nisplus.so.2 \
 			# end
 Linux_extra_libs1=	libattr.so.1.1.0/libattr.so.1 \
+			libacl.so.1.1.0/libacl.so.1 \
 			# end (/lib)
 Linux_extra_libs2=	# libustr-1.0.so.1.0.4/libustr-1.0.so.1 \
 			# end (/usr/lib)
-Linux_single_libs1=	# libsepol.so.1 \
-			# libselinux.so.1 \
-			# end (/lib)
+Linux_single_libs1=	# end (/lib/TARGET)
 Linux_single_libs2=	# libsemanage.so.1 \
-			# end (/usr/lib)
+			# end (/usr/lib/TARGET)
 posix_headers=		aio.h \
 			assert.h \
 			complex.h \
@@ -332,6 +334,7 @@ headers_Darwin_dirs=	#end
 headers_Darwin=		#end
 
 headers_FreeBSD_dirs=	arpa \
+			crypto \
 			dev \
 			geom \
 			machine \
@@ -351,6 +354,7 @@ headers_FreeBSD_dirs=	arpa \
 headers_DragonFly_dirs=	arpa \
 			bus \
 			cpu \
+			crypto \
 			dev \
 			libprop \
 			machine \
@@ -442,9 +446,11 @@ headers_FreeBSD=	${headers_DragonFly:Nutil.h:Ndevattr.h:Ndfregress.h:Ndisktab.h:
 			libgeom.h \
 			libprocstat.h \
 			malloc_np.h \
+			jail.h \
 			# end
 
-headers_Linux_dirs=	arpa \
+headers_Linux_dirs=	acl \
+			arpa \
 			attr \
 			asm-generic \
 			drm \
@@ -618,7 +624,6 @@ install:
 		${DESTDIR}${BASE}/libexec \
 		${DESTDIR}${BASE}/usr/include/compat \
 		${DESTDIR}${BASE}/usr/share/locale/en_US.UTF-8 \
-		${DESTDIR}${BASE}/usr/lib/gcc50 \
 		${DESTDIR}${BASE}/usr/lib/gcc80 \
 		# end
 .endif
@@ -679,6 +684,7 @@ install:
 		ln -s ${libkvm} libkvm.so && \
 		ln -s ${libcrypt} libcrypt.so && \
 		ln -s ${libutil} libutil.so && \
+		ln -s ${librpcsvc} librpcsvc.so && \
 		ln -s ${libusb} libusb.so && \
 		ln -s ${libusbhid} libusbhid.so)
 	${BSD_INSTALL_SCRIPT} ../${OPSYS:tl}/usr/bin/lorder ${DESTDIR}${BASE}/usr/bin/
@@ -691,7 +697,8 @@ install:
 		ln -s ${Libprocstat_FreeBSD} libprocstat.so && \
 		ln -s ${Libgeom_FreeBSD} libgeom.so && \
 		ln -s ${PREFIX}/lib/libexecinfo.so libexecinfo.so && \
-		ln -s libthr.so libpthread.so)
+		ln -s libthr.so libpthread.so && \
+		ln -s libjail.so.1 libjail.so)
 	${BSD_INSTALL_LIB} ../${OPSYS:tl}/lib/libgcc_s.so.1 ${DESTDIR}${BASE}/usr/lib/
 	${BSD_INSTALL_LIB} ../${OPSYS:tl}/lib/libcxxrt.so.1 ${DESTDIR}${BASE}/usr/lib/
 	${BSD_INSTALL_LIB} ../${OPSYS:tl}/usr/lib/libc++.so.1 ${DESTDIR}${BASE}/usr/lib/
@@ -716,10 +723,10 @@ install:
 		ln -s netproto/smb netsmb && \
 		ln -s bus/pccard pccard && \
 		ln -s bus/cam cam)
-.  for item in gcc50/libstdc++.so.9 gcc80/libstdc++.so.9
+.  for item in gcc80/libstdc++.so.9
 	${BSD_INSTALL_LIB} ../${OPSYS:tl}/usr/lib/${item} ${DESTDIR}${BASE}/usr/lib/${item}
 .  endfor
-.  for item in gcc50/libgcc_pic.a gcc80/libgcc_pic.a
+.  for item in gcc80/libgcc_pic.a
 	${BSD_INSTALL_DATA} ../${OPSYS:tl}/usr/lib/${item} ${DESTDIR}${BASE}/usr/lib/${item}
 .  endfor
 .endif
@@ -819,8 +826,7 @@ install:
 	grep file flex flex++ gzip gunzip zcat zcmp zdiff zegrep \
 	zfgrep zgrep lzcat lzcmp lzdiff lzegrep lzfgrep lzgrep lzma \
 	unlzma unxz xz xzcat xzcmp xzdiff xzegrep xzfgrep xzgrep yacc \
-	unzip less mtree bsdcat makewhatis dupe genpatch portfix patch \
-	fetch
+	unzip less mtree bsdcat dupe genpatch portfix patch fetch
 	cp ${LOCALBASE}/bin/${item} ${DESTDIR}${BASE}/usr/bin/
 .endfor
 .  for item in sed find xargs cmp diff diff3 sdiff \
@@ -836,6 +842,9 @@ install:
 	rm -rf ${DESTDIR}${BASE}/usr/include/net/ipfw*
 	rm -rf ${DESTDIR}${BASE}/usr/include/net/pf
 	rmdir  ${DESTDIR}${BASE}/usr/include/vfs/mfs
+	# fix timespec* for c++17
+	sed -i '/if __ISO_C_VISIBLE >= 2011$$/ s#$$# || (defined(__cplusplus) \&\& __cplusplus >= 201703) &#' \
+		${DESTDIR}${BASE}/usr/include/time.h
 .endif
 .if ${OPSYS} == FreeBSD
 	cp ${LOCALBASE}/lib/libdl.a ${DESTDIR}${BASE}/usr/lib/
@@ -848,7 +857,8 @@ install:
 .endfor
 	ln -s m4 ${DESTDIR}${BASE}/usr/bin/gm4
 	cp ${LOCALBASE}/share/misc/terminfo.db.default ${DESTDIR}${BASE}/usr/share/terminfo.db
-	cp ${LOCALBASE}/sbin/pkg-static ${DESTDIR}${BASE}/usr/bin/
+	cp ${LOCALBASE}/sbin/ravensw ${DESTDIR}${BASE}/usr/bin/
+	cp ${LOCALBASE}/sbin/makewhatis ${DESTDIR}${BASE}/usr/bin/
 	cp ${LOCALBASE}/share/file/magic.mgc ${DESTDIR}${BASE}/usr/share/file/
 	sed -e "s|${LOCALBASE}|/usr|g" ${LOCALBASE}/bin/egrep \
 		> ${DESTDIR}${BASE}/usr/bin/egrep

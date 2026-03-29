@@ -1,4 +1,4 @@
---- config.orig	2017-12-07 13:16:38 UTC
+--- config.orig	2019-12-20 13:02:41 UTC
 +++ config
 @@ -214,6 +214,10 @@ case "${SYSTEM}:${RELEASE}:${VERSION}:${
          echo "${MACH}-${ARCH}-freebsd${VERS}"; exit 0
@@ -26,7 +26,7 @@
 -	    fi
 -	fi
 -	;;
-+  *86*-*-solaris2)	OUT="solaris64-x86_64-gcc" ;;
++  x86_64-*-solaris2*)	OUT="solaris64-x86_64-gcc" ;;
    *-*-sunos4)		OUT="sunos-$CC" ;;
  
    *86*-*-bsdi4)		OUT="BSD-x86-elf"; options="$options no-sse2 -ldl" ;;
