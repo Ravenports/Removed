@@ -1,46 +1,47 @@
-DEF[PORTVERSION]=	0.8.11
+DEF[PORTVERSION]=	0.9.5
 # ------------------------------------------------------------------------
 
 NAMEBASE=		python-eyeD3
 VERSION=		${PORTVERSION}
-KEYWORDS=		python devel
-VARIANTS=		py38 py37
-SDESC[py38]=		Python audio data toolkit (ID3 and MP3) (PY 38)
-SDESC[py37]=		Python audio data toolkit (ID3 and MP3) (PY 37)
-HOMEPAGE=		https://eyed3.nicfit.net/
+KEYWORDS=		python
+VARIANTS=		py38 py39
+SDESC[py38]=		Python audio data toolkit (ID3 and MP3) (PY38)
+SDESC[py39]=		Python audio data toolkit (ID3 and MP3) (PY39)
+HOMEPAGE=		none
 CONTACT=		Python_Automaton[python@ironwolf.systems]
 
 DOWNLOAD_GROUPS=	main
-SITES[main]=		PYPI/e/eyeD3
-DISTFILE[1]=		eyeD3-0.8.11.tar.gz:main
+SITES[main]=		PYPIWHL/bd/67/202bcc28b01684f8fe18921f4b1dbe44b471b2c407f5d784849d513e417f
+DISTFILE[1]=		eyeD3-${PORTVERSION}-py2.py3-none-any.whl:main
 
 SPKGS[py38]=		single
-SPKGS[py37]=		single
+SPKGS[py39]=		single
 
-OPTIONS_AVAILABLE=	PY38 PY37
+OPTIONS_AVAILABLE=	PY38 PY39
 OPTIONS_STANDARD=	none
-VOPTS[py38]=		PY38=ON PY37=OFF
-VOPTS[py37]=		PY38=OFF PY37=ON
+VOPTS[py38]=		PY38=ON PY39=OFF
+VOPTS[py39]=		PY38=OFF PY39=ON
 
-# Output of setup.py --license
+# License listed at PyPI
 # GNU GPL v3.0
 
 GENERATED=		yes
+DISTNAME=		eyeD3-${PORTVERSION}.dist-info
 
-# install_requires extracted from setup.py (using python 2.7)
-# six
-# pathlib
-# python-magic
+# Requires-Dist extracted from wheel metadata
+# filetype
+# deprecation
+# dataclasses ; python_version < "3.7"
+# pylast ; extra == 'art-plugin'
+# requests ; extra == 'art-plugin'
+# pillow ; extra == 'art-plugin'
+# grako ; extra == 'display-plugin'
+# ruamel.yaml ; extra == 'yaml-plugin'
 
-DISTNAME=		eyeD3-${PORTVERSION}
-
-[PY38].USES_ON=				python:py38
-[PY38].BUILDRUN_DEPENDS_ON=		python-six:single:py38
-					python-pathlib:single:py38
-					python-python-magic:single:py38
-
-[PY37].USES_ON=				python:py37
-[PY37].BUILDRUN_DEPENDS_ON=		python-six:single:py37
-					python-pathlib:single:py37
-					python-python-magic:single:py37
+[PY38].USES_ON=				python:py38,wheel
+[PY38].RUN_DEPENDS_ON=			python-filetype:single:py38
+					python-deprecation:single:py38
+[PY39].USES_ON=				python:py39,wheel
+[PY39].RUN_DEPENDS_ON=			python-filetype:single:py39
+					python-deprecation:single:py39
 

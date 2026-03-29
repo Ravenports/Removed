@@ -1,8 +1,9 @@
-DEF[PORTVERSION]=	1.4.4
+DEF[PORTVERSION]=	1.4.8
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		Zstandard
 VERSION=		${PORTVERSION}
+REVISION=		1
 KEYWORDS=		archivers
 VARIANTS=		standard
 SDESC[standard]=	Fast real-time compression algorithm (aka zstd)
@@ -30,7 +31,9 @@ FPC_EQUIVALENT=		archivers/zstd
 
 BUILD_DEPENDS=		zlib:static:standard
 
-USES=			gmake
+USES=			cpe gmake
+CPE_VENDOR=		facebook
+CPE_PRODUCT=		zstandard
 BUILD_TARGET=		default
 MAKE_ARGS=		INCLUDEDIR="{{PREFIX}}/include"
 			LIBDIR="{{PREFIX}}/lib"
@@ -41,6 +44,7 @@ MAKE_ARGS=		INCLUDEDIR="{{PREFIX}}/include"
 			INSTALL_DATA="{{INSTALL_DATA}}"
 			INSTALL_MAN="{{INSTALL_MAN}}"
 SOVERSION=		${PORTVERSION}
+INSTALL_REQ_TOOLCHAIN=	yes
 
 post-patch:
 	${REINPLACE_CMD} -e '/define BACKTRACES_ENABLE/d' \

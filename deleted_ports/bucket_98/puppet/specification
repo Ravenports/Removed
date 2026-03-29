@@ -1,6 +1,7 @@
-DEF[PORTVERSION]=	6.11.1
+DEF[PORTVERSION]=	7.1.0
 DEF[ETCDIR]=		{{PREFIX}}/etc/puppet
-DEF[RV]=		v26
+DEF[RUBYDEF]=		EXTRACT_VERSION(RUBY_DEFAULT)
+DEF[RV]=		v${RUBYDEF:S/.//}
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		puppet
@@ -25,17 +26,18 @@ LICENSE_FILE=		APACHE20:{{WRKSRC}}/LICENSE
 LICENSE_TERMS=		primary:{{WRKDIR}}/TERMS
 LICENSE_SCHEME=		solo
 
-FPC_EQUIVALENT=		sysutils/puppet6
+FPC_EQUIVALENT=		sysutils/puppet7
 
-BUILDRUN_DEPENDS=	facter:single:standard
+BUILDRUN_DEPENDS=	ruby-facter:single:${RV}
 			ruby-hiera:single:${RV}
-			ruby-json:single:${RV}
 			ruby-semantic_puppet:single:${RV}
+			ruby-fast_gettext:single:${RV}
+			ruby-locale:single:${RV}
+			ruby-multi_json:single:${RV}
+			ruby-puppet-resource_api:single:${RV}
 			ruby-concurrent-ruby:single:${RV}
 			ruby-deep_merge:single:${RV}
-RUN_DEPENDS=		ruby-gettext-setup:single:${RV}
-			ruby-hocon:single:${RV}
-			ruby-ruby-augeas:single:${RV}
+			ruby-scanf:single:${RV}
 
 USES=			cpe ruby:${RV}
 CPE_VENDOR=		puppetlabs
@@ -73,7 +75,12 @@ post-patch:
 	${REINPLACE_CMD} -e "s|/var/log/puppetlabs/puppet|/var/log/puppet|" \
 		${WRKSRC}/install.rb \
 		${WRKSRC}/lib/puppet/util/run_mode.rb
+	${REINPLACE_CMD} -e "s|/opt/puppetlabs/puppet/public|/var/puppet/state|" \
+		${WRKSRC}/install.rb \
+		${WRKSRC}/lib/puppet/util/run_mode.rb
 	${REINPLACE_CMD} -e "s|/opt/puppetlabs/puppet/modules|${ETCDIR}/modules|" \
+		-e "s|/etc/puppetlabs/puppetserver/ca|/var/puppetserver/ca|" \
+		-e "s|/opt/puppetlabs/puppet/vendor_modules|${ETCDIR}/vendor_modules|" \
 		${WRKSRC}/lib/puppet/defaults.rb
 	${REINPLACE_CMD} -e "s|/opt/puppetlabs/puppet/bin/gem|${LOCALBASE}/bin/gem|" \
 		${WRKSRC}/lib/puppet/provider/package/puppet_gem.rb
@@ -81,6 +88,7 @@ post-patch:
 		${WRKSRC}/lib/puppet/defaults.rb
 	${REINPLACE_CMD} -e "s|\.\./\.\./\.\./locales|../locales|" \
 		${WRKSRC}/lib/puppet/gettext/config.rb
+	${FIND} ${WRKSRC} -name "*.orig" -delete
 
 do-build:
 	(cd ${WRKSRC} && ${SETENV} PREFIX=${PREFIX} LC_ALL=C.UTF-8 \
@@ -93,8 +101,6 @@ do-install:
 		${STAGEDIR}${ETCDIR}/manifests \
 		${STAGEDIR}${ETCDIR}/modules \
 		${STAGEDIR}/var/puppet
-	${INSTALL_DATA} ${WRKSRC}/conf/auth.conf \
-		${STAGEDIR}${ETCDIR}/auth.conf-dist
 	${SETENV} LC_ALL=C.UTF-8 ${RUBY} \
 		-I ${STAGEDIR}/${RUBY_SITELIBDIR} \
 		${STAGEDIR}${PREFIX}/bin/puppet agent --genconfig \
@@ -102,6 +108,7 @@ do-install:
 		--rundir=/var/run/puppet \
 		--vardir=/var/puppet \
 		--logdir=/var/log/puppet \
+		--publicdir=/var/puppet/state \
 		--codedir=${ETCDIR} \
 		> ${STAGEDIR}${ETCDIR}/puppet.conf-dist
 

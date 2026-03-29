@@ -1,1 +1,2 @@
-GitDB is a pure-Python git object database
+This is a mirror package for [gitdb]. Consider installing it directly
+instead.

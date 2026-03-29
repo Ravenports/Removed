@@ -3,22 +3,22 @@ DEF[PORTVERSION]=	2.6.4
 
 NAMEBASE=		libglade
 VERSION=		${PORTVERSION}
+REVISION=		1
 KEYWORDS=		devel
-VARIANTS=		py27
-SDESC[py27]=		Library for dynamically loading GLADE interfaces
+VARIANTS=		standard
+SDESC[standard]=	Library for dynamically loading GLADE interfaces
 HOMEPAGE=		https://developer.gnome.org/libglade/stable/
-CONTACT=		nobody
+CONTACT=		Michael_Reim[kraileth@elderlinux.org]
 
 DOWNLOAD_GROUPS=	main
 SITES[main]=		GNOME/libglade/${PORTVERSION:R}
 DISTFILE[1]=		libglade-${PORTVERSION}.tar.bz2:main
 DIST_SUBDIR=		gnome2
 
-SPKGS[py27]=		single
+SPKGS[standard]=	single
 
-OPTIONS_AVAILABLE=	PY27
+OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none
-VOPTS[py27]=		PY27=ON
 
 LICENSE=		GPLv2+:single
 LICENSE_FILE=		GPLv2+:{{WRKSRC}}/COPYING
@@ -37,11 +37,10 @@ MUST_CONFIGURE=		gnu
 CONFIGURE_ARGS=		--with-html-dir={{PREFIX}}/share/doc
 			--disable-gtk-doc
 			--with-xml-catalog={{LOCALBASE}}/share/xml/catalog.ports
+
 PLIST_SUB=		XMLCATALOG="{{LOCALBASE}}/bin/xmlcatalog"
 			CATALOG_PORTS_XML="{{LOCALBASE}}/share/xml/catalog.ports"
 LDFLAGS=		-lgmodule-2.0
-
-[PY27].USES_ON=				python:py27
 
 pre-patch:
 	${FIND} ${WRKSRC} -name "Makefile.in" -type f | \

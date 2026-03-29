@@ -3,11 +3,12 @@ DEF[PORTVERSION]=	20181009
 
 NAMEBASE=		ksh
 VERSION=		${PORTVERSION}
+REVISION=		1
 KEYWORDS=		shells
 VARIANTS=		standard
 SDESC[standard]=	Portable OpenBSD Korn Shell
 HOMEPAGE=		https://github.com/ibara/oksh
-CONTACT=		Leonid_Bobrov[mazocomp@disroot.org]
+CONTACT=		Leonid_Bobrov[goleo@disroot.org]
 
 DOWNLOAD_GROUPS=	main
 SITES[main]=		GITHUB/ibara:oksh:${PORTVERSION}
@@ -26,7 +27,8 @@ LICENSE_SCHEME=		solo
 
 FPC_EQUIVALENT=		shells/oksh
 
-USES=			ncurses
+USES=			cpe ncurses
+CPE_VENDOR=		ksh_project
 MUST_CONFIGURE=		yes
 CONFIGURE_ARGS=		--disable-static
 			--enable-curses

@@ -1,4 +1,4 @@
-DEF[PORTVERSION]=	5.1.0
+DEF[PORTVERSION]=	5.3.0
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		minetest
@@ -7,7 +7,7 @@ KEYWORDS=		games
 VARIANTS=		standard
 SDESC[standard]=	Infinite-world block sandbox game
 HOMEPAGE=		https://www.minetest.net/
-CONTACT=		Leonid_Bobrov[mazocomp@disroot.org]
+CONTACT=		Leonid_Bobrov[goleo@disroot.org]
 
 DOWNLOAD_GROUPS=	main game
 SITES[main]=		GITHUB/minetest:minetest:${PORTVERSION}
@@ -16,7 +16,7 @@ DISTFILE[1]=		generated:main
 DISTFILE[2]=		generated:game
 DF_INDEX=		1 2
 
-SPKGS[standard]=	complete client server data docs
+SPKGS[standard]=	complete client server data docs nls
 
 OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none

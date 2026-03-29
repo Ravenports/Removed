@@ -1,10 +1,9 @@
-DEF[PORTVERSION]=	1.0.3
+DEF[PORTVERSION]=	1.0.4
 DEF[SOVERSION]=		0.0.3
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		libasr
 VERSION=		${PORTVERSION}
-REVISION=		2
 KEYWORDS=		dns
 VARIANTS=		standard
 SDESC[standard]=	Asynchronous DNS resolver library
@@ -39,8 +38,7 @@ FPC_EQUIVALENT=		dns/libasr
 BUILD_DEPENDS=		groff:primary:standard
 BUILDRUN_DEPENDS=	nss:caroot:standard
 
-USES=			cpe autoreconf libtool
-CPE_VENDOR=		openbsd
+USES=			autoreconf libtool
 MUST_CONFIGURE=		gnu
 CONFIGURE_ARGS=		--with-mantype="man"
 INSTALL_TARGET=		install-strip

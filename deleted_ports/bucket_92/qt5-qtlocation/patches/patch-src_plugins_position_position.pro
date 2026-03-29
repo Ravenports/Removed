@@ -1,4 +1,4 @@
---- src/plugins/position/position.pro.orig	2019-11-26 16:53:20 UTC
+--- src/plugins/position/position.pro.orig	2020-05-04 22:35:55 UTC
 +++ src/plugins/position/position.pro
 @@ -2,8 +2,8 @@ TEMPLATE = subdirs
  

@@ -1,18 +1,17 @@
-DEF[DF_RELEASE]=	5.6.2
-DEF[LINUX_KERNEL]=	4.4.0-53
-DEF[LINUX_OSREL]=	${LINUX_KERNEL:DL="-":H}
-DEF[LINUX_MAJOR]=	${LINUX_OSREL:R}
-DEF[LINUX_VERSION]=	${LINUX_KERNEL:S/-//:S/.//:S/./0/}
-DEF[EXTRA_UBUNTU]=	4 5 6 7 8 9 10 11 12 13 17 18 19 21 22
-DEF[FREEBSD_RELEASE]=	11.1
-DEF[FREE_KERNEL_VER]=	1101001
-DEF[DFLY_KERNEL_VER]=	500600
+DEF[DF_RELEASE]=	5.8.0
+DEF[EXTRA_UBUNTU]=	4 5 6 7 8 9 10 11 12 13 17 18 19 21 22 23 24
+DEF[FREEBSD_RELEASE]=	12.2
 DEF[GCCX]=		EXTRACT_INFO(CURRENT_GCC)
+DEF[X_FREEBSD_1]=	EXTRACT_VERSION(PLATFORM_FreeBSD_x86-64)
+DEF[X_DRAGONFLY]=	EXTRACT_VERSION(PLATFORM_DragonFly_x86-64)
+DEF[X_LINUX_1]=		EXTRACT_VERSION(PLATFORM_Linux_x86-64)
+DEF[X_SOLARIS]=		EXTRACT_VERSION(PLATFORM_SunOS_x86-64)
+DEF[X_APPLE]=		EXTRACT_VERSION(PLATFORM_MacOS_x86-64)
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		ravensys-root
-VERSION=		3.0
-REVISION=		1
+VERSION=		3.1
+REVISION=		3
 KEYWORDS=		raven
 VARIANTS=		dragonfly freebsd_amd64 linux sunos macos
 SDESC[dragonfly]=	DragonFly64 system root for Ravenports build env
@@ -24,7 +23,7 @@ HOMEPAGE=		none
 CONTACT=		John_Marino[draco@marino.st]
 
 DOWNLOAD_GROUPS=	main avalon ubuntu1 ubuntu2 ubuntu3 ubuntu4 ubuntu5
-			ubuntu6 ubuntu7 ubuntu8 ubuntu9 ubuntu10
+			ubuntu6 ubuntu7 ubuntu8 ubuntu9 ubuntu10 ubuntu11
 			freebsd_amd64 dragonlace
 SITES[main]=		https://leaf.dragonflybsd.org/~marino/dports-src/
 SITES[avalon]=		https://mirror-master.dragonflybsd.org/iso-images/
@@ -40,6 +39,7 @@ SITES[ubuntu7]=		http://security.ubuntu.com/ubuntu/pool/main/s/shadow/
 SITES[ubuntu8]=		http://security.ubuntu.com/ubuntu/pool/main/l/linux/
 SITES[ubuntu9]=		UBUNTU/a/attr
 SITES[ubuntu10]=	UBUNTU/a/acl
+SITES[ubuntu11]=	http://security.ubuntu.com/ubuntu/pool/main/s/systemd/
 
 DISTFILE[1]=		dummy-tarball.tar.gz:main
 DISTFILE[2]=		dfly-x86_64-${DF_RELEASE}_REL.iso.bz2:avalon
@@ -63,6 +63,8 @@ DISTFILE[19]=		libattr1_2.4.47-2_amd64.deb:ubuntu9
 DISTFILE[20]=		mac_root_10.13.6.v01.tar.zst:dragonlace
 DISTFILE[21]=		libacl1-dev_2.2.52-3_amd64.deb:ubuntu10
 DISTFILE[22]=		libacl1_2.2.52-3_amd64.deb:ubuntu10
+DISTFILE[23]=		libudev1_229-4ubuntu21.27_amd64.deb:ubuntu11
+DISTFILE[24]=		libudev-dev_229-4ubuntu21.27_amd64.deb:ubuntu11
 
 SPKGS[dragonfly]=	single
 SPKGS[freebsd_amd64]=	single
@@ -80,42 +82,34 @@ VOPTS[macos]=		DRAGONFLY=OFF FREEBSDAMD64=OFF LINUX=OFF SUNOS=OFF MACOS=ON
 
 INVALID_RPATH=		yes
 
-# diffutils, findutils, coreutils intentionally not using noprefix
-# variants.  These bring in NLS which we don't want
 BUILD_DEPENDS=		nawk:single:standard
 			bzip2:static:standard
-			diffutils:single:standard
+			diffutils:primary:ravensys
 			libarchive:single:static
-			sha256:single:standard
-			gnugrep:single:standard
+			gnugrep:primary:ravensys
 			file:single:ravensys
-			findutils:single:standard
-			flex:primary:standard
+			findutils:primary:ravensys
+			flex:primary:ravensys
 			gzip:single:standard
 			xz:single:static
-			unzip:core:standard
+			unzip:primary:standard
 			m4:primary:noprefix
 			bmake:single:standard
-			bsd-patch:single:standard
-			sed:single:standard
+			sed:primary:ravensys
 			byacc:single:standard
-			ravensys-uname:single:standard
 			less:single:standard
 			nvi:single:standard
-			mtree:single:standard
-			coreutils:single:standard
-			binutils:single:standard
+			coreutils:primary:ravensys
+			binutils:single:ravensys
 			ncurses:primary:static
 			ravensw:single:standard
 			mandoc:single:standard
 			genpatch:single:standard
 			lockf:single:standard
 			fetch:single:standard
+			ravensys-utils:single:standard
 B_DEPS[linux]=		shadow:single:standard
 			bash:primary:static
-B_DEPS[dragonfly]=	libdl:single:standard
-B_DEPS[freebsd]=	libdl:single:standard
-B_DEPS[sunos]=		bsd-which:single:standard
 
 SKIP_BUILD=		yes
 SINGLE_JOB=		yes
@@ -131,9 +125,15 @@ PLIST_SUB=		SONAME_LIBM={{Libm_{{OPSYS}}}}
 			SONAME_LIBKVM={{Libkvm_{{OPSYS}}}}
 			SONAME_LIBRT={{Librt_{{OPSYS}}}}
 			SONAME_LIBRPCSVC={{Librpcsvc_{{OPSYS}}}}
+			SONAME_LIBCAM={{Libcam_{{OPSYS}}}}
 			BASE={{SYSPATH}}
 
 MAKE_ENV=		OPSYS="{{OPSYS}}"
+			ARCH="{{ARCH}}"
+			ARCHSTD="{{ARCH_STANDARD}}"
+			OSVERSION="{{OSVERSION}}"
+			OSREL="{{OSREL}}"
+			OSMAJOR="{{MAJOR}}"
 			MKDIR="{{MKDIR}}"
 			GCCX=${GCCX}
 			libm={{Libm_{{OPSYS}}}}
@@ -143,9 +143,15 @@ MAKE_ENV=		OPSYS="{{OPSYS}}"
 			libusbhid={{Libusbhid_{{OPSYS}}}}
 			libcrypt={{Libcrypt_{{OPSYS}}}}
 			libkvm={{Libkvm_{{OPSYS}}}}
+			libcam={{Libcam_{{OPSYS}}}}
 			librt={{Librt_{{OPSYS}}}}
 			librpcsvc={{Librpcsvc_{{OPSYS}}}}
 MAKE_ARGS=		BASE={{RSYS}}
+VAR_OPSYS[freebsd]=	MAKEFILE_LINE=SYSTEM=${X_FREEBSD_1}
+VAR_OPSYS[dragonfly]=	MAKEFILE_LINE=SYSTEM=${X_DRAGONFLY}
+VAR_OPSYS[linux]=	MAKEFILE_LINE=SYSTEM=${X_LINUX_1}
+VAR_OPSYS[sunos]=	MAKEFILE_LINE=SYSTEM=${X_SOLARIS}
+VAR_OPSYS[darwin]=	MAKEFILE_LINE=SYSTEM=${X_APPLE}
 
 [DRAGONFLY].DESCRIPTION=		Ravenports system root for DragonFly
 [DRAGONFLY].ONLY_FOR_OPSYS_ON=		dragonfly
@@ -167,6 +173,10 @@ MAKE_ARGS=		BASE={{RSYS}}
 [MACOS].ONLY_FOR_OPSYS_ON=		darwin
 [MACOS].DF_INDEX_ON=			20
 
+pre-fetch:
+	${SH} ${FILESDIR}/validate_pkgs.sh ${PREFIX} ${OPSYS} ${ARCH} \
+		${ARCH_STANDARD} ${OSVERSION} ${OSREL} ${MAJOR}
+
 post-extract-DRAGONFLY-ON:
 	${MV} ${WRKDIR}/${NAMEBASE}_2 ${WRKDIR}/dragonfly
 	@${MKDIR} ${WRKSRC}
@@ -179,7 +189,7 @@ post-install-DRAGONFLY-ON:
 		> ${STAGEDIR}${RSYS}/usr/share/master.passwd
 	${INSTALL_DATA} ${FOS}/etc/defaults/rc.conf \
 		${STAGEDIR}${RSYS}/usr/share/rc.conf
-	${FOS}/usr/sbin/pwd_mkdb -p -d ${STAGEDIR}${RSYS}/usr/share \
+	/usr/sbin/pwd_mkdb -p -d ${STAGEDIR}${RSYS}/usr/share \
 		${STAGEDIR}${RSYS}/usr/share/master.passwd
 	${MKDIR} ${STAGEDIR}${RSYS}/var/run
 	# handle ldconfig hints
@@ -190,11 +200,6 @@ post-install-DRAGONFLY-ON:
 	${MV} ${STAGEDIR}${RSYS}/var/run/ld-elf.so.hints \
 		${STAGEDIR}${RSYS}/usr/share/
 	${RM} -r ${STAGEDIR}${RSYS}/var
-
-	${ECHO} "${DF_RELEASE:R}"    > ${STAGEDIR}${RSYS}/usr/share/OSRELEASE
-	${ECHO} "${DF_RELEASE:R}"    > ${STAGEDIR}${RSYS}/usr/share/OSMAJOR
-	${ECHO} "${DFLY_KERNEL_VER}" > ${STAGEDIR}${RSYS}/usr/share/OSVERSION
-	${ECHO} "x86_64"             > ${STAGEDIR}${RSYS}/usr/share/STDARCH
 
 post-extract-LINUX-ON:
 	${MV} ${WRKDIR}/${NAMEBASE}_3 ${WRKDIR}/linux
@@ -212,10 +217,6 @@ post-install-LINUX-ON:
 		${STAGEDIR}${RSYS}/usr/share/passwd
 	${INSTALL_DATA} ${FOS}/etc/ld.so.conf.d/x86_64-linux-gnu.conf \
 		${STAGEDIR}${RSYS}/usr/share/x86_64-linux-gnu.conf
-	${ECHO} "${LINUX_OSREL}"   > ${STAGEDIR}${RSYS}/usr/share/OSRELEASE
-	${ECHO} "${LINUX_MAJOR}"   > ${STAGEDIR}${RSYS}/usr/share/OSMAJOR
-	${ECHO} "${LINUX_VERSION}" > ${STAGEDIR}${RSYS}/usr/share/OSVERSION
-	${ECHO} "x86_64"           > ${STAGEDIR}${RSYS}/usr/share/STDARCH
 	${ECHO} "include /etc/ld.so.conf.d/*.conf" > ${STAGEDIR}${RSYS}/usr/share/ld.so.conf
 	${LN} -s asm-generic ${STAGEDIR}${RSYS}/usr/include/asm
 
@@ -233,7 +234,7 @@ post-install-FREEBSDAMD64-ON:
 		${STAGEDIR}${RSYS}/usr/share/master.passwd
 	${INSTALL_DATA} ${FOS}/etc/defaults/rc.conf \
 		${STAGEDIR}${RSYS}/usr/share/rc.conf
-	${FOS}/usr/sbin/pwd_mkdb -p -d ${STAGEDIR}${RSYS}/usr/share \
+	/usr/sbin/pwd_mkdb -p -d ${STAGEDIR}${RSYS}/usr/share \
 		${STAGEDIR}${RSYS}/usr/share/master.passwd
 	${MKDIR} ${STAGEDIR}${RSYS}/var/run
 	# handle ldconfig hints
@@ -244,11 +245,6 @@ post-install-FREEBSDAMD64-ON:
 	${MV} ${STAGEDIR}${RSYS}/var/run/ld-elf.so.hints \
 		${STAGEDIR}${RSYS}/usr/share/
 	${RM} -r ${STAGEDIR}${RSYS}/var
-
-	${ECHO} ${FREEBSD_RELEASE}   > ${STAGEDIR}${RSYS}/usr/share/OSRELEASE
-	${ECHO} ${FREEBSD_RELEASE:R} > ${STAGEDIR}${RSYS}/usr/share/OSMAJOR
-	${ECHO} ${FREE_KERNEL_VER}   > ${STAGEDIR}${RSYS}/usr/share/OSVERSION
-	${ECHO} "x86_64"             > ${STAGEDIR}${RSYS}/usr/share/STDARCH
 
 post-extract-SUNOS-ON:
 	${MV} ${WRKDIR}/solaris_root_10_u8 ${WRKDIR}/sunos
@@ -262,17 +258,7 @@ post-extract-MACOS-ON:
 	@${MKDIR} ${WRKSRC}
 	${INSTALL_DATA} ${FILESDIR}/Makefile ${WRKSRC}/
 
-post-install-SUNOS-ON:
-	${ECHO} 5.10      > ${STAGEDIR}${RSYS}/usr/share/OSRELEASE
-	${ECHO} 5.10      > ${STAGEDIR}${RSYS}/usr/share/OSMAJOR
-	${ECHO} 510200910 > ${STAGEDIR}${RSYS}/usr/share/OSVERSION
-	${ECHO} x86_64    > ${STAGEDIR}${RSYS}/usr/share/STDARCH
-
 post-install-MACOS-ON:
-	${ECHO} 17.7.0    > ${STAGEDIR}${RSYS}/usr/share/OSRELEASE
-	${ECHO} 17        > ${STAGEDIR}${RSYS}/usr/share/OSMAJOR
-	${ECHO} 170700    > ${STAGEDIR}${RSYS}/usr/share/OSVERSION
-	${ECHO} x86_64    > ${STAGEDIR}${RSYS}/usr/share/STDARCH
 	${CHMOD} 600 ${STAGEDIR}${RSYS}/usr/share/master.passwd
 	${STAGEDIR}${RSYS}/usr/sbin/pwd_mkdb -p -d ${STAGEDIR}${RSYS}/usr/share \
 		${STAGEDIR}${RSYS}/usr/share/master.passwd

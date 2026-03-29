@@ -1,6 +1,4 @@
 DEF[PORTVERSION]=	EXTRACT_INFO(FIREFOX_ESR_VERSION)
-DEF[PY3DEF]=		EXTRACT_VERSION(PYTHON3_DEFAULT)
-DEF[PY3DEFNODOT]=	${PY3DEF:S/.//}
 DEF[MAJOR]=		${PORTVERSION:R:R}
 # ----------------------------------------------------------------------------
 
@@ -30,15 +28,15 @@ LICENSE_SCHEME=		solo
 
 BUILD_DEPENDS=		autoconf213:single:standard
 			zip:single:standard
-			python${PY3DEFNODOT}:single:standard
 			rust:single:standard
 			clang:compiler:standard
+			autoselect-python:single:standard
 BUILDRUN_DEPENDS=	icu:single:standard
 			nspr:single:standard
 
 DISTNAME=		firefox-${PORTVERSION}/js/src
 
-USES=			gmake perl pkgconfig python:py27,build zlib readline
+USES=			gmake perl pkgconfig python:build zlib readline
 MUST_CONFIGURE=		yes
 CONFIGURE_OUTSOURCE=	yes
 CONFIGURE_ARGS=		--prefix={{PREFIX}}
@@ -59,6 +57,8 @@ CONFIGURE_ARGS=		--prefix={{PREFIX}}
 
 PLIST_SUB=		MOZJS_MAJOR=${MAJOR}
 			MOZJS_MINOR=${PORTVERSION:R:E}
+
+VAR_OPSYS[linux]=	MAKEFILE_LINE=CONFIGURE_TARGET=x86_64-ravenadm-linux-gnu
 
 post-install:
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/js${MAJOR}

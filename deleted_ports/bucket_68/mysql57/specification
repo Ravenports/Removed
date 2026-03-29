@@ -28,8 +28,8 @@ OPTIONS_STANDARD=	ARCHIVE BLACKHOLE EXAMPLE FEDERATED INNOBASE PARTITION PERFSCH
 OPTGROUP_UNLIMITED=	STORAGE
 OPTDESCR[STORAGE]=	Storage engines statically compiled into server
 OPTGROUP[STORAGE]=	ARCHIVE BLACKHOLE EXAMPLE FEDERATED INNOBASE PARTITION PERFSCHEMA
-OPT_ON[all]=		PERFORMANCE
-OPT_ON[sunos]=		ALTSSL
+OPT_ON[all]=		PERFORMANCE ALTSSL
+# OPT_ON[sunos]=		ALTSSL
 
 LICENSE=		GPLv2:server
 LICENSE_FILE=		GPLv2:{{WRKSRC}}/README
@@ -49,7 +49,9 @@ EXRUN[client]=		libedit:single:standard
 # on some platforms, so it can't be hardcoded here.
 
 USES=			bison cmake perl:run shebangfix execinfo pkgconfig
-			c++:server,client cclibs:server,client zlib
+			c++:server,client cclibs:server,client zlib cpe
+CPE_VENDOR=		oracle
+CPE_PRODUCT=		mysql
 DISTNAME=		mysql-${PORTVERSION}
 SHEBANG_FILES=		scripts/*.pl
 CMAKE_BUILD_TYPE=	Release
@@ -78,7 +80,6 @@ CMAKE_ARGS=		-DINSTALL_PKGCONFIGDIR="{{LOCALBASE}}/lib/pkgconfig"
 			-DWITH_ZLIB=system
 			-DWITH_SSL={{OPENSSLBASE}}
 			-DWITH_EMBEDDED_SERVER="ON"
-			-DWITH_RAPID="OFF"
 			-DINSTALL_MYSQLTESTDIR=0
 CFLAGS=			-Wno-deprecated-declarations
 SUB_FILES=		my.cnf.sample

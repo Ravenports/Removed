@@ -17,8 +17,8 @@ Libbsdxml_FreeBSD=	libbsdxml.so.4
 CPA=			-RpP
 
 # /bin/cat    (archivers/libarchive)
-# /bin/md5    (security/sha256)
-# /bin/sha256 (security/sha256)
+# /bin/md5    (ravensys-utils)
+# /bin/sha256 (ravensys-utils)
 
 Bin_DragonFly=	/bin/[ \
 		/usr/bin/chflags \
@@ -86,7 +86,7 @@ Bin_Linux=	/bin/hostname \
 # /usr/bin/find   (misc/findutils)
 # /usr/bin/flex*  (textproc/flex)
 # /usr/bin/gzip*  (archivers/gzip)
-# /usr/bin/uname  (sysutils/uname)
+# /usr/bin/uname  (ravensys-utils)
 # /usr/bin/unzip  (archivers/unzip)
 # /usr/bin/xz*    (archivers/xz)
 # /usr/bin/m4     (devel/m4)
@@ -96,7 +96,8 @@ Bin_Linux=	/bin/hostname \
 # /usr/bin/xargs  (misc/findutils)
 # /usr/bin/yacc   (devel/byacc)
 # /usr/bin/less*  (sysutils/less)
-# /usr/bin/mtree  (sysutils/mtree)
+# /usr/bin/mtree  (ravensys-utils)
+# /usr/bin/rpcgen (ravensys-utils)
 # /usr/bin/sort   (sysutils/coreutils)
 # /usr/bin/objdump-sysroot (devel/binutils)
 
@@ -150,6 +151,7 @@ static_lib_generic=	/usr/lib/libc.a \
 			/usr/lib/libpthread.a
 static_lib_FreeBSD=	${static_lib_generic} \
 			/usr/lib/libbsdxml.a \
+			/usr/lib/libcam.a \
 			/usr/lib/libcompat.a \
 			/usr/lib/libdevstat.a \
 			/usr/lib/libgeom.a \
@@ -159,6 +161,9 @@ static_lib_FreeBSD=	${static_lib_generic} \
 			/usr/lib/libusb.a \
 			/usr/lib/libusbhid.a \
 			/usr/lib/libjail.a \
+			/usr/lib/libsbuf.a \
+			/usr/lib/libc_nonshared.a \
+			/usr/lib/libssp_nonshared.a \
 			/usr/lib/Scrt1.o \
 			/usr/lib/gcrt1.o \
 			/usr/lib/crt1.o \
@@ -204,6 +209,7 @@ dynamic_generic=	/lib/${libc} \
 			/lib/${libutil} \
 			/lib/${libcrypt} \
 			/lib/${libkvm} \
+			/lib/${libcam} \
 			/usr/lib/${librpcsvc} \
 			/usr/lib/${librt}
 dynamic_lib_FreeBSD=	${dynamic_generic} \
@@ -219,13 +225,13 @@ dynamic_lib_FreeBSD=	${dynamic_generic} \
 			/usr/lib/${libusb} \
 			/usr/lib/${libusbhid}
 dynamic_lib_DragonFly=	${dynamic_generic} \
-			/lib/libcam.so.3 \
 			/lib/libsbuf.so.3 \
 			/lib/libprop.so.3 \
 			/lib/libdevattr.so.3 \
 			/lib/libdevstat.so.3 \
 			/usr/lib/libdevinfo.so.3 \
 			/usr/lib/libdevmapper.so.0 \
+			/usr/lib/libkinfo.so.2 \
 			/usr/lib/libpthread.so \
 			/usr/lib/libpthread.so.0 \
 			/usr/lib/libexecinfo.so.1 \
@@ -255,6 +261,7 @@ Linux_shared_libs=	${Linux_C_lib} \
 			libnss_hesiod-2.23.so/libnss_hesiod.so.2 \
 			libnss_nis-2.23.so/libnss_nis.so.2 \
 			libnss_nisplus-2.23.so/libnss_nisplus.so.2 \
+			libudev.so.1.6.4/libudev.so.1 \
 			# end
 Linux_extra_libs1=	libattr.so.1.1.0/libattr.so.1 \
 			libacl.so.1.1.0/libacl.so.1 \
@@ -334,8 +341,10 @@ headers_Darwin_dirs=	#end
 headers_Darwin=		#end
 
 headers_FreeBSD_dirs=	arpa \
+			cam \
 			crypto \
 			dev \
+			fs \
 			geom \
 			machine \
 			net \
@@ -343,9 +352,11 @@ headers_FreeBSD_dirs=	arpa \
 			netipsec \
 			netinet \
 			netinet6 \
+			nfsclient \
 			rpc \
 			rpcsvc \
 			sys \
+			ufs \
 			vm \
 			x86 \
 			xlocale \
@@ -372,21 +383,17 @@ headers_DragonFly_dirs=	arpa \
 			xlocale \
 			# end
 
-headers_DragonFly=	${posix_headers:Nstropts.h:Ntrace.h} \
+headers_BSD=		${posix_headers:Nstropts.h:Ntrace.h} \
 			ar.h \
 			bitstring.h \
 			bluetooth.h \
 			camlib.h \
-			devattr.h \
 			devinfo.h \
 			devstat.h \
-			dfregress.h \
-			disktab.h \
 			efivar.h \
 			elf-hints.h \
 			elf.h \
 			err.h \
-			evtr.h \
 			floatingpoint.h \
 			fstab.h \
 			fts.h \
@@ -394,7 +401,6 @@ headers_DragonFly=	${posix_headers:Nstropts.h:Ntrace.h} \
 			ieeefp.h \
 			ifaddrs.h \
 			kvm.h \
-			libcryptsetup.h \
 			libusb.h \
 			libusb20.h \
 			libusb20_desc.h \
@@ -402,9 +408,7 @@ headers_DragonFly=	${posix_headers:Nstropts.h:Ntrace.h} \
 			link.h \
 			linker_set.h \
 			login_cap.h \
-			luks.h \
 			memory.h \
-			mntopts.h \
 			mpool.h \
 			netconfig.h \
 			nlist.h \
@@ -412,7 +416,6 @@ headers_DragonFly=	${posix_headers:Nstropts.h:Ntrace.h} \
 			paths.h \
 			printf.h \
 			pthread_np.h \
-			re_comp.h \
 			readpassphrase.h \
 			res_update.h \
 			resolv.h \
@@ -430,14 +433,25 @@ headers_DragonFly=	${posix_headers:Nstropts.h:Ntrace.h} \
 			ucontext.h \
 			usb.h \
 			usbhid.h \
-			util.h \
-			utmp.h \
 			uuid.h \
 			vis.h \
 			xlocale.h \
 			# end
 
-headers_FreeBSD=	${headers_DragonFly:Nutil.h:Ndevattr.h:Ndfregress.h:Ndisktab.h:Nevtr.h:Nlibcryptsetup.h:Nluks.h:Nmntopts.h:Nre_comp.h:Nutmp.h} \
+headers_DragonFly=	${headers_BSD} \
+			devattr.h \
+			dfregress.h \
+			disktab.h \
+			evtr.h \
+			kinfo.h \
+			kinfo_pcpu.h \
+			libcryptsetup.h \
+			luks.h \
+			mntopts.h \
+			re_comp.h \
+			util.h
+
+headers_FreeBSD=	${headers_BSD} \
 			_ctype.h \
 			bsm/audit.h \
 			libusb20.h \
@@ -518,6 +532,7 @@ headers_Linux=		_G_config.h \
 			libgen.h \
 			libintl.h \
 			libio.h \
+			libudev.h \
 			limits.h \
 			link.h \
 			locale.h \
@@ -585,7 +600,8 @@ headers_Linux=		_G_config.h \
 			xlocale.h \
 			# end
 
-pcfiles_Linux=		# end
+pcfiles_Linux=		libudev.pc \
+			# end
 pcfiles_SunOS=		# end
 pcfiles_Darwin=		# end
 pcfiles_FreeBSD=	libusb-0.1.pc \
@@ -640,12 +656,13 @@ install:
 		${DESTDIR}${BASE}/lib64 \
 		${DESTDIR}${BASE}/lib/x86_64-linux-gnu \
 		${DESTDIR}${BASE}/usr/lib/x86_64-linux-gnu \
+		${DESTDIR}${BASE}/usr/lib/pkgconfig \
 		# end
 .endif
 
 .if "${OPSYS}" == "SunOS"
 	cp ${CPA} ../${OPSYS:tl}/* ${DESTDIR}${BASE}/
-	# use BSD's which
+	# use BSD's which (from ravensys-utils)
 	${BSD_INSTALL_PROGRAM} ${LOCALBASE}/bin/which ${DESTDIR}${BASE}/usr/bin/
 	# /bin/sh is really /usr/xpg4/bin/sh, move it there
 	# Move /usr/bin/bash (from distro) to /bin/bash
@@ -678,10 +695,10 @@ install:
 .endif
 .if ${OPSYS} == DragonFly || ${OPSYS} == FreeBSD
 	(cd ${DESTDIR}${BASE}/usr/lib && \
-		ln -s ${libc} libc.so && \
 		ln -s ${libm} libm.so && \
 		ln -s ${librt} librt.so && \
 		ln -s ${libkvm} libkvm.so && \
+		ln -s ${libcam} libcam.so && \
 		ln -s ${libcrypt} libcrypt.so && \
 		ln -s ${libutil} libutil.so && \
 		ln -s ${librpcsvc} librpcsvc.so && \
@@ -702,16 +719,19 @@ install:
 	${BSD_INSTALL_LIB} ../${OPSYS:tl}/lib/libgcc_s.so.1 ${DESTDIR}${BASE}/usr/lib/
 	${BSD_INSTALL_LIB} ../${OPSYS:tl}/lib/libcxxrt.so.1 ${DESTDIR}${BASE}/usr/lib/
 	${BSD_INSTALL_LIB} ../${OPSYS:tl}/usr/lib/libc++.so.1 ${DESTDIR}${BASE}/usr/lib/
+	sed -e 's|/lib/libc\.so|/usr/lib/libc.so|'  ../${OPSYS:tl}/usr/lib/libc.so \
+		> ${DESTDIR}${BASE}/usr/lib/libc.so
 .endif
 .if ${OPSYS} == DragonFly
 	(cd ${DESTDIR}${BASE}/usr/lib && \
+		ln -s ${libc} libc.so && \
 		ln -s libsbuf.so.3 libsbuf.so && \
 		ln -s libprop.so.3 libprop.so && \
 		ln -s libdevattr.so.3 libdevattr.so && \
 		ln -s libdevstat.so.3 libdevstat.so && \
 		ln -s libdevinfo.so.3 libdevinfo.so && \
-		ln -s libdevmapper.so.0 libdevmapper.so && \
-		ln -s libcam.so.3 libcam.so)
+		ln -s libkinfo.so.2 libkinfo.so && \
+		ln -s libdevmapper.so.0 libdevmapper.so)
 	(cd ${DESTDIR}${BASE}/usr/include && \
 		ln -s /usr/include/dev/misc/evdev compat/linux && \
 		ln -s vfs fs && \
@@ -795,17 +815,17 @@ install:
 	# use coreutils that FreeBSD and DragonFly passed on (/bin)
 .  for item in [ chmod cp date echo expr kill link ln ls mkdir mv pwd \
 	realpath rm rmdir sleep test unlink
-	cp ${CPA} ${LOCALBASE}/bin/g${item} ${DESTDIR}${BASE}/bin/${item}
+	cp ${CPA} ${LOCALBASE}/bin/${item} ${DESTDIR}${BASE}/bin/${item}
 .  endfor
 	# use coreutils that FreeBSD and DragonFly passed on (/usr/bin)
 .  for item in basename chgrp chown comm cut dirname env false head id \
 	join mkfifo mktemp printenv printf readlink tail tee touch \
 	tee tr true tsort uniq whoami
-	cp ${CPA} ${LOCALBASE}/bin/g${item} ${DESTDIR}${BASE}/usr/bin/${item}
+	cp ${CPA} ${LOCALBASE}/bin/${item} ${DESTDIR}${BASE}/usr/bin/${item}
 .  endfor
 .  if ${OPSYS} == Linux || ${OPSYS} == SunOS
 .    for item in stat
-	cp ${CPA} ${LOCALBASE}/bin/g${item} ${DESTDIR}${BASE}/usr/bin/${item}
+	cp ${CPA} ${LOCALBASE}/bin/${item} ${DESTDIR}${BASE}/usr/bin/${item}
 .    endfor
 .  endif
 .endif
@@ -815,24 +835,26 @@ install:
 	cp ${CPA} ../${OPSYS:tl}/usr/include/${hdr} ${DESTDIR}${BASE}/usr/include/
 .  endfor
 .for item in ${pcfiles_${OPSYS}}
+.  if ${OPSYS} == Linux
+	${BSD_INSTALL_DATA} ../${OPSYS:tl}/usr/lib/x86_64-linux-gnu/pkgconfig/${item} \
+		${DESTDIR}${BASE}/usr/lib/pkgconfig/
+.  else
 	${BSD_INSTALL_DATA} ../${OPSYS:tl}/usr/libdata/pkgconfig/${item} \
 		${DESTDIR}${BASE}/usr/lib/pkgconfig/
+.  endif
 .endfor
-.for item in md5 sha256 
+.for item in md5 sha256 cat
 	cp ${CPA} ${LOCALBASE}/bin/${item} ${DESTDIR}${BASE}/bin/
 .endfor
-	cp ${CPA} ${LOCALBASE}/bin/gcat ${DESTDIR}${BASE}/bin/cat
 .for item in m4 bzip2 bunzip2 bzcat bzgrep bzegrep bzfgrep lockf \
 	grep file flex flex++ gzip gunzip zcat zcmp zdiff zegrep \
 	zfgrep zgrep lzcat lzcmp lzdiff lzegrep lzfgrep lzgrep lzma \
 	unlzma unxz xz xzcat xzcmp xzdiff xzegrep xzfgrep xzgrep yacc \
-	unzip less mtree bsdcat dupe genpatch portfix patch fetch
+	unzip less mtree bsdcat dupe genpatch portfix patch fetch \
+	rpcgen sed find xargs cmp diff diff3 sdiff \
+	install wc sort od mknod seq
 	cp ${LOCALBASE}/bin/${item} ${DESTDIR}${BASE}/usr/bin/
 .endfor
-.  for item in sed find xargs cmp diff diff3 sdiff \
-	install wc sort od mknod seq
-	cp ${CPA} ${LOCALBASE}/bin/g${item} ${DESTDIR}${BASE}/usr/bin/${item}
-.  endfor
 .for item in ${headers_${OPSYS}}
 	${BSD_INSTALL_DATA} ../${OPSYS:tl}/usr/include/${item} ${DESTDIR}${BASE}/usr/include/${item}
 .endfor
@@ -851,7 +873,8 @@ install:
 	rmdir ${DESTDIR}${BASE}/usr/include/dev/nand
 	rmdir ${DESTDIR}${BASE}/usr/include/dev/powermac_nvram
 .endif
-.for item in nawk/awk objdump/objdump-sysroot less/more bmake/make \
+	cp ${LOCALBASE}/toolchain/bin/objdump ${DESTDIR}${BASE}/usr/bin/objdump-sysroot
+.for item in nawk/awk less/more bmake/make \
 	bsdcpio/cpio bsdtar/tar ravensys-uname/uname nvi/vi
 	cp ${LOCALBASE}/bin/${item:H} ${DESTDIR}${BASE}/usr/bin/${item:T}
 .endfor
@@ -875,6 +898,14 @@ install:
 		${DESTDIR}${BASE}/usr/share/locale/en_US.UTF-8/
 .  endfor
 .endif
+	# move os-specific files from specification to makefile
+	cd ${DESTDIR}${BASE}/usr/share \
+		&& ${ECHO} ${OPSYS}     > OPSYS \
+		&& ${ECHO} ${ARCH}      > ARCH \
+		&& ${ECHO} ${ARCHSTD}   > STDARCH \
+		&& ${ECHO} ${OSVERSION} > OSVERSION \
+		&& ${ECHO} ${OSREL}     > OSRELEASE \
+		&& ${ECHO} ${OSMAJOR}   > OSMAJOR
 
 extra-includes:
 .for item in ${headers_${OPSYS}}

@@ -2294,8 +2294,8 @@ lib/python%%XYDOT%%/ensurepip/__pycache__/__main__.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/ensurepip/__pycache__/_uninstall.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/ensurepip/__pycache__/_uninstall.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/ensurepip/__pycache__/_uninstall.cpython-%%XY%%.pyc
-lib/python%%XYDOT%%/ensurepip/_bundled/pip-19.2.3-py2.py3-none-any.whl
-lib/python%%XYDOT%%/ensurepip/_bundled/setuptools-41.2.0-py2.py3-none-any.whl
+lib/python%%XYDOT%%/ensurepip/_bundled/pip-%%PIP%%-py2.py3-none-any.whl
+lib/python%%XYDOT%%/ensurepip/_bundled/setuptools-%%SETUP%%-py3-none-any.whl
 lib/python%%XYDOT%%/html/__init__.py
 lib/python%%XYDOT%%/html/entities.py
 lib/python%%XYDOT%%/html/parser.py
@@ -2402,11 +2402,12 @@ lib/python%%XYDOT%%/idlelib/undo.py
 lib/python%%XYDOT%%/idlelib/window.py
 lib/python%%XYDOT%%/idlelib/zoomheight.py
 lib/python%%XYDOT%%/idlelib/zzdummy.py
+lib/python%%XYDOT%%/idlelib/Icons/README.txt
 lib/python%%XYDOT%%/idlelib/Icons/folder.gif
-lib/python%%XYDOT%%/idlelib/Icons/idle.icns
 lib/python%%XYDOT%%/idlelib/Icons/idle.ico
 lib/python%%XYDOT%%/idlelib/Icons/idle_16.gif
 lib/python%%XYDOT%%/idlelib/Icons/idle_16.png
+lib/python%%XYDOT%%/idlelib/Icons/idle_256.png
 lib/python%%XYDOT%%/idlelib/Icons/idle_32.gif
 lib/python%%XYDOT%%/idlelib/Icons/idle_32.png
 lib/python%%XYDOT%%/idlelib/Icons/idle_48.gif
@@ -3586,6 +3587,7 @@ lib/python%%XYDOT%%/test/randv2_32.pck
 lib/python%%XYDOT%%/test/randv2_64.pck
 lib/python%%XYDOT%%/test/randv3.pck
 lib/python%%XYDOT%%/test/re_tests.py
+lib/python%%XYDOT%%/test/recursion.tar
 lib/python%%XYDOT%%/test/regrtest.py
 lib/python%%XYDOT%%/test/relimport.py
 lib/python%%XYDOT%%/test/reperf.py
@@ -5845,11 +5847,13 @@ lib/python%%XYDOT%%/test/test_asyncio/echo.py
 lib/python%%XYDOT%%/test/test_asyncio/echo2.py
 lib/python%%XYDOT%%/test/test_asyncio/echo3.py
 lib/python%%XYDOT%%/test/test_asyncio/functional.py
+lib/python%%XYDOT%%/test/test_asyncio/test_asyncio_waitfor.py
 lib/python%%XYDOT%%/test/test_asyncio/test_base_events.py
 lib/python%%XYDOT%%/test/test_asyncio/test_buffered_proto.py
 lib/python%%XYDOT%%/test/test_asyncio/test_context.py
 lib/python%%XYDOT%%/test/test_asyncio/test_events.py
 lib/python%%XYDOT%%/test/test_asyncio/test_futures.py
+lib/python%%XYDOT%%/test/test_asyncio/test_futures2.py
 lib/python%%XYDOT%%/test/test_asyncio/test_locks.py
 lib/python%%XYDOT%%/test/test_asyncio/test_pep492.py
 lib/python%%XYDOT%%/test/test_asyncio/test_proactor_events.py
@@ -5887,6 +5891,9 @@ lib/python%%XYDOT%%/test/test_asyncio/__pycache__/echo3.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/test/test_asyncio/__pycache__/functional.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/test/test_asyncio/__pycache__/functional.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/test/test_asyncio/__pycache__/functional.cpython-%%XY%%.pyc
+lib/python%%XYDOT%%/test/test_asyncio/__pycache__/test_asyncio_waitfor.cpython-%%XY%%.opt-1.pyc
+lib/python%%XYDOT%%/test/test_asyncio/__pycache__/test_asyncio_waitfor.cpython-%%XY%%.opt-2.pyc
+lib/python%%XYDOT%%/test/test_asyncio/__pycache__/test_asyncio_waitfor.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/test/test_asyncio/__pycache__/test_base_events.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/test/test_asyncio/__pycache__/test_base_events.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/test/test_asyncio/__pycache__/test_base_events.cpython-%%XY%%.pyc
@@ -5902,6 +5909,9 @@ lib/python%%XYDOT%%/test/test_asyncio/__pycache__/test_events.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/test/test_asyncio/__pycache__/test_futures.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/test/test_asyncio/__pycache__/test_futures.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/test/test_asyncio/__pycache__/test_futures.cpython-%%XY%%.pyc
+lib/python%%XYDOT%%/test/test_asyncio/__pycache__/test_futures2.cpython-%%XY%%.opt-1.pyc
+lib/python%%XYDOT%%/test/test_asyncio/__pycache__/test_futures2.cpython-%%XY%%.opt-2.pyc
+lib/python%%XYDOT%%/test/test_asyncio/__pycache__/test_futures2.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/test/test_asyncio/__pycache__/test_locks.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/test/test_asyncio/__pycache__/test_locks.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/test/test_asyncio/__pycache__/test_locks.cpython-%%XY%%.pyc
@@ -6164,6 +6174,7 @@ lib/python%%XYDOT%%/test/test_importlib/__init__.py
 lib/python%%XYDOT%%/test/test_importlib/__main__.py
 lib/python%%XYDOT%%/test/test_importlib/abc.py
 lib/python%%XYDOT%%/test/test_importlib/fixtures.py
+lib/python%%XYDOT%%/test/test_importlib/stubs.py
 lib/python%%XYDOT%%/test/test_importlib/test_abc.py
 lib/python%%XYDOT%%/test/test_importlib/test_api.py
 lib/python%%XYDOT%%/test/test_importlib/test_lazy.py
@@ -6192,6 +6203,9 @@ lib/python%%XYDOT%%/test/test_importlib/__pycache__/abc.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/test/test_importlib/__pycache__/fixtures.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/test/test_importlib/__pycache__/fixtures.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/test/test_importlib/__pycache__/fixtures.cpython-%%XY%%.pyc
+lib/python%%XYDOT%%/test/test_importlib/__pycache__/stubs.cpython-%%XY%%.opt-1.pyc
+lib/python%%XYDOT%%/test/test_importlib/__pycache__/stubs.cpython-%%XY%%.opt-2.pyc
+lib/python%%XYDOT%%/test/test_importlib/__pycache__/stubs.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/test/test_importlib/__pycache__/test_abc.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/test/test_importlib/__pycache__/test_abc.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/test/test_importlib/__pycache__/test_abc.cpython-%%XY%%.pyc
@@ -6767,6 +6781,7 @@ lib/python%%XYDOT%%/tkinter/test/test_tkinter/test_geometry_managers.py
 lib/python%%XYDOT%%/tkinter/test/test_tkinter/test_images.py
 lib/python%%XYDOT%%/tkinter/test/test_tkinter/test_loadtk.py
 lib/python%%XYDOT%%/tkinter/test/test_tkinter/test_misc.py
+lib/python%%XYDOT%%/tkinter/test/test_tkinter/test_simpledialog.py
 lib/python%%XYDOT%%/tkinter/test/test_tkinter/test_text.py
 lib/python%%XYDOT%%/tkinter/test/test_tkinter/test_variables.py
 lib/python%%XYDOT%%/tkinter/test/test_tkinter/test_widgets.py
@@ -6788,6 +6803,9 @@ lib/python%%XYDOT%%/tkinter/test/test_tkinter/__pycache__/test_loadtk.cpython-%%
 lib/python%%XYDOT%%/tkinter/test/test_tkinter/__pycache__/test_misc.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/tkinter/test/test_tkinter/__pycache__/test_misc.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/tkinter/test/test_tkinter/__pycache__/test_misc.cpython-%%XY%%.pyc
+lib/python%%XYDOT%%/tkinter/test/test_tkinter/__pycache__/test_simpledialog.cpython-%%XY%%.opt-1.pyc
+lib/python%%XYDOT%%/tkinter/test/test_tkinter/__pycache__/test_simpledialog.cpython-%%XY%%.opt-2.pyc
+lib/python%%XYDOT%%/tkinter/test/test_tkinter/__pycache__/test_simpledialog.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/tkinter/test/test_tkinter/__pycache__/test_text.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/tkinter/test/test_tkinter/__pycache__/test_text.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/tkinter/test/test_tkinter/__pycache__/test_text.cpython-%%XY%%.pyc

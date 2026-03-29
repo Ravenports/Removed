@@ -362,6 +362,7 @@
 %%BASE%%/usr/bin/printf
 %%BASE%%/usr/bin/ravensw
 %%BASE%%/usr/bin/readlink
+%%BASE%%/usr/bin/rpcgen
 %%BASE%%/usr/bin/sdiff
 %%BASE%%/usr/bin/sed
 %%BASE%%/usr/bin/seq
@@ -2470,6 +2471,8 @@
 %%BASE%%/usr/lib/security/amd64/pkcs11_softtoken.so.1
 %%BASE%%/usr/lib/security/amd64/pkcs11_softtoken_extra.so
 %%BASE%%/usr/lib/security/amd64/pkcs11_softtoken_extra.so.1
+%%BASE%%/usr/share/ARCH
+%%BASE%%/usr/share/OPSYS
 %%BASE%%/usr/share/OSMAJOR
 %%BASE%%/usr/share/OSRELEASE
 %%BASE%%/usr/share/OSVERSION

@@ -23,9 +23,11 @@ OPTIONS_STANDARD=	none
 
 FPC_EQUIVALENT=		${KEYWORD}/php${SUFFIX}-${MODULE}
 
-BUILDRUN_DEPENDS=	recode:single:standard
+BUILDRUN_DEPENDS=	recode:primary:standard
 
-USES=			php:ext,${SUFFIX}
+USES=			php:ext,${SUFFIX} cpe
+CPE_VENDOR=		php
+CPE_PRODUCT=		php
 DISTNAME=		php-${PORTVERSION}/ext/{{PHP_MODNAME}}
 CONFIGURE_ARGS=		--with-${MODULE}={{LOCALBASE}}
 EXTRACT_HEAD[1]=	{{TAR}} -xf

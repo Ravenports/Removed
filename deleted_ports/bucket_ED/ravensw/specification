@@ -1,6 +1,7 @@
 DEF[PORTVERSION]=	1.11.1
-DEF[ROLLING_TAG]=	16e7810
-DEF[REVISION]=		4
+# branch: c-version
+DEF[ROLLING_TAG]=	95f8b68
+DEF[REVISION]=		6
 DEF[SQLITE_VER]=	3.28.0
 DEF[SQLITE_LONGVER]=	${SQLITE_VER:S/.//:S/./0/}00
 DEF[SQLITE_YEAR]=	2019
@@ -53,6 +54,8 @@ CONFIGURE_ARGS=		--mandir={{MANPREFIX}}/man
 			--prefix={{PREFIX}}
 CFLAGS=			-Wno-error
 
+VAR_OPSYS[sunos]=	CFLAGS=-DUSE_ESTREAM
+
 # comment next 2 lines out later
 SET_DEBUGGING_ON=	yes
 OPTIMIZER_LEVEL=	0
@@ -71,13 +74,14 @@ post-extract:
 post-build-RUNTESTS-ON:
 	# All the tests are hardcoded with "pkg" executable
 	(cd ${WRKSRC}/src && ${LN} -s ravensw pkg)
-	${ECHO} "!/bin/sh"                   >> ${WRKSRC}/tests/exec_test.sh
+	${ECHO} "#!/bin/sh"                  >> ${WRKSRC}/tests/exec_test.sh
 .if "${OPSYS}" == "Linux"
 	${ECHO} "export -n RAVENSW_CACHEDIR" >> ${WRKSRC}/tests/exec_test.sh
 	${ECHO} "export -n RAVENSW_DBDIR"    >> ${WRKSRC}/tests/exec_test.sh
 .else
-	${ECHO} "unset RAVENSW_CACHEDIR"  >> ${WRKSRC}/tests/exec_test.sh
-	${ECHO} "unset RAVENSW_DBDIR"     >> ${WRKSRC}/tests/exec_test.sh
+	${ECHO} "unset RAVENSW_CACHEDIR"     >> ${WRKSRC}/tests/exec_test.sh
+	${ECHO} "unset RAVENSW_DBDIR"        >> ${WRKSRC}/tests/exec_test.sh
 .endif
 	${ECHO} "kyua test"                  >> ${WRKSRC}/tests/exec_test.sh
 	${CHMOD} ${BINMODE} ${WRKSRC}/tests/exec_test.sh
+	(cd ${WRKSRC}/tests && ./exec_test.sh ||:)

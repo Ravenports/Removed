@@ -34,12 +34,13 @@ LICENSE_SCHEME=		dual
 
 FPC_EQUIVALENT=		lang/perl5.28
 
-BUILDRUN_DEPENDS=	gdbm:single:standard
+BUILD_DEPENDS=		gdbm:primary:static
 			db5:static:standard
 RUN_DEPENDS=		autoselect-perl:single:standard
 
 USES=			bdb cpe perl-interp cclibs:primary
-
+CPE_VENDOR=		perl
+CPE_PRODUCT=		perl
 DISTNAME=		perl-{{VERSION}}
 MUST_CONFIGURE=		yes
 CONFIGURE_SCRIPT=	Configure
@@ -75,11 +76,6 @@ post-extract:
 		${WRKSRC}/README > ${WRKDIR}/TERMS
 
 post-patch:
-	# GDBM is missing the runpath
-	${REINPLACE_CMD} -e 's|@PREFIX@|${PREFIX}|' \
-		${WRKSRC}/ext/GDBM_File/Makefile.PL \
-		${WRKSRC}/ext/NDBM_File/Makefile.PL \
-		${WRKSRC}/ext/ODBM_File/Makefile.PL
 	${REINPLACE_CMD} -e 's|@WRKSRC@|${WRKSRC}|' \
 		${WRKSRC}/cpan/DB_File/Makefile.PL
 	${REINPLACE_CMD} -e 's|/usr/local|${PREFIX}|g' \

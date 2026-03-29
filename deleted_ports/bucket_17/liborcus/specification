@@ -1,11 +1,12 @@
-# libreoffice looks for version 0.14 (use liborcus-1.4)
-DEF[PORTVERSION]=	0.15.3
-DEF[ORCUS_VERSION]=	0.15
+DEF[PORTVERSION]=	0.16.1
+DEF[ORCUS_VERSION]=	0.16
 DEF[SOVERSION]=		0.0.0
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		liborcus
 VERSION=		${PORTVERSION}
+# rerolled
+REVISION=		1
 KEYWORDS=		devel misc
 VARIANTS=		standard
 SDESC[standard]=	File import library for spreadsheet documents
@@ -21,6 +22,10 @@ SPKGS[standard]=	single
 OPTIONS_AVAILABLE=	none
 OPTIONS_STANDARD=	none
 
+LICENSE=		MPL:single
+LICENSE_FILE=		MPL:{{WRKSRC}}/LICENSE
+LICENSE_SCHEME=		solo
+
 FPC_EQUIVALENT=		devel/liborcus
 
 PLIST_SUB=		VER=${ORCUS_VERSION}
@@ -29,13 +34,31 @@ BUILD_DEPENDS=		mdds:single:standard
 			bzip2:static:standard
 			bzip2:shared:standard
 BUILDRUN_DEPENDS=	boost-libraries:rest:python_default
+			ixion:single:standard
 
-USES=			libtool pkgconfig zlib autoreconf
-MUST_CONFIGURE=		gnu
-CONFIGURE_ARGS=		--with-boost="{{LOCALBASE}}"
-			--disable-spreadsheet-model
-			--disable-python
-			--disable-werror
-INSTALL_TARGET=		install-strip
+USES=			pkgconfig zlib cmake python:build
 INSTALL_REQ_TOOLCHAIN=	yes
 SOVERSION=		${SOVERSION}
+CMAKE_ARGS=		-DMDDS_INCLUDEDIR:STRING="{{LOCALBASE}}/include/mdds-1.2"
+			-DIXION_INCLUDEDIR:STRING="{{LOCALBASE}}/include/ixion-0.16"
+LDFLAGS=		-lboost_program_options
+			-lboost_thread
+			-lboost_filesystem
+			-lboost_iostreams
+
+post-patch:
+	# fix module name
+	${REINPLACE_CMD} -e 's|Zlib|ZLIB|' \
+		-e '/CMAKE_CXX_STANDARD/ s|11|14|' \
+		${WRKSRC}/CMakeLists.txt
+
+post-install:
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/orcus*
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/lib*.so
+	# manually create pkgconfig file
+	${SED} -e 's|@prefix@|${PREFIX}|; s|@exec_prefix@|${PREFIX}|' \
+	-e 's|@libdir@|${PREFIX}/lib|; s|@includedir@|${PREFIX}/include|' \
+	-e 's|liborcus-@ORCUS_API_VERSION@|orcus-${ORCUS_VERSION}|' \
+	-e 's|@ORCUS_API_VERSION@|${ORCUS_VERSION}|g' \
+	-e ' s|@VERSION@|${PORTVERSION}|g' ${WRKSRC}/liborcus.pc.in \
+	> ${STAGEDIR}${PREFIX}/lib/pkgconfig/liborcus-${ORCUS_VERSION}.pc

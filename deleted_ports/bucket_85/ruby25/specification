@@ -29,9 +29,9 @@ LICENSE_SCHEME=		dual
 
 FPC_EQUIVALENT=		lang/ruby25
 
+BUILD_DEPENDS=		gdbm:primary:static
 BUILDRUN_DEPENDS=	libyaml:single:standard
 			libffi:single:standard
-			gdbm:single:standard
 			gmp:complete:standard
 RUN_DEPENDS=		autoselect-ruby:single:standard
 
@@ -57,13 +57,15 @@ CONFIGURE_ENV=		debugflags=
 CFLAGS=			-Wno-attributes
 PLIST_SUB=		XY={{RUBY_SUFFIX}}
 			XDOTY={{RUBY_VER}}
+			MODULE={{BUNDLE:Uso}}
 CPE_VENDOR=		ruby-lang
+CPE_PRODUCT=		ruby
 CPE_VERSION=		${PORTVERSION}
 CPE_UPDATE=		p${PATCHLEVEL}
 INSTALL_REQ_TOOLCHAIN=	yes
 
 VAR_OPSYS[darwin]=	CONFIGURE_ENV=ac_cv_func_backtrace=no
-VAR_OPSYS[dragonfly]=	CFLAGS=-fuse-ld=gold
+			MAKEFILE_LINE=BUNDLE=bundle
 
 post-patch:
 	${FIND} ${WRKSRC}/ -name "*.orig" -delete

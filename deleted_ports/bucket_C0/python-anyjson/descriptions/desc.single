@@ -42,7 +42,6 @@ Traceback (most recent call last):
   <snipped traceback>
 ValueError: cannot parse JSON description
 
-
 Contact
 -------
 
@@ -60,4 +59,3 @@ License
 -------
 
 see the LICENSE file
-

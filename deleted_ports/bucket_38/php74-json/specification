@@ -23,8 +23,13 @@ OPTIONS_STANDARD=	none
 
 FPC_EQUIVALENT=		${KEYWORD}/php${SUFFIX}-${MODULE}
 
-USES=			php:ext,${SUFFIX}
+BUILD_DEPENDS=		re2c:primary:standard
+
+USES=			php:ext,${SUFFIX} cpe
+CPE_VENDOR=		php
+CPE_PRODUCT=		php
 DISTNAME=		php-${PORTVERSION}/ext/{{PHP_MODNAME}}
 CONFIGURE_ARGS=		--enable-${MODULE}
 EXTRACT_HEAD[1]=	{{TAR}} -xf
 EXTRACT_TAIL[1]=	php-${PORTVERSION}/ext/{{PHP_MODNAME}}
+MAKE_ENV=		RE2C={{LOCALBASE}}/bin/re2c

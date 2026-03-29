@@ -1,6 +1,6 @@
-DEF[PORTVERSION]=	1.27
-DEF[INTEL_VERSION]=	20191115
-DEF[AMD_VERSION]=	20191021
+DEF[PORTVERSION]=	1.37
+DEF[INTEL_VERSION]=	20201118
+DEF[AMD_VERSION]=	20191228
 DEF[TAG]=		microcode-${INTEL_VERSION}
 # ----------------------------------------------------------------------------
 
