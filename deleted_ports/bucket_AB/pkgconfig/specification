@@ -1,5 +1,4 @@
-DEF[PORTVERSION]=	1.5.4
-DEF[SOVERSION]=		3.0.0
+DEF[PORTVERSION]=	1.3.0
 # ----------------------------------------------------------------------------
 
 NAMEBASE=		pkgconfig
@@ -24,17 +23,12 @@ LICENSE=		ISCL:single
 LICENSE_FILE=		ISCL:{{WRKSRC}}/COPYING
 LICENSE_SCHEME=		solo
 
-FPC_EQUIVALENT=		devel/pkgconf
-
 USES=			libtool
 DISTNAME=		pkgconf-${PORTVERSION}
 MUST_CONFIGURE=		gnu
 INSTALL_TARGET=		install-strip
 TEST_TARGET=		check
-CONFIGURE_ARGS=		--with-pkg-config-dir=/usr/lib/pkgconfig:{{PREFIX}}/lib/pkgconfig
-			--with-system-libdir=/lib:/usr/lib
-			--with-system-includedir=/usr/include
-SOVERSION=		${SOVERSION}
+CONFIGURE_ARGS=		--with-pkg-config-dir={{PREFIX}}/lib/pkgconfig
 
 post-install:
 	${LN} -sf pkgconf ${STAGEDIR}${PREFIX}/bin/pkg-config

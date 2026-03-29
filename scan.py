@@ -279,7 +279,7 @@ def sync_purged_ports(filter, rsource):
     if purged:
         with open("/tmp/folders.txt", "w") as fout:
             for path in purged:
-                fout.write(f"{path}/\n")
+                fout.write(f"{path}\n")
         slash_rsource = os.path.join(rsource, "")
         slash_destination = os.path.join(str(destination), "")
         # -r: Recursive (Must be explicit with --files-from)
@@ -295,6 +295,7 @@ def sync_purged_ports(filter, rsource):
             "rsync", "-aR", "--delete",
             "--info=NAME",
             "--files-from=/tmp/folders.txt",
+            "-r",   # <--- MANUALLY RE-ENABLE RECURSION
             slash_rsource, slash_destination
         ]
         # print(f"Executing: {' '.join(cmd)}")
