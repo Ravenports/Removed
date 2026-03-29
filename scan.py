@@ -232,7 +232,7 @@ def write_out_index(deleted_ports):
     with history.open("w") as fout:
         fout.write("# Last time deleted Ravenport was available\n\n")
         fout.write("```\n")
-        fout.write("Directory  Commit      Date                 Portname\n")
+        fout.write("Directory  Commit      Date                       Portname\n")
         fout.write("```\n\n---\n\n```\n")
         #          "bucket_00  0123456789  2017-04-22T11:42:17-05:00  ravensys-uname
         for name, data in sorted(deleted_ports.items()):
@@ -265,8 +265,7 @@ def update_deleted_ports(deleted_ports, purged, commit_hash, iso_date):
     for port in purged:
         portname = port.split("/")[-1]
         prefix = bucket(portname)
-        just_dt = iso_date[:19]
-        deleted_ports[portname] = [prefix, commit_hash, just_dt]
+        deleted_ports[portname] = [prefix, commit_hash, iso_date]
 
 
 def sync_purged_ports(filter, rsource):
