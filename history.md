@@ -44,6 +44,7 @@ bucket_5B  befd8453e4  2023-10-26T00:07:49+00:00  clang15
 bucket_2B  2419e6f74b  2024-04-19T14:13:34+00:00  clang16
 bucket_15  93c791c4c2  2024-10-17T15:18:43+00:00  clang17
 bucket_32  0c547af541  2025-04-27T16:53:09+00:00  clang18
+bucket_A1  02ee7129e9  2026-04-01T11:43:48+00:00  clang19
 bucket_26  4e9ec98a95  2023-04-22T13:53:32+00:00  cmake-trinity
 bucket_87  70670e8f8f  2025-12-05T17:48:54+00:00  cpp-hocon
 bucket_4B  0dfe65592e  2024-12-28T23:58:34+00:00  cxxbridge-cmd
@@ -136,6 +137,7 @@ bucket_31  c4f7df53b7  2022-01-01T17:11:49-06:00  libav
 bucket_2B  cebe2d37ec  2023-04-22T16:03:02+00:00  libbsd4sol
 bucket_3B  ca1d3d8957  2020-04-28T23:11:36+00:00  libdl
 bucket_DA  a985aded8a  2024-12-14T03:12:41+00:00  libglade
+bucket_30  33f2479c52  2026-03-31T11:55:42+00:00  libmesode
 bucket_17  5ae43f5196  2025-12-11T17:36:08+00:00  liborcus
 bucket_AC  b8906242e4  2022-01-03T02:28:20+00:00  liborcus-0.16
 bucket_14  3ac0b2c872  2026-01-24T14:41:11+00:00  liborcus-0.20
@@ -154,12 +156,14 @@ bucket_A3  befd8453e4  2023-10-26T00:07:49+00:00  lld15
 bucket_22  2419e6f74b  2024-04-19T14:13:34+00:00  lld16
 bucket_8E  93c791c4c2  2024-10-17T15:18:43+00:00  lld17
 bucket_13  0c547af541  2025-04-27T16:53:09+00:00  lld18
+bucket_F5  02ee7129e9  2026-04-01T11:43:48+00:00  lld19
 bucket_1F  4fe5e064b9  2025-12-05T04:17:34+00:00  llvm-libunwind
 bucket_61  c57b70f321  2023-01-22T02:34:43+00:00  llvm13
 bucket_A8  befd8453e4  2023-10-26T00:07:49+00:00  llvm15
 bucket_80  2419e6f74b  2024-04-19T14:13:34+00:00  llvm16
 bucket_C4  93c791c4c2  2024-10-17T15:18:43+00:00  llvm17
 bucket_61  0c547af541  2025-04-27T16:53:09+00:00  llvm18
+bucket_6D  02ee7129e9  2026-04-01T11:43:48+00:00  llvm19
 bucket_B9  b46bfd7f49  2020-05-29T13:03:57-05:00  llvm40
 bucket_4A  378487cb93  2018-07-23T14:02:13-05:00  llvm50
 bucket_73  28641cd396  2018-09-21T12:23:24-05:00  llvm60
@@ -186,6 +190,7 @@ bucket_97  4da82ae81d  2022-03-01T21:05:04-06:00  midori
 bucket_79  a180752e92  2020-12-24T22:51:02+00:00  mime-support
 bucket_14  eb956e6939  2024-11-13T20:38:10+00:00  minetest
 bucket_31  0060362d52  2024-07-18T21:16:24+00:00  mozjs102
+bucket_6D  06c7a92808  2026-04-14T02:49:07+00:00  mozjs128
 bucket_6C  41327a0d0d  2022-09-07T11:57:36+00:00  mozjs78
 bucket_95  ca1d3d8957  2020-04-28T23:11:36+00:00  mtree
 bucket_56  cd342c6999  2019-02-02T15:31:09-06:00  mysql55
@@ -867,6 +872,7 @@ bucket_7C  d365776633  2021-11-14T20:08:20+00:00  qt6-qtquickcontrols2
 bucket_4E  aa775f32bf  2021-01-02T02:24:35+00:00  qt6-quicktimeline
 bucket_ED  32df789d8a  2024-08-11T17:27:19+00:00  ravensw
 bucket_B4  a9780b021c  2025-07-05T02:25:31+00:00  ravensys-root
+bucket_E4  ee7f4a4024  2026-04-04T10:26:31-05:00  ravensys-root-freebsd_amd64
 bucket_ED  ca1d3d8957  2020-04-28T23:11:36+00:00  ravensys-selector
 bucket_BC  ca1d3d8957  2020-04-28T23:11:36+00:00  ravensys-uname
 bucket_BB  02fc59c87a  2023-03-31T04:58:57+02:00  recode
