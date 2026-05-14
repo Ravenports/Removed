@@ -80,6 +80,7 @@ bucket_FA  2a04b40ce5  2020-12-27T20:21:15+00:00  gcc7
 bucket_D6  c1827f8fe1  2021-08-19T01:26:15+00:00  gcc8
 bucket_38  8a0ceed4be  2023-04-07T19:38:59+00:00  gcc9
 bucket_B9  ef645a2f1e  2021-01-17T22:14:14+00:00  gif
+bucket_AC  5dd5dbf53b  2026-05-14T11:32:58+00:00  glade
 bucket_B7  83fa2673ab  2017-05-24T19:18:13-05:00  gnat-sdl
 bucket_4B  09b035c1f8  2023-08-08T17:27:46-05:00  gnat-util
 bucket_27  c164a36e7b  2019-01-21T10:29:41-06:00  gnatcoll
