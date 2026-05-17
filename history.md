@@ -767,6 +767,7 @@ bucket_B5  8fa15068ec  2025-11-30T22:17:17+00:00  php82-zip
 bucket_49  8fa15068ec  2025-11-30T22:17:17+00:00  php82-zlib
 bucket_35  0376618214  2024-12-21T20:00:13+00:00  php83-pspell
 bucket_A4  022fa08e9e  2024-12-08T15:58:24+00:00  php84-pspell
+bucket_AA  75c2fdb939  2026-05-17T21:21:43+00:00  pipewire
 bucket_C4  5c09bc8014  2019-10-29T08:21:30-05:00  pkg-bsd
 bucket_AB  dd3e4ee355  2019-11-22T08:28:00-06:00  pkgconfig
 bucket_95  d0fa0fa9ca  2025-05-24T11:03:55-05:00  plan9port
