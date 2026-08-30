@@ -1,0 +1,37 @@
+DEF[PORTVERSION]=	1.2.0
+# ------------------------------------------------------------------------
+
+NAMEBASE=		python-pyproject_hooks
+VERSION=		${PORTVERSION}
+KEYWORDS=		python
+VARIANTS=		v13 v14
+SDESC[v13]=		Pyproject.toml-based build backend hooks (3.13)
+SDESC[v14]=		Pyproject.toml-based build backend hooks (3.14)
+HOMEPAGE=		https://github.com/pypa/pyproject-hooks
+CONTACT=		Python_Automaton[python@ravenports.com]
+
+DOWNLOAD_GROUPS=	main
+SITES[main]=		PYPIWHL/bd/24/12818598c362d7f300f18e74db45963dbcb85150324092410c8b49405e42
+DISTFILE[1]=		pyproject_hooks-${PORTVERSION}-py3-none-any.whl:main
+DIST_SUBDIR=		python-src
+
+SPKGS[v13]=		single
+SPKGS[v14]=		single
+
+OPTIONS_AVAILABLE=	PY313 PY314
+OPTIONS_STANDARD=	none
+VOPTS[v13]=		PY313=ON PY314=OFF
+VOPTS[v14]=		PY313=OFF PY314=ON
+
+# License listed at PyPI
+# Not provided.
+
+GENERATED=		yes
+DISTNAME=		pyproject_hooks-${PORTVERSION}.dist-info
+
+# Requires-Dist extracted from wheel metadata
+
+
+[PY313].USES_ON=			python:v13,wheel
+[PY314].USES_ON=			python:v14,wheel
+

@@ -1,0 +1,40 @@
+DEF[PORTVERSION]=	24.11.0
+# ------------------------------------------------------------------------
+
+NAMEBASE=		python-incremental
+VERSION=		${PORTVERSION}
+KEYWORDS=		python
+VARIANTS=		v13 v14
+SDESC[v13]=		Library for versioning python projects (3.13)
+SDESC[v14]=		Library for versioning python projects (3.14)
+HOMEPAGE=		https://github.com/twisted/incremental
+CONTACT=		Python_Automaton[python@ravenports.com]
+
+DOWNLOAD_GROUPS=	main
+SITES[main]=		PYPIWHL/1d/55/0f4df2a44053867ea9cbea73fc588b03c55605cd695cee0a3d86f0029cb2
+DISTFILE[1]=		incremental-${PORTVERSION}-py3-none-any.whl:main
+DIST_SUBDIR=		python-src
+
+SPKGS[v13]=		single
+SPKGS[v14]=		single
+
+OPTIONS_AVAILABLE=	PY313 PY314
+OPTIONS_STANDARD=	none
+VOPTS[v13]=		PY313=ON PY314=OFF
+VOPTS[v14]=		PY313=OFF PY314=ON
+
+# License listed at PyPI
+# Not provided.
+
+GENERATED=		yes
+DISTNAME=		incremental-${PORTVERSION}.dist-info
+
+# Requires-Dist extracted from wheel metadata
+# packaging>=17.0
+# tomli; python_version < '3.11'
+
+[PY313].USES_ON=			python:v13,wheel
+[PY313].RUN_DEPENDS_ON=			python-packaging:single:v13
+[PY314].USES_ON=			python:v14,wheel
+[PY314].RUN_DEPENDS_ON=			python-packaging:single:v14
+

@@ -1,0 +1,15 @@
+Incremental
+===========
+
+|pypi|
+|calver|
+|gha|
+|coverage|
+
+Incremental is a [CalVer] version manager supports the future.
+
+API documentation can be found [here].
+Narrative documentation follows.
+
+.. |coverage| image:: https://img.shields.io/badge/Coverage-100%25-green
+    :alt: Coverage: 100%

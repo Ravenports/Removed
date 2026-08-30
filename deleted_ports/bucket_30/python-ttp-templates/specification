@@ -1,0 +1,48 @@
+DEF[PORTVERSION]=	0.5.8
+# ------------------------------------------------------------------------
+
+NAMEBASE=		python-ttp-templates
+VERSION=		${PORTVERSION}
+KEYWORDS=		python
+VARIANTS=		v13 v14
+SDESC[v13]=		Template Text Parser Templates collections (3.13)
+SDESC[v14]=		Template Text Parser Templates collections (3.14)
+HOMEPAGE=		https://github.com/dmulyalin/ttp_templates
+CONTACT=		Python_Automaton[python@ravenports.com]
+
+DOWNLOAD_GROUPS=	main
+SITES[main]=		PYPIWHL/1d/f1/8204b76eb1fcf3e87fafef12cba1284887ddc1c940bc0dce29320e3b2390
+DISTFILE[1]=		ttp_templates-${PORTVERSION}-py3-none-any.whl:main
+DIST_SUBDIR=		python-src
+
+SPKGS[v13]=		single
+SPKGS[v14]=		single
+
+OPTIONS_AVAILABLE=	PY313 PY314
+OPTIONS_STANDARD=	none
+VOPTS[v13]=		PY313=ON PY314=OFF
+VOPTS[v14]=		PY313=OFF PY314=ON
+
+# License listed at PyPI
+# MIT
+
+GENERATED=		yes
+DISTNAME=		ttp_templates-${PORTVERSION}.dist-info
+
+# Requires-Dist extracted from wheel metadata
+# mkdocs ; extra == "docs"
+# mkdocs-material ; extra == "docs"
+# mkdocs-material-extensions ; extra == "docs"
+# mkdocstrings[python] ; extra == "docs"
+# pydantic (>=2.0)
+# pygments ; extra == "docs"
+# pymdown-extensions ; extra == "docs"
+# ttp (>=0.10.0)
+
+[PY313].USES_ON=			python:v13,wheel
+[PY313].RUN_DEPENDS_ON=			python-pydantic:single:v13
+					python-ttp:single:v13
+[PY314].USES_ON=			python:v14,wheel
+[PY314].RUN_DEPENDS_ON=			python-pydantic:single:v14
+					python-ttp:single:v14
+

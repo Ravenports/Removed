@@ -11,13 +11,16 @@ bucket_4C  65b8ae04c4  2023-08-08T17:18:52-05:00  AdaBrowse
 bucket_1F  e5afabe63e  2023-09-23T21:31:19+00:00  AdaYaml
 bucket_DF  d8ccfd6519  2024-11-17T22:33:34+00:00  ORBit2
 bucket_19  2cf7ef6766  2025-05-17T00:35:39-05:00  R-DCluster
+bucket_F3  d52dd239bd  2026-05-22T13:39:58+00:00  R-Quandl
 bucket_E4  7e1b3515ce  2023-08-28T13:35:35+00:00  R-XLConnect
 bucket_63  1c77856dbe  2020-04-18T18:08:56+00:00  R-foreign
 bucket_4E  c41aba1076  2023-10-18T04:03:34+00:00  R-maptools
 bucket_76  8d48077f8b  2025-05-11T19:11:22+00:00  R-mathjaxr
 bucket_AD  1c77856dbe  2020-04-18T18:08:56+00:00  R-mgcv
 bucket_5B  1c77856dbe  2020-04-18T18:08:56+00:00  R-nlme
+bucket_EE  d52dd239bd  2026-05-22T13:39:58+00:00  R-plogr
 bucket_BF  7e1b3515ce  2023-08-28T13:35:35+00:00  R-rJava
+bucket_E6  d52dd239bd  2026-05-22T13:39:58+00:00  R-rgexf
 bucket_59  2cf7ef6766  2025-05-17T00:35:39-05:00  R-spdep
 bucket_1D  1c77856dbe  2020-04-18T18:08:56+00:00  R-survival
 bucket_30  7e1b3515ce  2023-08-28T13:35:35+00:00  R-xlsx
@@ -47,6 +50,7 @@ bucket_32  0c547af541  2025-04-27T16:53:09+00:00  clang18
 bucket_A1  02ee7129e9  2026-04-01T11:43:48+00:00  clang19
 bucket_CF  04107379b4  2026-05-17T21:54:00+00:00  clang20
 bucket_26  4e9ec98a95  2023-04-22T13:53:32+00:00  cmake-trinity
+bucket_80  6ab1ad7a72  2026-08-04T20:29:44+02:00  comtrya
 bucket_87  70670e8f8f  2025-12-05T17:48:54+00:00  cpp-hocon
 bucket_4B  0dfe65592e  2024-12-28T23:58:34+00:00  cxxbridge-cmd
 bucket_97  394abb2bdf  2025-11-10T14:29:15+00:00  cython2
@@ -60,6 +64,7 @@ bucket_4C  2be40a3ac3  2021-01-25T15:48:25+00:00  facter
 bucket_F3  cf99b0233f  2023-10-29T15:00:12-05:00  ffmpeg4
 bucket_0E  819cd084b5  2025-04-28T19:09:34-05:00  ffmpeg5
 bucket_D8  440599e798  2025-12-06T04:33:46+00:00  ffmpeg6
+bucket_DE  a823915042  2026-08-20T16:37:09+00:00  ffmpeg7
 bucket_6C  115688154f  2023-08-05T00:45:41+00:00  firebird25
 bucket_5B  115688154f  2023-08-05T00:45:41+00:00  firebird30
 bucket_BE  115688154f  2023-08-05T00:45:41+00:00  firebird40
@@ -87,6 +92,7 @@ bucket_4B  09b035c1f8  2023-08-08T17:27:46-05:00  gnat-util
 bucket_27  c164a36e7b  2019-01-21T10:29:41-06:00  gnatcoll
 bucket_FA  eddbfd61b1  2021-11-21T00:18:02+00:00  gnatcross-system-netbsd
 bucket_5B  0058210156  2024-05-03T15:33:54+00:00  gnulib
+bucket_55  2e106f3110  2026-08-22T11:50:22+02:00  gnustep-make-bootstrap
 bucket_22  942396e88a  2022-09-20T01:51:24+00:00  gnutls-devel
 bucket_2C  65ce19b2e5  2024-05-04T00:17:34+00:00  go119
 bucket_1A  65ce19b2e5  2024-05-04T00:17:34+00:00  go121
@@ -103,6 +109,7 @@ bucket_E7  d3ff7cb897  2020-10-27T12:39:51+00:00  gtkmm24
 bucket_D7  0ac367ab15  2023-01-15T21:09:08+00:00  guile22
 bucket_E8  b946284d46  2023-08-28T08:11:31-05:00  hardlink-osx
 bucket_DC  94f28d79e9  2021-04-07T18:32:07+00:00  hunspell-he
+bucket_CD  67398eae89  2026-08-20T14:25:40+00:00  hunspell-pt_BR
 bucket_6B  83fa2673ab  2017-05-24T19:18:13-05:00  icu-le-hb
 bucket_22  a9d15ed0b3  2021-04-03T21:03:25+00:00  ilmbase
 bucket_70  dd06e8995b  2019-03-11T09:45:17-05:00  imapsync
@@ -257,6 +264,7 @@ bucket_FB  3521140905  2026-01-29T19:15:06+00:00  perl-ExtUtils-XSpp
 bucket_90  6c1c952b17  2017-06-15T00:28:35-05:00  perl-Fennec-Lite
 bucket_1E  bb223f746a  2025-11-10T01:00:38+00:00  perl-File-Slurp-Tiny
 bucket_8F  ba4ff110ed  2017-06-13T01:14:48-05:00  perl-GDGraph
+bucket_EA  3c6b2323c2  2026-06-21T20:11:03+00:00  perl-GeoIP2
 bucket_3A  413e8f6a64  2017-06-14T10:36:51-05:00  perl-Graph-Dependency
 bucket_6F  e15203c2e4  2024-06-19T16:07:15+00:00  perl-HTML-TokeParser-Simple
 bucket_4C  ae83e8600e  2020-04-26T14:23:16+00:00  perl-IO-CaptureOutput
@@ -793,8 +801,10 @@ bucket_12  cf2dc132d3  2022-12-11T04:20:01+00:00  py27-pycairo
 bucket_39  cf2dc132d3  2022-12-11T04:20:01+00:00  py27-pygobject
 bucket_B2  cf2dc132d3  2022-12-11T04:20:01+00:00  py27-setuptools
 bucket_AC  bb3f9a2fa6  2026-03-27T23:59:52+00:00  pyside6
+bucket_EE  e803b0001c  2026-07-05T17:54:40+00:00  python-Babel
 bucket_32  bcf27b29b5  2025-02-28T22:20:01+00:00  python-Flask-Cors
 bucket_24  05cdc1ca7f  2020-05-31T11:23:58+00:00  python-GNATPython
+bucket_4C  56dc9e5d2d  2026-07-24T13:50:31+02:00  python-Pillow
 bucket_F6  3a79fbee28  2024-07-10T17:32:25+00:00  python-PyPDF2
 bucket_C0  e2ea0baba5  2024-04-30T19:23:57+00:00  python-anyjson
 bucket_BF  47ac81c8cc  2025-02-28T23:20:27+00:00  python-boolean
@@ -815,12 +825,14 @@ bucket_E5  7b236b7aa3  2019-12-04T16:13:08-06:00  python-enum
 bucket_B9  05cdc1ca7f  2020-05-31T11:23:58+00:00  python-enum34
 bucket_59  3679949704  2020-04-20T06:35:42+00:00  python-eye3D
 bucket_BB  9fd0f3b786  2020-12-31T21:42:59+00:00  python-eyeD3
+bucket_7A  9e3ca1129c  2026-07-05T18:32:31+00:00  python-eyed3
 bucket_FB  7b236b7aa3  2019-12-04T16:13:08-06:00  python-futures
 bucket_5A  bf3258c860  2021-08-27T02:05:41+00:00  python-gitdb2
 bucket_29  61a6418e05  2023-01-17T20:15:12+00:00  python-gnupg
 bucket_21  4037ab6c1f  2019-12-05T11:58:55-06:00  python-gtk2
 bucket_7F  c88e73aa43  2026-02-25T16:51:45+00:00  python-htmlmin
 bucket_08  14e8af25d5  2020-04-20T06:21:50+00:00  python-importlib_metadata
+bucket_1C  e24b552694  2026-07-05T18:19:31+00:00  python-incremental
 bucket_19  0b03538081  2025-01-02T20:56:16+01:00  python-jsonslicer
 bucket_04  f8c6a22064  2026-01-18T19:09:48+00:00  python-lia-web
 bucket_09  ca0ca29eeb  2020-04-22T17:26:23+02:00  python-markdown
@@ -835,8 +847,10 @@ bucket_6C  90fe5745ce  2025-10-08T17:23:18+00:00  python-passlib
 bucket_C6  ff339f57d2  2022-03-01T20:52:06+01:00  python-pathlib
 bucket_48  e16205f474  2024-12-21T15:01:34+01:00  python-pspdfutils
 bucket_90  d3fc8e9501  2020-07-06T22:23:27+00:00  python-pycrypto
+bucket_8A  c3d5809d64  2026-07-05T18:45:17+00:00  python-pydantic-core
 bucket_73  95f0f3572e  2021-01-09T04:37:19+00:00  python-pygobject
 bucket_E0  5678234a68  2020-01-27T18:26:42+00:00  python-pygobject2
+bucket_CB  0318178a8b  2026-07-05T18:36:23+00:00  python-pyproject_hooks
 bucket_0A  c923195abc  2019-03-03T19:09:57-06:00  python-relativetimebuilder
 bucket_75  2e9c662438  2021-02-04T15:45:09+00:00  python-reportlib
 bucket_01  3f54c19263  2025-11-30T22:51:10+00:00  python-roman-numerals-py
@@ -852,6 +866,7 @@ bucket_DB  cefe6c9ddd  2023-04-18T02:33:55+00:00  python-sphinxcontrib.jquery
 bucket_91  5658e3635c  2024-11-11T19:09:41+00:00  python-sqlite3
 bucket_FD  963de22002  2021-02-04T15:49:03+00:00  python-tkmail
 bucket_06  27c1c94416  2020-09-23T22:32:48+02:00  python-tornado4
+bucket_30  707d9725e7  2026-07-05T18:27:31+00:00  python-ttp-templates
 bucket_AB  064d3e8a0f  2023-08-31T12:54:11+00:00  python-twisted-iocpsupport
 bucket_11  56fc20c210  2024-11-11T17:13:25+00:00  python-typed-ast
 bucket_89  14e8af25d5  2020-04-20T06:21:50+00:00  python-typed_ast
@@ -919,6 +934,7 @@ bucket_9C  1830644ff5  2024-10-18T04:55:59+00:00  tcl85
 bucket_96  a1755c4430  2024-01-24T19:20:14+01:00  termbox
 bucket_C7  fb8cdbe0fa  2024-01-21T17:15:19+01:00  termcap
 bucket_AB  1830644ff5  2024-10-18T04:55:59+00:00  tk85
+bucket_BF  15b1437e1d  2026-08-30T17:45:14+00:00  tree-sitter-025
 bucket_30  a3e5113825  2020-01-24T14:08:38+00:00  warsow
 bucket_B8  a3e5113825  2020-01-24T14:08:38+00:00  warsow-data
 bucket_F9  5738430f3c  2022-05-22T16:50:00+00:00  webkitgtk
